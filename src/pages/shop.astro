@@ -38,6 +38,18 @@ const testimonials = [
     }
 ];
 
+const imagePaths = [
+    '/assets/1.jpeg', '/assets/2.jpeg', '/assets/3.jpeg', '/assets/4.png', '/assets/5.jpeg', 
+    '/assets/6.jpeg', '/assets/7.jpeg', '/assets/8.jpeg', '/assets/9.jpeg', '/assets/10.jpeg', 
+    '/assets/12.jpeg', '/assets/13.jpg', '/assets/14.png', '/assets/15.jpeg', '/assets/16.jpeg', 
+    '/assets/17.jpeg', '/assets/18.jpeg', '/assets/19.jpeg', '/assets/20.jpeg', '/assets/21.jpeg', 
+    '/assets/22.jpeg', '/assets/23.jpeg', '/assets/24.jpeg', '/assets/25.jpeg', '/assets/26.jpg', 
+    '/assets/27.jpeg', '/assets/28.jpeg', '/assets/29.jpeg', '/assets/30.jpeg', '/assets/31.jpeg', 
+    '/assets/32.jpeg', '/assets/33.jpeg', '/assets/34.jpeg', '/assets/35.jpeg', '/assets/36.jpeg', 
+    '/assets/37.jpeg', '/assets/38.jpeg', '/assets/39.jpeg', '/assets/40.jpeg', '/assets/41.jpeg', 
+    '/assets/42.jpeg', '/assets/43.jpeg', '/assets/44.jpeg'
+];
+
 const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z`;
 ---
 
@@ -162,6 +174,18 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
                     <li>Posicionamiento LinkedIn</li>
                     <li>Storytelling Twitter</li>
                 </ul>
+            </div>
+        </section>
+
+         <!-- Image Gallery -->
+        <section class="image-gallery-section">
+            <h2 class="text-center">Galería de Imágenes</h2>
+            <div class="image-grid">
+                {imagePaths.map((imagePath, index) => (
+                    <div class="image-card">
+                        <img src={imagePath} alt={`Imagen de la galería ${index + 1}`} loading="lazy" />
+                    </div>
+                ))}
             </div>
         </section>
 
@@ -318,6 +342,25 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     .quote { font-style: italic; margin-bottom: 1rem; }
     .author { font-weight: 700; margin-bottom: 0.25rem; }
     .role { font-size: 0.9rem; color: var(--color-text-secondary); }
+
+    .image-gallery-section {
+        margin-top: 4rem;
+    }
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+    .image-card {
+        background-color: var(--color-bg-secondary);
+        padding: 1rem;
+        border-radius: 12px;
+        text-align: center;
+    }
+    .image-card img {
+        max-width: 100%;
+        border-radius: 8px;
+    }
 
     .contact-details p { margin-bottom: 0.5rem; }
     .social-links a { margin: 0 0.5rem; color: var(--color-accent); text-decoration: none; }
