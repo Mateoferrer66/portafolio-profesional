@@ -8,11 +8,51 @@ const premiumApps = [
     { name: "Duolingo Premium", price: "$ COP 50.000 / Garantía por un Año" }
 ];
 
+const products3d = [
+    { name: "Artículos útiles para el hogar", image: "/assets/15.jpeg" },
+    { name: "Figuras Personalizadas", image: "/assets/16.jpeg" },
+    { name: "Artículos de decoración", image: "/assets/17.jpeg" },
+    { name: "Productos para la salud", image: "/assets/18.jpeg" }
+];
+
 const graphicDesign = [
     { name: "Identidad Corporativa", price: "$ COP 200.000" },
     { name: "Flyers o Banners", price: "$ COP 30.000" },
     { name: "Pieza Publicitaria", price: "$ COP 30.000" },
     { name: "Logos", price: "$ COP 30.000" }
+];
+
+const ropaExclusiva = [
+    { name: "Hoddies", image: "/assets/25.jpeg" },
+    { name: "Pantalones", image: "/assets/26.jpg" },
+    { name: "Conjuntos", image: "/assets/27.jpeg" }
+];
+
+const asesoriasMatematicas = [
+    { name: "Tareas", image: "/assets/28.jpeg" },
+    { name: "Trabajos", image: "/assets/29.jpeg" },
+    { name: "Asesorías", image: "/assets/30.jpeg" },
+    { name: "Parciales", image: "/assets/31.jpeg" },
+    { name: "Explicaciones Online", image: "/assets/32.jpeg" },
+    { name: "Soporte 24/7 Colegio – Universidad", image: "/assets/33.jpeg" }
+];
+
+const asesoriasTecnologicas = [
+    { name: "Desarrollo Web", image: "/assets/34.jpeg" },
+    { name: "Programación", image: "/assets/35.jpeg" },
+    { name: "Consultorías Personalizadas", image: "/assets/36.jpeg" },
+    { name: "Instalación Programas", image: "/assets/37.jpeg" },
+    { name: "Formateo", image: "/assets/38.jpeg" },
+    { name: "Tutorías", image: "/assets/39.jpeg" }
+];
+
+const managerRedesSociales = [
+    { name: "Reels", image: "/assets/40.jpeg" },
+    { name: "Historias", image: "/assets/41.jpeg" },
+    { name: "Post o Foto", image: "/assets/42.jpeg" },
+    { name: "Live", image: "/assets/43.jpeg" },
+    { name: "Posicionamiento LinkedIn", image: "/assets/44.jpeg" },
+    { name: "Storytelling Twitter", image: "/assets/28.jpeg" } // Reusing an image
 ];
 
 const testimonials = [
@@ -63,24 +103,36 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         </section>
 
         <!-- Section 2 -->
-        <section class="feature-section text-center">
-            <h2>Crea lo que tú quieras</h2>
-            <p>«Además, ofrecemos la venta de aplicaciones, desarrollo de páginas web y diseño gráfico de alta calidad. Nuestro equipo de expertos está comprometido a brindarte soluciones innovadoras y educativas para tus necesidades tecnológicas y creativas. ¡Explora nuestra tienda y descubre cómo podemos ayudarte a alcanzar tus objetivos!»</p>
-            <a href="/contact" class="cta-button">Comenzar</a>
+        <section class="feature-section-grid">
+            <div class="text-content">
+                <h2>Crea lo que tú quieras</h2>
+                <p>«Además, ofrecemos la venta de aplicaciones, desarrollo de páginas web y diseño gráfico de alta calidad. Nuestro equipo de expertos está comprometido a brindarte soluciones innovadoras y educativas para tus necesidades tecnológicas y creativas. ¡Explora nuestra tienda y descubre cómo podemos ayudarte a alcanzar tus objetivos!»</p>
+                <a href="/contact" class="cta-button">Comenzar</a>
+            </div>
+            <div class="image-mosaic">
+                <img src="/assets/1.jpeg" alt="Image 1" loading="lazy" />
+                <img src="/assets/2.jpeg" alt="Image 2" loading="lazy" />
+                <img src="/assets/3.jpeg" alt="Image 3" loading="lazy" />
+                <img src="/assets/4.png" alt="Image 4" loading="lazy" />
+            </div>
         </section>
 
         <!-- Feature Grid -->
-        <section class="feature-grid">
-            <div class="feature-card">
+        <section class="feature-grid-centered">
+            <div class="feature-card text-center">
                 <h3>A tu servicio y a tu medida</h3>
                 <p>Nos enorgullecemos de ofrecer servicios integrales que abarcan asesorías tecnológicas para resolver tus desafíos informáticos, asesorías matemáticas para potenciar tus habilidades numéricas, y servicios de impresión 3D para convertir tus ideas en realidad física.</p>
                 <a href="/contact" class="cta-button-small">Comenzar</a>
             </div>
+        </section>
+        <section class="feature-grid">
             <div class="feature-card">
+                <img src="/assets/5.jpeg" alt="Image 5" loading="lazy" class="app-image" />
                 <h3>Negocio Personalizado</h3>
                 <p>Nos esforzamos por ofrecer soluciones integrales y personalizadas que satisfagan las necesidades únicas de cada cliente.</p>
             </div>
             <div class="feature-card">
+                <img src="/assets/6.jpeg" alt="Image 6" loading="lazy" class="app-image" />
                 <h3>Productos Exclusivos</h3>
                 <p>Nuestro compromiso es proporcionar un servicio de calidad excepcional, respaldado por un equipo de expertos apasionados por la innovación y la excelencia. Te invitamos a explorar nuestra tienda y descubrir cómo podemos colaborar contigo para alcanzar tus metas tecnológicas y creativas.</p>
             </div>
@@ -92,100 +144,113 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
             <a href="/contact" class="cta-button">Comenzar</a>
             <p>Ofrecemos la venta de aplicaciones, desarrollo de páginas web y diseño gráfico de alta calidad. Nuestro equipo de expertos está comprometido a brindarte soluciones innovadoras y educativas para tus necesidades tecnológicas y creativas.</p>
             <p>Selección de aplicaciones de alta calidad disponibles para su compra, que abarcan diferentes necesidades y sectores. Si estás buscando potenciar tu presencia en línea, ofrecemos servicios de desarrollo de páginas web a medida, adaptadas a tus requerimientos y objetivos específicos. Por último, nuestro equipo de diseño gráfico está preparado para brindarte soluciones creativas y profesionales que realzarán la imagen de tu marca y proyectos.</p>
+            <img src="/assets/7.jpeg" alt="Image 7" loading="lazy" />
         </section>
 
         <!-- Detailed Services -->
         <section class="detailed-services">
-            <div class="service-item">
-                <h3>Paginas Web</h3>
-                <p>Si estás buscando establecer o mejorar tu presencia en línea, nuestro equipo de desarrollo de páginas web está comprometido a crear experiencias digitales únicas y atractivas, adaptadas a tus objetivos comerciales y estéticos. Por último, nuestro equipo de diseño gráfico se enorgullece de ofrecer soluciones creativas y profesionales que elevarán la imagen de tu marca, desde logotipos y material promocional hasta diseños para redes sociales y más.</p>
-            </div>
-            <div class="service-item">
-                <h3>Impresión 3D</h3>
-                <p>Estamos equipados para convertir tus ideas más creativas en realidad física, ofreciéndote la posibilidad de materializar tus diseños tridimensionales con la más alta calidad y precisión. Además, nuestra selección de aplicaciones disponibles para su compra está cuidadosamente seleccionada para abordar una amplia variedad de necesidades, desde productividad hasta entretenimiento, para satisfacer los requerimientos digitales más exigentes.</p>
-            </div>
-            <div class="service-item">
-                <h3>Venta de Aplicaciones Android</h3>
-                <p>La creación y venta de aplicaciones para dispositivos Android ha experimentado un notable auge, convirtiéndose en un lucrativo negocio para empresas y desarrolladores independientes. La popularidad de Android como sistema operativo móvil ha generado oportunidades significativas para aquellos que desean incursionar en el desarrollo y comercialización de aplicaciones para esta plataforma y mantenimiento de computadores a nivel de software.</p>
+            <div class="feature-grid service-grid-container">
+                <div class="feature-card">
+                    <img src="/assets/8.jpeg" alt="Image 8" loading="lazy" class="app-image" />
+                    <h3>Paginas Web</h3>
+                    <p>Si estás buscando establecer o mejorar tu presencia en línea, nuestro equipo de desarrollo de páginas web está comprometido a crear experiencias digitales únicas y atractivas, adaptadas a tus objetivos comerciales y estéticos. Por último, nuestro equipo de diseño gráfico se enorgullece de ofrecer soluciones creativas y profesionales que elevarán la imagen de tu marca, desde logotipos y material promocional hasta diseños para redes sociales y más.</p>
+                </div>
+                <div class="feature-card">
+                    <img src="/assets/9.jpeg" alt="Image 9" loading="lazy" class="app-image" />
+                    <h3>Impresión 3D</h3>
+                    <p>Estamos equipados para convertir tus ideas más creativas en realidad física, ofreciéndote la posibilidad de materializar tus diseños tridimensionales con la más alta calidad y precisión. Además, nuestra selección de aplicaciones disponibles para su compra está cuidadosamente seleccionada para abordar una amplia variedad de necesidades, desde productividad hasta entretenimiento, para satisfacer los requerimientos digitales más exigentes.</p>
+                </div>
+                <div class="feature-card">
+                    <img src="/assets/10.jpeg" alt="Image 10" loading="lazy" class="app-image" />
+                    <h3>Venta de Aplicaciones Android</h3>
+                    <p>La creación y venta de aplicaciones para dispositivos Android ha experimentado un notable auge, convirtiéndose en un lucrativo negocio para empresas y desarrolladores independientes. La popularidad de Android como sistema operativo móvil ha generado oportunidades significativas para aquellos que desean incursionar en el desarrollo y comercialización de aplicaciones para esta plataforma y mantenimiento de computadores a nivel de software.</p>
+                </div>
             </div>
 
             <div class="service-item">
                 <h3>Aplicaciones Ilimitadas Android</h3>
-                <ul class="service-list price-list">
-                </ul>
+                <div class="feature-grid">
+                    {premiumApps.map((app, index) => (
+                        <div class="feature-card">
+                            <img src={[`/assets/44.jpeg`, `/assets/12.jpeg`, `/assets/13.jpg`, `/assets/14.png`][index]} alt={app.name} loading="lazy" class="app-image" />
+                            <h4>{app.name}</h4>
+                            <p>{app.price}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div class="service-item">
                 <h3>Productos 3D</h3>
-                <ul class="service-list simple">
-                    <li>Artículos útiles para el hogar</li>
-                    <li>Figuras Personalizadas</li>
-                    <li>Artículos de decoración</li>
-                    <li>Productos para la salud</li>
-                </ul>
+                <div class="feature-grid">
+                    {products3d.map((product) => (
+                        <div class="feature-card">
+                            <img src={product.image} alt={product.name} loading="lazy" class="app-image" />
+                            <h4>{product.name}</h4>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div class="service-item">
                 <h3>Diseño Gráfico</h3>
-                <ul class="service-list price-list">
-                </ul>
+                <div class="feature-grid">
+                    {graphicDesign.map((item, index) => (
+                        <div class="feature-card">
+                            <img src={[`/assets/19.jpeg`, `/assets/20.jpeg`, `/assets/21.jpeg`, `/assets/22.jpeg`][index]} alt={item.name} loading="lazy" class="app-image" />
+                            <h4>{item.name}</h4>
+                            <p>{item.price}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div class="service-item">
                 <h3>Ropa Exclusiva</h3>
-                <ul class="service-list simple">
-                    <li>Hoddies</li>
-                    <li>Pantalones</li>
-                    <li>Conjuntos</li>
-                </ul>
+                <div class="feature-grid">
+                    {ropaExclusiva.map((item, index) => (
+                        <div class="feature-card">
+                           <img src={[`/assets/23.jpeg`, `/assets/24.jpeg`, `/assets/25.jpeg`][index]} alt={item.name} loading="lazy" class="app-image" />
+                            <h4>{item.name}</h4>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div class="service-item">
                 <h3>Asesorías Matemáticas</h3>
-                <ul class="service-list simple">
-                    <li>Tareas</li>
-                    <li>Trabajos</li>
-                    <li>Asesorías</li>
-                    <li>Parciales</li>
-                    <li>Explicaciones Online</li>
-                    <li>Soporte 24/7 Colegio – Universidad</li>
-                </ul>
+                <div class="feature-grid">
+                    {asesoriasMatematicas.map((item, index) => (
+                        <div class="feature-card">
+                           <img src={[`/assets/26.jpg`, `/assets/27.jpeg`, `/assets/28.jpeg`, `/assets/29.jpeg`, `/assets/30.jpeg`, `/assets/31.jpeg`][index]} alt={item.name} loading="lazy" class="app-image" />
+                            <h4>{item.name}</h4>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div class="service-item">
                 <h3>Asesorías Tecnológicas</h3>
-                <ul class="service-list simple">
-                    <li>Desarrollo Web</li>
-                    <li>Programación</li>
-                    <li>Consultorías Personalizadas</li>
-                    <li>Instalación Programas</li>
-                    <li>Formateo</li>
-                    <li>Tutorías</li>
-                </ul>
+                <div class="feature-grid">
+                    {asesoriasTecnologicas.map((item, index) => (
+                        <div class="feature-card">
+                           <img src={[`/assets/32.jpeg`, `/assets/33.jpeg`, `/assets/34.jpeg`, `/assets/35.jpeg`, `/assets/36.jpeg`, `/assets/37.jpeg`][index]} alt={item.name} loading="lazy" class="app-image" />
+                            <h4>{item.name}</h4>
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div class="service-item">
                 <h3>Manager Redes Sociales</h3>
-                <ul class="service-list simple">
-                    <li>Reels</li>
-                    <li>Historias</li>
-                    <li>Post o Foto</li>
-                    <li>Live</li>
-                    <li>Posicionamiento LinkedIn</li>
-                    <li>Storytelling Twitter</li>
-                </ul>
-            </div>
-        </section>
-
-         <!-- Image Gallery -->
-        <section class="image-gallery-section">
-            <h2 class="text-center">Galería de Imágenes</h2>
-            <div class="image-grid">
-                {imagePaths.map((imagePath, index) => (
-                    <div class="image-card">
-                        <img src={imagePath} alt={`Imagen de la galería ${index + 1}`} loading="lazy" />
-                    </div>
-                ))}
+                <div class="feature-grid">
+                    {managerRedesSociales.map((item, index) => (
+                        <div class="feature-card">
+                           <img src={[`/assets/38.jpeg`, `/assets/39.jpeg`, `/assets/40.jpeg`, `/assets/41.jpeg`, `/assets/42.jpeg`, `/assets/43.jpeg`][index]} alt={item.name} loading="lazy" class="app-image" />
+                            <h4>{item.name}</h4>
+                        </div>
+                    ))}
+                </div>
             </div>
         </section>
 
@@ -261,6 +326,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     h1 { font-size: 3rem; font-weight: 700; margin-bottom: 1rem; }
     h2 { font-size: 2.2rem; font-weight: 600; margin-bottom: 1.5rem; }
     h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: var(--color-accent); }
+    h4 { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; }
     p { line-height: 1.7; color: var(--color-text-secondary); margin-bottom: 1rem; }
     .large-text { font-size: 1.1rem; max-width: 800px; margin-left: auto; margin-right: auto; }
 
@@ -284,6 +350,34 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     }
     .feature-section p { margin-bottom: 1.5rem; }
 
+    .feature-section-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: center;
+    }
+
+    .image-mosaic {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .image-mosaic img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+    .feature-grid-centered {
+        margin-bottom: 2rem;
+    }
+    .feature-grid-centered .feature-card {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
     .feature-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -301,6 +395,16 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         padding: 2rem;
         border-radius: 12px;
         margin-bottom: 2rem;
+    }
+    .service-grid-container {
+        margin-bottom: 2rem;
+    }
+    .app-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 1rem;
     }
     .service-list {
         list-style: none;
