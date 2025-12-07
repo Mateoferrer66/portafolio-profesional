@@ -1,4 +1,6 @@
 ---
+import AnimatedBackground from "./AnimatedBackground.astro";
+
 interface Props {
 	title: string;
 	tagline?: string;
@@ -6,8 +8,6 @@ interface Props {
 }
 
 const { align = "center", tagline, title } = Astro.props;
-
-// import ThreeBackground from './ThreeBackground';
 ---
 
 <div class:list={["hero stack gap-4", align]}>
@@ -16,7 +16,7 @@ const { align = "center", tagline, title } = Astro.props;
 		{tagline && <p class="tagline">{tagline}</p>}
 	</div>
 	<slot />
-	{/* <ThreeBackground client:only="react" /> */}
+	<AnimatedBackground />
 </div>
 
 <style>

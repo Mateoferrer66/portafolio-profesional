@@ -24,6 +24,14 @@ const { href } = Astro.props;
 		background: var(--gradient-accent-orange);
 		box-shadow: var(--shadow-md);
 		white-space: nowrap;
+		transition:
+			transform 0.3s ease,
+			box-shadow 0.3s ease;
+	}
+
+	a:hover {
+		transform: translateY(-2px) scale(1.02);
+		box-shadow: var(--shadow-lg);
 	}
 
 	@media (min-width: 20em) {
@@ -34,7 +42,7 @@ const { href } = Astro.props;
 
 	/* Overlay for hover effects. */
 	a::after {
-		content: '';
+		content: "";
 		position: absolute;
 		inset: 0;
 		pointer-events: none;

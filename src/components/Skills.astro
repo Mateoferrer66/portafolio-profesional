@@ -23,10 +23,10 @@ import Icon from "./Icon.astro";
     <Icon icon="trophy" color="var(--accent-regular)" size="2.5rem" gradient />
     <h2>Industry Leader</h2>
     <p>
-		Excellent communication and creative skills in self-learning technology innovation, 
-		excellent team and independent performance, ability to work on several tasks at the same time 
-		and under pressure, optimization of processes and delivery of quality results.
-		quality.
+      Excellent communication and creative skills in self-learning technology
+      innovation, excellent team and independent performance, ability to work on
+      several tasks at the same time and under pressure, optimization of
+      processes and delivery of quality results. quality.
     </p>
   </div>
   <div class="stack gap-2 lg:gap-4">
@@ -50,8 +50,24 @@ import Icon from "./Icon.astro";
     border: 1px solid var(--gray-800);
     border-radius: 0.75rem;
     padding: 1.5rem;
-    background-color: var(--gray-999_40);
-    box-shadow: var(--shadow-sm);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.05),
+      rgba(255, 255, 255, 0.02)
+    );
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-md);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
+  }
+
+  .box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--accent-regular);
   }
 
   .skills {
