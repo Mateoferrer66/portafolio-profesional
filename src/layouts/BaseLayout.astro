@@ -8,6 +8,7 @@ import MainHead from '../components/MainHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppButton from '../components/WhatsAppButton.astro';
+import ThreeDBackground from '../components/ThreeDBackground';
 
 interface Props {
 	title?: string | undefined;
@@ -24,6 +25,7 @@ const { title, description } = Astro.props;
 		<MainHead title={title} description={description} />
 	</head>
 	<body>
+		<ThreeDBackground client:load />
 		<div class="stack backgrounds">
 			<Nav />
 			<slot />
