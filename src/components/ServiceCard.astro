@@ -1,0 +1,74 @@
+---
+interface Props {
+  title: string;
+  icon: string;
+  description: string;
+}
+
+import Icon from './Icon.astro';
+
+const { title, icon, description } = Astro.props;
+---
+
+<div class="service-card">
+  <div class="service-icon">
+    <Icon icon={icon} size="2em" />
+  </div>
+  <h4 class="service-title">{title}</h4>
+  <p class="service-description">{description}</p>
+</div>
+
+<style>
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: var(--gradient-subtle);
+    border: 1px solid var(--accent-regular);
+    border-opacity: 0.2;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .service-card:hover {
+    transform: translateY(-5px);
+    background: var(--gradient-subtle);
+    border-color: var(--accent-regular);
+  }
+
+  .service-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent-regular);
+    color: var(--accent-text-over);
+  }
+
+  .service-title {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--gray-0);
+  }
+
+  .service-description {
+    font-size: var(--text-sm);
+    color: var(--gray-300);
+    line-height: 1.6;
+  }
+
+  @media (min-width: 50em) {
+    .service-card {
+      padding: 2.5rem;
+    }
+
+    .service-title {
+      font-size: var(--text-xl);
+    }
+  }
+</style>

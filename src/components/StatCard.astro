@@ -1,0 +1,59 @@
+---
+interface Props {
+  number: string;
+  label: string;
+  description?: string;
+}
+
+const { number, label, description } = Astro.props;
+---
+
+<div class="stat">
+  <div class="stat-number">{number}</div>
+  <div class="stat-label">{label}</div>
+  {description && <div class="stat-description">{description}</div>}
+</div>
+
+<style>
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-regular);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--gray-0);
+  }
+
+  .stat-description {
+    font-size: var(--text-sm);
+    color: var(--gray-300);
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 50em) {
+    .stat {
+      padding: 2.5rem;
+    }
+
+    .stat-number {
+      font-size: 3rem;
+    }
+
+    .stat-label {
+      font-size: var(--text-xl);
+    }
+  }
+</style>

@@ -1,0 +1,93 @@
+---
+interface Props {
+  name: string;
+  role: string;
+  comment: string;
+  image?: string;
+  company?: string;
+}
+
+const { name, role, comment, image, company } = Astro.props;
+---
+
+<div class="testimonial">
+  <div class="testimonial-quote">{comment}</div>
+  <div class="testimonial-author">
+    {image && (
+      <img src={image} alt={name} class="author-image" width="40" height="40" />
+    )}
+    <div class="author-info">
+      <div class="author-name">{name}</div>
+      <div class="author-role">
+        {role}
+        {company && <span> • {company}</span>}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .testimonial {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: var(--gradient-subtle);
+    border: 1px solid var(--accent-regular);
+    border-opacity: 0.2;
+  }
+
+  .testimonial-quote {
+    font-size: var(--text-lg);
+    font-style: italic;
+    color: var(--gray-100);
+    line-height: 1.6;
+  }
+
+  .testimonial-quote::before {
+    content: '"';
+    font-size: 2rem;
+    color: var(--accent-regular);
+    margin-right: 0.5rem;
+  }
+
+  .testimonial-author {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .author-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .author-name {
+    font-weight: 600;
+    color: var(--gray-0);
+  }
+
+  .author-role {
+    font-size: var(--text-sm);
+    color: var(--gray-400);
+  }
+
+  @media (min-width: 50em) {
+    .testimonial {
+      padding: 2.5rem;
+    }
+
+    .testimonial-quote {
+      font-size: var(--text-xl);
+    }
+  }
+</style>

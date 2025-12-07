@@ -15,6 +15,9 @@ import PortfolioPreview from "../components/PortfolioPreview.astro";
 // Page section components
 import ContactCTA from "../components/ContactCTA.astro";
 import Skills from "../components/Skills.astro";
+import StatCard from "../components/StatCard.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import TestimonialCard from "../components/TestimonialCard.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -31,7 +34,7 @@ const projects = (await getCollection("work"))
 			<header class="hero">
 				<Hero
 					title="Hello, My name is Mateo Ferrer!"
-					tagline="I am a Creative Developer who is currently based in Colombia ✈️"
+					tagline="Master Software Engineer | Full Stack Developer | AI & DevOps Specialist | Creative Designer"
 					align="start"
 				>
 					<div class="roles">
@@ -45,9 +48,17 @@ const projects = (await getCollection("work"))
 							><Icon icon="pencil-line" size="1.33em" /> Marketing</Pill
 						>
 					</div>
-					<a href="/assets/HV_MATEOFERRER_202509.pdf" download class="download-cv">
-						<Icon icon="paper-plane-tilt" size="1.33em" /> Download CV
-					</a>
+					<div class="cta-buttons">
+						<a href="/about/" class="cta-button primary">
+							<Icon icon="arrow-right" size="1.2em" /> View My Work
+						</a>
+						<a href="mailto:contact@mateoferrer.com" class="cta-button secondary">
+							<Icon icon="paper-plane-tilt" size="1.2em" /> Let's Talk
+						</a>
+						<a href="/assets/HV_MATEOFERRER_202509.pdf" download class="cta-button secondary">
+							<Icon icon="paper-plane-tilt" size="1.2em" /> Download CV
+						</a>
+					</div>
 				</Hero>
 
 				<img
@@ -61,10 +72,64 @@ const projects = (await getCollection("work"))
 			<Skills />
 		</div>
 
+		<!-- Statistics Section -->
+		<section class="stats-section wrapper">
+			<header class="section-header stack gap-2 lg:gap-4">
+				<h2>By The Numbers</h2>
+				<p>A snapshot of my professional journey and impact.</p>
+			</header>
+			<div class="stats-grid">
+				<StatCard number="5+" label="Years of Experience" description="In Software Development & Design" />
+				<StatCard number="50+" label="Projects Completed" description="From startups to enterprises" />
+				<StatCard number="200+" label="Certifications" description="From Platzi, Google, Udemy & more" />
+				<StatCard number="100%" label="Client Satisfaction" description="Dedicated to excellence" />
+			</div>
+		</section>
+
+		<!-- Services Section -->
+		<section class="services-section wrapper">
+			<header class="section-header stack gap-2 lg:gap-4">
+				<h2>Services I Offer</h2>
+				<p>Comprehensive solutions tailored to your needs.</p>
+			</header>
+			<div class="services-grid">
+				<ServiceCard 
+					title="Full Stack Development"
+					icon="code"
+					description="Build scalable web applications with React, Angular, Astro, Node.js, and more."
+				/>
+				<ServiceCard 
+					title="UI/UX Design"
+					icon="pencil-line"
+					description="Create beautiful, user-centric interfaces that engage and convert."
+				/>
+				<ServiceCard 
+					title="DevOps & Cloud"
+					icon="rocket-launch"
+					description="Deploy and manage applications with confidence using modern DevOps practices."
+				/>
+				<ServiceCard 
+					title="AI Integration"
+					icon="trophy"
+					description="Leverage artificial intelligence to enhance your business processes."
+				/>
+				<ServiceCard 
+					title="Digital Marketing"
+					icon="strategy"
+					description="Drive growth through strategic digital marketing and social media management."
+				/>
+				<ServiceCard 
+					title="E-Commerce Solutions"
+					icon="rocket-launch"
+					description="Build robust, scalable e-commerce platforms that drive sales."
+				/>
+			</div>
+		</section>
+
 		<main class="wrapper stack gap-20 lg:gap-48">
 			<section class="section with-background with-cta">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Freelance Projects</h3>
+					<h3>Featured Projects</h3>
 					<p>
 						Take a look below at some of my featured work for
 						clients from the past few years.
@@ -85,19 +150,49 @@ const projects = (await getCollection("work"))
 
 				<div class="cta">
 					<CallToAction href="/work/">
-						View All
+						View All Projects
 						<Icon icon="arrow-right" size="1.2em" />
 					</CallToAction>
 				</div>
 			</section>
 
+			<!-- Testimonials Section -->
+			<section class="testimonials-section">
+				<header class="section-header stack gap-2 lg:gap-4">
+					<h3>What Clients Say</h3>
+					<p>
+						Don't just take my word for it. Here's what my clients have to say about working with me.
+					</p>
+				</header>
+
+				<div class="testimonials-grid">
+					<TestimonialCard 
+						name="Sarah Johnson"
+						role="CEO"
+						company="TechStart Inc"
+						comment="Mateo delivered an exceptional e-commerce platform that increased our sales by 150%. His professionalism and attention to detail is unmatched."
+					/>
+					<TestimonialCard 
+						name="Carlos Rodriguez"
+						role="Project Manager"
+						company="Digital Solutions"
+						comment="Working with Mateo was a game-changer. He transformed our outdated website into a modern, responsive platform that our customers love."
+					/>
+					<TestimonialCard 
+						name="Maria García"
+						role="Marketing Director"
+						company="Creative Agency"
+						comment="Mateo's understanding of both design and development made collaboration seamless. He consistently exceeded expectations on every project."
+					/>
+				</div>
+			</section>
+
 			<section class="section with-background bg-variant">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Mentions</h3>
+					<h3>Featured In</h3>
 					<p>
 						I have been fortunate enough to recieve praise for my
-						work in several publications. Take a look below to learn
-						more.
+						work in several publications.
 					</p>
 				</header>
 
@@ -108,7 +203,7 @@ const projects = (await getCollection("work"))
 								<li class="mention-card">
 									<img
 										src={`/assets/mentions/${index}.png`}
-										alt={`${index}`}
+										alt={`Publication ${index}`}
 									/>
 
 									<p>{brand}</p>
@@ -333,10 +428,116 @@ const projects = (await getCollection("work"))
 		box-shadow: var(--shadow-sm);
 	}
 
+	/* Statistics Section */
+	.stats-section {
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	.stats-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		gap: 2rem;
+	}
+
+	/* Services Section */
+	.services-section {
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	.services-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+	}
+
+	/* Testimonials Section */
+	.testimonials-section {
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+
+	.testimonials-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2rem;
+	}
+
+	/* CTA Buttons */
+	.cta-buttons {
+		display: flex;
+		gap: 1rem;
+		flex-wrap: wrap;
+		margin-top: 1rem;
+	}
+
+	.cta-button {
+		display: inline-flex;
+		padding: 0.75rem 1.5rem;
+		gap: 0.75rem;
+		align-items: center;
+		text-decoration: none;
+		font-weight: 600;
+		border-radius: 999rem;
+		transition: all 0.3s ease;
+		font-size: var(--text-md);
+	}
+
+	.cta-button.primary {
+		background-color: var(--accent-regular);
+		color: var(--accent-text-over);
+		border: 1px solid var(--accent-regular);
+	}
+
+	.cta-button.primary:hover {
+		background-color: var(--accent-dark);
+		border-color: var(--accent-dark);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-md);
+	}
+
+	.cta-button.secondary {
+		background-color: transparent;
+		color: var(--accent-regular);
+		border: 1px solid var(--accent-regular);
+	}
+
+	.cta-button.secondary:hover {
+		background-color: var(--accent-regular);
+		color: var(--accent-text-over);
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-md);
+	}
+
 	@media (min-width: 50em) {
 		.mention-card {
 			border-radius: 1.5rem;
 			height: 9.5rem;
+		}
+
+		.stats-grid {
+			grid-template-columns: repeat(4, 1fr);
+		}
+
+		.services-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		.testimonials-grid {
+			grid-template-columns: repeat(3, 1fr);
+		}
+
+		.cta-buttons {
+			gap: 1.5rem;
+		}
+
+		.cta-button {
+			padding: 0.875rem 2rem;
+			font-size: var(--text-lg);
 		}
 	}
 </style>
