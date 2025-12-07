@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "@astrojs/react": "^3.0.2",
-    "@types/react": "^18.2.21",
-    "@types/react-dom": "^18.2.7",
     "astro": "^3.0.12",
     "faraday": "^1.12.0",
     "react": "^18.2.0",
@@ -20,6 +18,9 @@
     "three": "^0.181.2"
   },
   "devDependencies": {
-    "@astrojs/partytown": "^2.0.4"
+    "@astrojs/partytown": "^2.0.4",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.181.0"
   }
 }
