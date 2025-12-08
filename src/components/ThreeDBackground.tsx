@@ -91,7 +91,7 @@ const ThreeDBackground: React.FC = () => {
       renderer.setClearColor(0x0a0a1a, 1);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFShadowShadowMap;
+      renderer.shadowMap.type = THREE.PCFShadowMap;
       renderer.toneMappingExposure = 1.2;
       
       containerRef.current.appendChild(renderer.domElement);
@@ -123,17 +123,19 @@ const ThreeDBackground: React.FC = () => {
 
       glowLights.forEach(light => {
         const pointLight = new THREE.PointLight(light.color, light.intensity);
-        pointLight.position.set(...light.pos);
+        pointLight.position.set(light.pos[0], light.pos[1], light.pos[2]);
         pointLight.castShadow = true;
         pointLight.shadow.mapSize.width = 1024;
         pointLight.shadow.mapSize.height = 1024;
         
         // Add glow sphere around light
         const glowGeo = new THREE.SphereGeometry(0.5, 8, 8);
-        const glowMat = new THREE.MeshBasicMaterial({
+        const glowMat = new THREE.MeshStandardMaterial({
           color: light.color,
           emissive: light.color,
           emissiveIntensity: 0.8,
+          metalness: 0.8,
+          roughness: 0.2,
         });
         const glowSphere = new THREE.Mesh(glowGeo, glowMat);
         glowSphere.position.copy(pointLight.position);
