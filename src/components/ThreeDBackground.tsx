@@ -1,22 +1,75 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 
+// Post-processing effects
+class BloomEffect {
+  scene: THREE.Scene;
+  camera: THREE.Camera;
+  renderer: THREE.WebGLRenderer;
+  bloomLayer: THREE.Layers;
+  materials: Map<THREE.Object3D, THREE.Material>;
+  darkMaterial: THREE.MeshBasicMaterial;
+  renderTarget: THREE.WebGLRenderTarget;
+
+  constructor(scene: THREE.Scene, camera: THREE.Camera, renderer: THREE.WebGLRenderer) {
+    this.scene = scene;
+    this.camera = camera;
+    this.renderer = renderer;
+    this.bloomLayer = new THREE.Layers();
+    this.bloomLayer.set(1);
+    this.materials = new Map();
+    this.darkMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
+    this.renderTarget = new THREE.WebGLRenderTarget(512, 512);
+  }
+
+  enableBloom(obj: THREE.Object3D) {
+    obj.layers.enable(1);
+  }
+
+  render() {
+    this.scene.traverse((obj: any) => {
+      if (obj.isMesh && this.bloomLayer.test(obj.layers)) {
+        this.materials.set(obj, obj.material);
+        obj.material = this.darkMaterial;
+      }
+    });
+
+    this.renderer.setRenderTarget(this.renderTarget);
+    this.renderer.render(this.scene, this.camera);
+    this.renderer.setRenderTarget(null);
+
+    this.scene.traverse((obj: any) => {
+      if (this.materials.has(obj)) {
+        obj.material = this.materials.get(obj);
+      }
+    });
+
+    return this.renderTarget.texture;
+  }
+
+  dispose() {
+    this.renderTarget.dispose();
+    this.darkMaterial.dispose();
+  }
+}
+
 const ThreeDBackground: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const particlesRef = useRef<THREE.Points | null>(null);
-  const torusRef = useRef<THREE.Mesh | null>(null);
-  const spheresRef = useRef<THREE.Mesh[]>([]);
+  const meshesRef = useRef<THREE.Mesh[]>([]);
   const animationIdRef = useRef<number | null>(null);
+  const bloomEffectRef = useRef<BloomEffect | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
 
     try {
-      // Scene setup
+      // Scene setup with dark background
       const scene = new THREE.Scene();
       sceneRef.current = scene;
+      scene.fog = new THREE.Fog(0x0a0a1a, 150, 600);
+      scene.background = new THREE.Color(0x0a0a1a);
       
       const camera = new THREE.PerspectiveCamera(
         75,
@@ -26,115 +79,209 @@ const ThreeDBackground: React.FC = () => {
       );
       camera.position.z = 50;
 
-      // Renderer setup
+      // Advanced Renderer setup
       const renderer = new THREE.WebGLRenderer({ 
         antialias: true, 
-        alpha: true,
-        powerPreference: 'high-performance'
+        alpha: false,
+        powerPreference: 'high-performance',
+        precision: 'highp',
       });
       rendererRef.current = renderer;
       renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(0x000000, 0);
+      renderer.setClearColor(0x0a0a1a, 1);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFShadowShadowMap;
+      renderer.toneMappingExposure = 1.2;
       
       containerRef.current.appendChild(renderer.domElement);
 
-      // Lighting
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+      // Bloom effect
+      const bloomEffect = new BloomEffect(scene, camera, renderer);
+      bloomEffectRef.current = bloomEffect;
+
+      // Enhanced lighting system
+      const ambientLight = new THREE.AmbientLight(0x1a1a3f, 0.4);
       scene.add(ambientLight);
 
-      const pointLight = new THREE.PointLight(0x7c3aed, 1.5);
-      pointLight.position.set(20, 20, 20);
-      scene.add(pointLight);
+      // Directional light for shadows
+      const directionalLight = new THREE.DirectionalLight(0x7c3aed, 0.8);
+      directionalLight.position.set(40, 40, 20);
+      directionalLight.castShadow = true;
+      directionalLight.shadow.mapSize.width = 2048;
+      directionalLight.shadow.mapSize.height = 2048;
+      directionalLight.shadow.camera.far = 200;
+      scene.add(directionalLight);
 
-      // Particles background
+      // Multiple glow point lights
+      const glowLights = [
+        { pos: [40, 30, 20], color: 0x7c3aed, intensity: 2.5 },
+        { pos: [-40, -30, 20], color: 0x3b82f6, intensity: 2 },
+        { pos: [0, 40, -30], color: 0x06b6d4, intensity: 2 },
+        { pos: [0, -40, 0], color: 0xec4899, intensity: 1.5 },
+      ];
+
+      glowLights.forEach(light => {
+        const pointLight = new THREE.PointLight(light.color, light.intensity);
+        pointLight.position.set(...light.pos);
+        pointLight.castShadow = true;
+        pointLight.shadow.mapSize.width = 1024;
+        pointLight.shadow.mapSize.height = 1024;
+        
+        // Add glow sphere around light
+        const glowGeo = new THREE.SphereGeometry(0.5, 8, 8);
+        const glowMat = new THREE.MeshBasicMaterial({
+          color: light.color,
+          emissive: light.color,
+          emissiveIntensity: 0.8,
+        });
+        const glowSphere = new THREE.Mesh(glowGeo, glowMat);
+        glowSphere.position.copy(pointLight.position);
+        
+        scene.add(pointLight);
+        scene.add(glowSphere);
+      });
+
+      const meshes: THREE.Mesh[] = [];
+
+      // Create futuristic shapes with enhanced materials
+      const createGeometries = () => {
+        const geos = [
+          new THREE.IcosahedronGeometry(2, 4),
+          new THREE.OctahedronGeometry(2.5, 2),
+          new THREE.TetrahedronGeometry(3, 0),
+          new THREE.DodecahedronGeometry(2, 0),
+          new THREE.TorusGeometry(2, 0.8, 16, 100),
+        ];
+        return geos;
+      };
+
+      const geometries = createGeometries();
+
+      // Create multiple animated shapes with glow
+      for (let i = 0; i < 8; i++) {
+        const geometry = geometries[i % geometries.length];
+        
+        const hue = 0.6 + i * 0.05;
+        const saturation = 0.9;
+        const lightness = 0.55;
+
+        const material = new THREE.MeshStandardMaterial({
+          color: new THREE.Color().setHSL(hue, saturation, lightness),
+          metalness: 0.75,
+          roughness: 0.15,
+          emissive: new THREE.Color().setHSL(hue, saturation, 0.4),
+          emissiveIntensity: 0.6,
+          wireframe: false,
+          envMapIntensity: 1,
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        
+        // Enable bloom on this mesh
+        bloomEffect.enableBloom(mesh);
+        
+        // Position shapes in space
+        const angle = (i / 8) * Math.PI * 2;
+        const distance = 25 + Math.sin(i) * 10;
+        mesh.position.set(
+          Math.cos(angle) * distance,
+          Math.sin(angle) * 10,
+          Math.sin(angle * 1.5) * 20 - 30
+        );
+
+        mesh.rotation.set(
+          Math.random() * Math.PI,
+          Math.random() * Math.PI,
+          Math.random() * Math.PI
+        );
+
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+
+        mesh.userData = {
+          posX: mesh.position.x,
+          posY: mesh.position.y,
+          posZ: mesh.position.z,
+          rotX: Math.random() * 0.01,
+          rotY: Math.random() * 0.01,
+          rotZ: Math.random() * 0.01,
+          orbitSpeed: Math.random() * 0.0005 + 0.0001,
+          orbitAngle: Math.random() * Math.PI * 2,
+          scale: 1 + Math.sin(i) * 0.3,
+          originalHue: hue,
+        };
+
+        meshes.push(mesh);
+        scene.add(mesh);
+      }
+
+      meshesRef.current = meshes;
+
+      // Enhanced particle effects with glow
       const particlesGeometry = new THREE.BufferGeometry();
       const particlesCnt = 800;
       const posArray = new Float32Array(particlesCnt * 3);
+      const sizeArray = new Float32Array(particlesCnt);
+      const colorArray = new Float32Array(particlesCnt * 3);
 
       for (let i = 0; i < particlesCnt * 3; i += 3) {
-        posArray[i] = (Math.random() - 0.5) * 200;
-        posArray[i + 1] = (Math.random() - 0.5) * 200;
-        posArray[i + 2] = (Math.random() - 0.5) * 200;
+        posArray[i] = (Math.random() - 0.5) * 350;
+        posArray[i + 1] = (Math.random() - 0.5) * 350;
+        posArray[i + 2] = (Math.random() - 0.5) * 350;
+
+        sizeArray[i / 3] = Math.random() * 0.8 + 0.2;
+
+        const hue = Math.random() * 0.3 + 0.6;
+        const color = new THREE.Color().setHSL(hue, 0.8, 0.6);
+        colorArray[i] = color.r;
+        colorArray[i + 1] = color.g;
+        colorArray[i + 2] = color.b;
       }
 
       particlesGeometry.setAttribute(
         'position',
         new THREE.BufferAttribute(posArray, 3)
       );
+      particlesGeometry.setAttribute(
+        'size',
+        new THREE.BufferAttribute(sizeArray, 1)
+      );
+      particlesGeometry.setAttribute(
+        'color',
+        new THREE.BufferAttribute(colorArray, 3)
+      );
 
       const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.7,
-        color: 0x7c3aed,
+        size: 0.5,
         sizeAttenuation: true,
         transparent: true,
-        opacity: 0.8,
+        opacity: 0.7,
+        vertexColors: true,
       });
 
       const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-      particlesRef.current = particles;
       scene.add(particles);
-
-      // Torus geometry
-      const torusGeometry = new THREE.TorusGeometry(10, 3, 16, 100);
-      const torusMaterial = new THREE.MeshStandardMaterial({
-        color: 0x7c3aed,
-        metalness: 0.7,
-        roughness: 0.2,
-        emissive: 0x5a21a1,
-        emissiveIntensity: 0.5,
-      });
-      const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-      torusRef.current = torus;
-      scene.add(torus);
-
-      // Floating spheres
-      const spheres: THREE.Mesh[] = [];
-      for (let i = 0; i < 5; i++) {
-        const sphereGeometry = new THREE.IcosahedronGeometry(Math.random() * 3 + 1, 32);
-        const sphereMaterial = new THREE.MeshStandardMaterial({
-          color: new THREE.Color().setHSL(0.7 + Math.random() * 0.2, 0.8, 0.5),
-          metalness: 0.6,
-          roughness: 0.3,
-          emissive: new THREE.Color().setHSL(0.7 + Math.random() * 0.2, 0.8, 0.3),
-          emissiveIntensity: 0.3,
-        });
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        
-        sphere.position.set(
-          (Math.random() - 0.5) * 100,
-          (Math.random() - 0.5) * 100,
-          (Math.random() - 0.5) * 100
-        );
-
-        sphere.userData = {
-          x: sphere.position.x,
-          y: sphere.position.y,
-          z: sphere.position.z,
-          speed: Math.random() * 0.01 + 0.005,
-          angle: Math.random() * Math.PI * 2,
-        };
-
-        spheres.push(sphere);
-        scene.add(sphere);
-      }
-      spheresRef.current = spheres;
 
       // Mouse movement
       let mouseX = 0;
       let mouseY = 0;
+      let targetMouseX = 0;
+      let targetMouseY = 0;
 
       const handleMouseMove = (e: MouseEvent) => {
-        mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-        mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+        targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
+        targetMouseY = -(e.clientY / window.innerHeight) * 2 + 1;
       };
 
       window.addEventListener('mousemove', handleMouseMove);
 
       // Scroll effect
       let scrollY = 0;
+      let targetScrollY = 0;
+
       const handleScroll = () => {
-        scrollY = window.scrollY;
+        targetScrollY = window.scrollY;
       };
 
       window.addEventListener('scroll', handleScroll);
@@ -150,43 +297,81 @@ const ThreeDBackground: React.FC = () => {
 
       window.addEventListener('resize', handleResize);
 
+      // Time tracking for wave effects
+      let time = 0;
+
       // Animation loop
       const animate = () => {
         animationIdRef.current = requestAnimationFrame(animate);
+        time += 0.016; // Approximately 60fps
 
-        // Rotate torus
-        if (torusRef.current) {
-          torusRef.current.rotation.x += 0.005;
-          torusRef.current.rotation.y += 0.01;
-          torusRef.current.position.y = scrollY * 0.0005;
-        }
+        // Smooth mouse movement
+        mouseX += (targetMouseX - mouseX) * 0.05;
+        mouseY += (targetMouseY - mouseY) * 0.05;
+        scrollY += (targetScrollY - scrollY) * 0.1;
 
-        // Rotate particles
-        if (particlesRef.current) {
-          particlesRef.current.rotation.x += 0.0001;
-          particlesRef.current.rotation.y += 0.0001;
-        }
+        // Animate shapes with enhanced effects
+        meshesRef.current.forEach((mesh, index) => {
+          const userData = mesh.userData;
+          
+          // Orbital motion with wave effect
+          userData.orbitAngle += userData.orbitSpeed;
+          const orbitRadius = 30 + Math.sin(index + time * 0.2) * 15;
+          
+          mesh.position.x = Math.cos(userData.orbitAngle) * orbitRadius;
+          mesh.position.y = Math.sin(userData.orbitAngle * 0.5) * 20 + Math.sin(time * 0.3 + index) * 5 + scrollY * 0.001;
+          mesh.position.z = Math.sin(userData.orbitAngle * 0.7) * orbitRadius - 30;
 
-        // Animate spheres with scroll effect
-        spheresRef.current.forEach((sphere) => {
-          sphere.rotation.x += 0.002;
-          sphere.rotation.y += 0.003;
+          // Rotation with time-based variation
+          mesh.rotation.x += userData.rotX;
+          mesh.rotation.y += userData.rotY + time * 0.0001;
+          mesh.rotation.z += userData.rotZ;
 
-          const userData = sphere.userData;
-          userData.angle = (userData.angle || 0) + userData.speed;
+          // Enhanced pulse effect
+          const pulse = 1 + Math.sin(time * 1.5 + index) * 0.25;
+          mesh.scale.set(
+            userData.scale * pulse,
+            userData.scale * pulse,
+            userData.scale * pulse
+          );
 
-          // Orbital motion
-          sphere.position.x =
-            userData.x + Math.cos(userData.angle) * 30;
-          sphere.position.y =
-            userData.y + Math.sin(userData.angle) * 30 + scrollY * 0.0005;
-          sphere.position.z =
-            userData.z + Math.sin(userData.angle * 0.5) * 20;
+          // Color shift effect
+          const material = mesh.material as THREE.MeshStandardMaterial;
+          const hueShift = Math.sin(time * 0.3 + index) * 0.05;
+          material.emissive.setHSL(
+            userData.originalHue + hueShift,
+            0.9,
+            0.4 + Math.sin(time * 0.5) * 0.1
+          );
         });
 
-        // Camera follow mouse with smoother movement
-        camera.position.x += (mouseX * 8 - camera.position.x) * 0.02;
-        camera.position.y += (mouseY * 8 - camera.position.y) * 0.02;
+        // Animate particles with wave motion
+        if (particles) {
+          particles.rotation.x += 0.00005;
+          particles.rotation.y += 0.00008;
+          
+          const positionAttribute = particlesGeometry.getAttribute('position') as THREE.BufferAttribute;
+          const positions = positionAttribute.array as Float32Array;
+          
+          for (let i = 0; i < positions.length; i += 3) {
+            positions[i + 1] += Math.sin(time * 0.5 + positions[i] * 0.01) * 0.02;
+          }
+          positionAttribute.needsUpdate = true;
+        }
+
+        // Camera follow mouse smoothly with bounds
+        camera.position.x = THREE.MathUtils.lerp(
+          camera.position.x,
+          mouseX * 8,
+          0.01
+        );
+        camera.position.y = THREE.MathUtils.lerp(
+          camera.position.y,
+          mouseY * 8,
+          0.01
+        );
+
+        camera.lookAt(0, 0, 0);
 
         renderer.render(scene, camera);
       };
@@ -205,14 +390,14 @@ const ThreeDBackground: React.FC = () => {
           containerRef.current.removeChild(renderer.domElement);
         }
         renderer.dispose();
+        bloomEffect.dispose();
         particlesGeometry.dispose();
         particlesMaterial.dispose();
-        torusGeometry.dispose();
-        torusMaterial.dispose();
-        spheres.forEach(sphere => {
-          (sphere.geometry as THREE.BufferGeometry).dispose();
-          (sphere.material as THREE.Material).dispose();
+        meshes.forEach(mesh => {
+          (mesh.geometry as THREE.BufferGeometry).dispose();
+          (mesh.material as THREE.Material).dispose();
         });
+        geometries.forEach(geo => geo.dispose());
       };
     } catch (error) {
       console.error('Error initializing 3D background:', error);
