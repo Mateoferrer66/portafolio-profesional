@@ -182,9 +182,23 @@ declare module 'astro:content' {
   collection: "work";
   data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
+"cursos-react.md": {
+	id: "cursos-react.md";
+  slug: "cursos-react";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
 "ecommerce.md": {
 	id: "ecommerce.md";
   slug: "ecommerce";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"freelance.md": {
+	id: "freelance.md";
+  slug: "freelance";
   body: string;
   collection: "work";
   data: InferEntrySchema<"work">
@@ -196,9 +210,23 @@ declare module 'astro:content' {
   collection: "work";
   data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
+"milmexico.md": {
+	id: "milmexico.md";
+  slug: "milmexico";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
 "nested/webpages.md": {
 	id: "nested/webpages.md";
   slug: "nested/webpages";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"tradership.md": {
+	id: "tradership.md";
+  slug: "tradership";
   body: string;
   collection: "work";
   data: InferEntrySchema<"work">

@@ -9,6 +9,9 @@ export const collections = {
 			tags: z.array(z.string()),
 			img: z.string(),
 			img_alt: z.string().optional(),
+			category: z.enum(['client-work', 'courses', 'personal']).default('client-work'),
+			featured: z.boolean().default(false),
+			order: z.number().optional(),
 		}),
 	}),
 };

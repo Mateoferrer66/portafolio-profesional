@@ -1,39 +1,165 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection } from "astro:content";
 
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from "../layouts/BaseLayout.astro";
 
-import ContactCTA from '../components/ContactCTA.astro';
-import PortfolioPreview from '../components/PortfolioPreview.astro';
-import Hero from '../components/Hero.astro';
-import Grid from '../components/Grid.astro';
+import ContactCTA from "../components/ContactCTA.astro";
+import PortfolioPreview from "../components/PortfolioPreview.astro";
+import Hero from "../components/Hero.astro";
+import Grid from "../components/Grid.astro";
 
-const projects = (await getCollection('work')).sort(
-	(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+const allProjects = (await getCollection("work")).sort(
+	(a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf(),
+);
+
+// Group projects by category
+const courseProjects = allProjects.filter((p) => p.data.category === "courses");
+const personalProjects = allProjects.filter(
+	(p) => p.data.category === "personal",
+);
+const clientProjects = allProjects.filter(
+	(p) => p.data.category === "client-work",
 );
 ---
 
 <BaseLayout
 	title="My Work | Mateo Ferrer"
-	description="Acerca de mis recientes proyectos Mateo Ferrer"
+	description="Explore my portfolio of professional projects, courses, and personal work"
 >
 	<div class="stack gap-20">
 		<main class="wrapper stack gap-8">
 			<Hero
-				title="Personal Projects"
-				tagline="See my most recent projects below to get an idea of my past experience."
+				title="My Work"
+				tagline="Explore my comprehensive portfolio of client projects, educational courses, and personal initiatives."
 				align="start"
 			/>
-			<Grid variant="offset">
-				{
-					projects.map((project) => (
-						<li>
-							<PortfolioPreview project={project} />
-						</li>
-					))
-				}
-			</Grid>
+
+			<!-- Cursos de React Section -->
+			{
+				courseProjects.length > 0 && (
+					<section class="category-section">
+						<header class="section-header">
+							<h2 class="section-title">
+								<span class="icon">📚</span> Cursos de React
+							</h2>
+							<p class="section-description">
+								Comprehensive React training courses covering
+								fundamentals to advanced topics.
+							</p>
+						</header>
+						<Grid variant="offset">
+							{courseProjects.map((project) => (
+								<li>
+									<PortfolioPreview project={project} />
+								</li>
+							))}
+						</Grid>
+					</section>
+				)
+			}
+
+			<!-- Personal Projects Section -->
+			{
+				personalProjects.length > 0 && (
+					<section class="category-section">
+						<header class="section-header">
+							<h2 class="section-title">
+								<span class="icon">🚀</span> Personal Projects
+							</h2>
+							<p class="section-description">
+								Innovative personal initiatives including
+								Freelance work, MilMexico, and Tradership.
+							</p>
+						</header>
+						<Grid variant="offset">
+							{personalProjects.map((project) => (
+								<li>
+									<PortfolioPreview project={project} />
+								</li>
+							))}
+						</Grid>
+					</section>
+				)
+			}
+
+			<!-- Client Work Section -->
+			{
+				clientProjects.length > 0 && (
+					<section class="category-section">
+						<header class="section-header">
+							<h2 class="section-title">
+								<span class="icon">💼</span> Client Projects
+							</h2>
+							<p class="section-description">
+								Professional work delivered for clients,
+								showcasing real-world solutions.
+							</p>
+						</header>
+						<Grid variant="offset">
+							{clientProjects.map((project) => (
+								<li>
+									<PortfolioPreview project={project} />
+								</li>
+							))}
+						</Grid>
+					</section>
+				)
+			}
 		</main>
 		<ContactCTA />
 	</div>
 </BaseLayout>
+
+<style>
+	.category-section {
+		margin-bottom: 4rem;
+		padding: 2rem 0;
+		border-bottom: 1px solid var(--gray-800);
+	}
+
+	.category-section:last-of-type {
+		border-bottom: none;
+	}
+
+	.section-header {
+		margin-bottom: 2rem;
+		text-align: center;
+	}
+
+	.section-title {
+		font-size: var(--text-3xl);
+		font-weight: 700;
+		color: var(--gray-0);
+		margin-bottom: 0.75rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+	}
+
+	.icon {
+		font-size: 1.5em;
+	}
+
+	.section-description {
+		font-size: var(--text-lg);
+		color: var(--gray-300);
+		max-width: 50ch;
+		margin: 0 auto;
+		line-height: 1.6;
+	}
+
+	@media (min-width: 50em) {
+		.category-section {
+			padding: 3rem 0;
+		}
+
+		.section-title {
+			font-size: var(--text-4xl);
+		}
+
+		.section-header {
+			margin-bottom: 3rem;
+		}
+	}
+</style>

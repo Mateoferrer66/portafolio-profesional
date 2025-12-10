@@ -10,6 +10,8 @@ tags:
   - Branding
   - Backend
   - React.Js
+category: client-work
+featured: false
 ---
 "App Goals  es una innovadora aplicación que utiliza la tecnología de React para ayudarte a organizar y administrar tus tareas de manera eficiente. Con App Goals , puedes crear listas de tareas personalizadas, establecer recordatorios y realizar un seguimiento de tu progreso, todo en un solo lugar.
 

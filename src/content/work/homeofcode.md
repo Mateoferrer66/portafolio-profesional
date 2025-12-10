@@ -12,6 +12,8 @@ tags:
   - .NET
   - React.Js
   - SQL
+category: client-work
+featured: false
 ---
 
 ## HOME OF CODE 
