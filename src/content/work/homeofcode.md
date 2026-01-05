@@ -1,7 +1,7 @@
 ---
 title: Home of Code
 publishDate: 2020-03-02 00:00:00
-img: /assets/stock-1.jpg
+img: /assets/home-code-cover.png
 img_alt: Plataforma digital donde las personas pueden aprender programacion de manera gratuita 
 description: |
   Digital platform where people can learn programming for free courses

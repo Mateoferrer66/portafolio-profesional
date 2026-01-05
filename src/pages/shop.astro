@@ -1,80 +1,151 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const premiumApps = [
-    { name: "YouTube Premium", price: "$ COP 50.000 / Garantía por un Año" },
-    { name: "Spotify Premium", price: "$ COP 50.000 / Garantía por un Año" },
-    { name: "Deezer Premium", price: "$ COP 50.000 / Garantía por un Año" },
-    { name: "Duolingo Premium", price: "$ COP 50.000 / Garantía por un Año" },
-];
+// Combined product data for easier filtering
+const products = [
+    // Premium Apps
+    {
+        id: 1,
+        name: "YouTube Premium",
+        price: "$50.000 / Año",
+        category: "apps",
+        image: "/assets/app-youtube.png",
+        tags: ["streaming", "video"],
+    },
+    {
+        id: 2,
+        name: "Spotify Premium",
+        price: "$50.000 / Año",
+        category: "apps",
+        image: "/assets/app-spotify.png",
+        tags: ["music", "streaming"],
+    },
+    {
+        id: 3,
+        name: "Deezer Premium",
+        price: "$50.000 / Año",
+        category: "apps",
+        image: "/assets/app-deezer.png",
+        tags: ["music", "streaming"],
+    },
+    {
+        id: 4,
+        name: "Duolingo Premium",
+        price: "$50.000 / Año",
+        category: "apps",
+        image: "/assets/app-duolingo.png",
+        tags: ["education", "languages"],
+    },
 
-const products3d = [
-    { name: "Artículos útiles para el hogar", image: "/assets/15.jpeg" },
-    { name: "Figuras Personalizadas", image: "/assets/16.jpeg" },
-    { name: "Artículos de decoración", image: "/assets/17.jpeg" },
-    { name: "Productos para la salud", image: "/assets/18.jpeg" },
-];
+    // 3D Products
+    {
+        id: 5,
+        name: "Artículos útiles hogar",
+        price: "Cotizar",
+        category: "3d",
+        image: "/assets/shop-3d-home.png",
+        tags: ["home", "decor"],
+    },
+    {
+        id: 6,
+        name: "Figuras Personalizadas",
+        price: "Cotizar",
+        category: "3d",
+        image: "/assets/shop-3d-figures.png",
+        tags: ["custom", "figures"],
+    },
+    {
+        id: 7,
+        name: "Artículos decoración",
+        price: "Cotizar",
+        category: "3d",
+        image: "/assets/shop-3d-decor-new.png",
+        tags: ["decor"],
+    },
+    {
+        id: 8,
+        name: "Productos salud",
+        price: "Cotizar",
+        category: "3d",
+        image: "/assets/shop-3d-health.png",
+        tags: ["health"],
+    },
 
-const graphicDesign = [
-    { name: "Identidad Corporativa", price: "$ COP 200.000" },
-    { name: "Flyers o Banners", price: "$ COP 30.000" },
-    { name: "Pieza Publicitaria", price: "$ COP 30.000" },
-    { name: "Logos", price: "$ COP 30.000" },
-];
+    // Graphic Design
+    {
+        id: 9,
+        name: "Identidad Corporativa",
+        price: "$200.000",
+        category: "design",
+        image: "/assets/shop-design-branding.png",
+        tags: ["branding", "logo"],
+    },
+    {
+        id: 10,
+        name: "Flyers o Banners",
+        price: "$30.000",
+        category: "design",
+        image: "/assets/shop-design-flyer.png",
+        tags: ["marketing", "social"],
+    },
+    {
+        id: 11,
+        name: "Pieza Publicitaria",
+        price: "$30.000",
+        category: "design",
+        image: "/assets/shop-design-social.png",
+        tags: ["ads"],
+    },
+    {
+        id: 12,
+        name: "Logos",
+        price: "$30.000",
+        category: "design",
+        image: "/assets/shop-design-logo.png",
+        tags: ["logo", "branding"],
+    },
 
-const ropaExclusiva = [
-    { name: "Hoddies", image: "/assets/25.jpeg" },
-    { name: "Pantalones", image: "/assets/26.jpg" },
-    { name: "Conjuntos", image: "/assets/27.jpeg" },
+    // Tech Consulting
+    {
+        id: 13,
+        name: "Desarrollo Web",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-web.png",
+        tags: ["development", "web"],
+    },
+    {
+        id: 14,
+        name: "Programación",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-code.png",
+        tags: ["coding", "scripts"],
+    },
+    {
+        id: 15,
+        name: "Soporte Técnico",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-support.png",
+        tags: ["support", "hardware"],
+    },
 ];
-
-const asesoriasMatematicas = [
-    { name: "Tareas", image: "/assets/28.jpeg" },
-    { name: "Trabajos", image: "/assets/29.jpeg" },
-    { name: "Asesorías", image: "/assets/30.jpeg" },
-    { name: "Parciales", image: "/assets/31.jpeg" },
-    { name: "Explicaciones Online", image: "/assets/32.jpeg" },
-    { name: "Soporte 24/7 Colegio – Universidad", image: "/assets/33.jpeg" },
-];
-
-const asesoriasTecnologicas = [
-    { name: "Desarrollo Web", image: "/assets/34.jpeg" },
-    { name: "Programación", image: "/assets/35.jpeg" },
-    { name: "Consultorías Personalizadas", image: "/assets/36.jpeg" },
-    { name: "Instalación Programas", image: "/assets/37.jpeg" },
-    { name: "Formateo", image: "/assets/38.jpeg" },
-    { name: "Tutorías", image: "/assets/39.jpeg" },
-];
-
-const managerRedesSociales = [
-    { name: "Reels", image: "/assets/40.jpeg" },
-    { name: "Historias", image: "/assets/41.jpeg" },
-    { name: "Post o Foto", image: "/assets/42.jpeg" },
-    { name: "Live", image: "/assets/43.jpeg" },
-    { name: "Posicionamiento LinkedIn", image: "/assets/44.jpeg" },
-    { name: "Storytelling Twitter", image: "/assets/28.jpeg" },
-];
-
 const testimonials = [
     {
-        quote: "Estoy encantado con mi compra. El producto llegó en perfectas condiciones y exactamente como se describe en la página. Además, el envío fue rápido y el servicio al cliente fue excepcional.",
+        quote: "Estoy encantado con mi compra. El producto llegó en perfectas condiciones y exactamente como se describe en la página.",
         author: "Cristian Guerrero",
         role: "Productor Multimedia",
     },
     {
-        quote: "Esta tienda online ofrece una gran variedad de productos de alta calidad. He realizado múltiples compras y siempre he quedado satisfecho. Recomiendo totalmente esta tienda a otros compradores.",
+        quote: "Esta tienda online ofrece una gran variedad de productos de alta calidad. He realizado múltiples compras y siempre he quedado satisfecho.",
         author: "Fernando Castillo",
         role: "Deportista – Coach",
     },
     {
-        quote: "No puedo creer lo bueno que es este sitio web. Fácil de navegar, proceso de compra sin complicaciones y un servicio de entrega rápido. Definitivamente compraré de nuevo.",
+        quote: "No puedo creer lo bueno que es este sitio web. Fácil de navegar, proceso de compra sin complicaciones y un servicio de entrega rápido.",
         author: "Maicol Garzón",
         role: "Fotógrafo",
-    },
-    {
-        quote: "¡Increíble experiencia de compra! Encontré exactamente lo que buscaba a un precio excelente. El proceso de pago fue sencillo y mi pedido llegó en tiempo récord. Definitivamente mi tienda de tecnología favorita.",
-        author: "Manuel Mendoza",
-        role: "Ingeniero Químico",
     },
 ];
 
@@ -86,327 +157,178 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     description="Tienda online de servicios tecnológicos y educativos."
 >
     <div class="main-container">
-        <!-- Hero -->
-        <section class="hero text-center">
-            <h1>Mateo Ferrer Shop</h1>
-            <p class="large-text">
-                ¡Bienvenido a nuestra tienda online de servicios tecnológicos y
-                educativos! En nuestro sitio, encontrarás una amplia gama de
-                asesorías tecnológicas y matemáticas, así como servicios de
-                impresión 3D.
-            </p>
-            <a href="#services" class="cta-button">Comenzar</a>
-        </section>
+        <!-- Floating Cart Button -->
+        <button id="cart-toggle" class="cart-float-btn" aria-label="Open Cart">
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                ><circle cx="9" cy="21" r="1"></circle><circle
+                    cx="20"
+                    cy="21"
+                    r="1"></circle><path
+                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+                ></path></svg
+            >
+            <span id="cart-count">0</span>
+        </button>
 
-        <!-- Section 2 -->
-        <section class="feature-section-grid">
-            <div class="text-content">
-                <h2>Crea lo que tú quieras</h2>
-                <p>
-                    Además, ofrecemos la venta de aplicaciones, desarrollo de
-                    páginas web y diseño gráfico de alta calidad. Nuestro equipo
-                    de expertos está comprometido a brindarte soluciones
-                    innovadoras y educativas para tus necesidades tecnológicas y
-                    creativas. ¡Explora nuestra tienda y descubre cómo podemos
-                    ayudarte a alcanzar tus objetivos!
-                </p>
-                <a href="#services" class="cta-button">Comenzar</a>
+        <!-- Cart Sidebar -->
+        <div id="cart-sidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h2>Tu Carrito</h2>
+                <button id="cart-close" class="close-btn">&times;</button>
             </div>
-            <div class="image-mosaic">
-                <img src="/assets/1.jpeg" alt="Image 1" loading="lazy" />
-                <img src="/assets/2.jpeg" alt="Image 2" loading="lazy" />
-                <img src="/assets/3.jpeg" alt="Image 3" loading="lazy" />
-                <img src="/assets/4.png" alt="Image 4" loading="lazy" />
+            <div id="cart-items" class="cart-items">
+                <!-- Items injected by JS -->
+                <p class="empty-msg">Tu carrito está vacío.</p>
             </div>
-        </section>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total Estimado:</span>
+                    <span id="cart-total-price">$0</span>
+                </div>
+                <a
+                    href="https://wa.me/573005059987"
+                    target="_blank"
+                    class="checkout-btn">Cotizar por WhatsApp</a
+                >
+            </div>
+        </div>
+        <div id="cart-overlay" class="cart-overlay"></div>
 
-        <!-- Feature Grid -->
-        <section class="feature-grid-centered">
-            <div class="feature-card text-center">
-                <h3>A tu servicio y a tu medida</h3>
-                <p>
-                    Nos enorgullecemos de ofrecer servicios integrales que
-                    abarcan asesorías tecnológicas para resolver tus desafíos
-                    informáticos, asesorías matemáticas para potenciar tus
-                    habilidades numéricas, y servicios de impresión 3D para
-                    convertir tus ideas en realidad física.
+        <!-- Hero Section -->
+        <section class="shop-hero">
+            <div class="hero-content">
+                <span class="badge">NUEVO</span>
+                <h1>Marketplace Digital</h1>
+                <p class="hero-text">
+                    Descubre nuestra selección premium de servicios
+                    tecnológicos, asesorías especializadas y productos de diseño
+                    exclusivo. Todo lo que necesitas para potenciar tu proyecto
+                    o negocio.
                 </p>
-                <a href="#contact" class="cta-button-small">Comenzar</a>
-            </div>
-        </section>
-        <section class="feature-grid">
-            <div class="feature-card">
-                <img
-                    src="/assets/5.jpeg"
-                    alt="Image 5"
-                    loading="lazy"
-                    class="app-image"
-                />
-                <h3>Negocio Personalizado</h3>
-                <p>
-                    Nos esforzamos por ofrecer soluciones integrales y
-                    personalizadas que satisfagan las necesidades únicas de cada
-                    cliente.
-                </p>
-            </div>
-            <div class="feature-card">
-                <img
-                    src="/assets/6.jpeg"
-                    alt="Image 6"
-                    loading="lazy"
-                    class="app-image"
-                />
-                <h3>Productos Exclusivos</h3>
-                <p>
-                    Nuestro compromiso es proporcionar un servicio de calidad
-                    excepcional, respaldado por un equipo de expertos
-                    apasionados por la innovación y la excelencia. Te invitamos
-                    a explorar nuestra tienda y descubrir cómo podemos colaborar
-                    contigo para alcanzar tus metas tecnológicas y creativas.
-                </p>
-            </div>
-        </section>
-
-        <!-- Section 3 -->
-        <section class="feature-section text-center">
-            <h2>Descubre un mundo de posibilidades</h2>
-            <a href="#services" class="cta-button">Comenzar</a>
-            <p>
-                Ofrecemos la venta de aplicaciones, desarrollo de páginas web y
-                diseño gráfico de alta calidad. Nuestro equipo de expertos está
-                comprometido a brindarte soluciones innovadoras y educativas
-                para tus necesidades tecnológicas y creativas.
-            </p>
-            <p>
-                Selección de aplicaciones de alta calidad disponibles para su
-                compra, que abarcan diferentes necesidades y sectores. Si estás
-                buscando potenciar tu presencia en línea, ofrecemos servicios de
-                desarrollo de páginas web a medida, adaptadas a tus
-                requerimientos y objetivos específicos. Por último, nuestro
-                equipo de diseño gráfico está preparado para brindarte
-                soluciones creativas y profesionales que realzarán la imagen de
-                tu marca y proyectos.
-            </p>
-            <img src="/assets/7.jpeg" alt="Image 7" loading="lazy" />
-        </section>
-
-        <!-- Detailed Services -->
-        <section class="detailed-services" id="services">
-            <div class="feature-grid service-grid-container">
-                <div class="feature-card">
-                    <img
-                        src="/assets/8.jpeg"
-                        alt="Image 8"
-                        loading="lazy"
-                        class="app-image"
+                <!-- Search Bar -->
+                <div class="search-container">
+                    <input
+                        type="text"
+                        id="product-search"
+                        placeholder="Buscar productos..."
                     />
-                    <h3>Paginas Web</h3>
-                    <p>
-                        Si estás buscando establecer o mejorar tu presencia en
-                        línea, nuestro equipo de desarrollo de páginas web está
-                        comprometido a crear experiencias digitales únicas y
-                        atractivas, adaptadas a tus objetivos comerciales y
-                        estéticos. Por último, nuestro equipo de diseño gráfico
-                        se enorgullece de ofrecer soluciones creativas y
-                        profesionales que elevarán la imagen de tu marca, desde
-                        logotipos y material promocional hasta diseños para
-                        redes sociales y más.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <img
-                        src="/assets/9.jpeg"
-                        alt="Image 9"
-                        loading="lazy"
-                        class="app-image"
-                    />
-                    <h3>Impresión 3D</h3>
-                    <p>
-                        Estamos equipados para convertir tus ideas más creativas
-                        en realidad física, ofreciéndote la posibilidad de
-                        materializar tus diseños tridimensionales con la más
-                        alta calidad y precisión. Además, nuestra selección de
-                        aplicaciones disponibles para su compra está
-                        cuidadosamente seleccionada para abordar una amplia
-                        variedad de necesidades, desde productividad hasta
-                        entretenimiento, para satisfacer los requerimientos
-                        digitales más exigentes.
-                    </p>
-                </div>
-                <div class="feature-card">
-                    <img
-                        src="/assets/10.jpeg"
-                        alt="Image 10"
-                        loading="lazy"
-                        class="app-image"
-                    />
-                    <h3>Venta de Aplicaciones Android</h3>
-                    <p>
-                        La creación y venta de aplicaciones para dispositivos
-                        Android ha experimentado un notable auge, convirtiéndose
-                        en un lucrativo negocio para empresas y desarrolladores
-                        independientes. La popularidad de Android como sistema
-                        operativo móvil ha generado oportunidades significativas
-                        para aquellos que desean incursionar en el desarrollo y
-                        comercialización de aplicaciones para esta plataforma y
-                        mantenimiento de computadores a nivel de software.
-                    </p>
+                    <button class="search-btn">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><circle cx="11" cy="11" r="8"></circle><line
+                                x1="21"
+                                y1="21"
+                                x2="16.65"
+                                y2="16.65"></line></svg
+                        >
+                    </button>
                 </div>
             </div>
+            <div class="hero-image">
+                <img src="/assets/shop-hero.png" alt="Futuristic Shop" />
+            </div>
+        </section>
 
-            <div class="service-item">
-                <h3>Aplicaciones Ilimitadas Android</h3>
-                <div class="feature-grid">
-                    {
-                        premiumApps.map((app, index) => (
-                            <div class="feature-card">
-                                <img
-                                    src={
-                                        [
-                                            `/assets/10.jpeg`,
-                                            `/assets/12.jpeg`,
-                                            `/assets/13.jpg`,
-                                            `/assets/14.png`,
-                                        ][index]
-                                    }
-                                    alt={app.name}
-                                    loading="lazy"
-                                    class="app-image"
-                                />
-                                <h4>{app.name}</h4>
-                                <p>{app.price}</p>
-                            </div>
-                        ))
-                    }
-                </div>
+        <!-- Categories Filter -->
+        <section class="catalog-section" id="catalog">
+            <div class="filters-container">
+                <button class="filter-btn active" data-filter="all"
+                    >Todos</button
+                >
+                <button class="filter-btn" data-filter="apps"
+                    >Apps Premium</button
+                >
+                <button class="filter-btn" data-filter="tech">Tecnología</button
+                >
+                <button class="filter-btn" data-filter="design">Diseño</button>
+                <button class="filter-btn" data-filter="3d">Impresión 3D</button
+                >
             </div>
 
-            <div class="service-item">
-                <h3>Productos 3D</h3>
-                <div class="feature-grid">
-                    {
-                        products3d.map((product) => (
-                            <div class="feature-card">
+            <div class="products-grid" id="products-grid">
+                {
+                    products.map((product) => (
+                        <div
+                            class="product-card"
+                            data-category={product.category}
+                            data-name={product.name.toLowerCase()}
+                        >
+                            <div class="image-wrapper">
                                 <img
                                     src={product.image}
                                     alt={product.name}
                                     loading="lazy"
-                                    class="app-image"
                                 />
+                                <div class="overlay">
+                                    <button
+                                        class="add-cart-btn"
+                                        data-id={product.id}
+                                        data-name={product.name}
+                                        data-price={product.price}
+                                        data-image={product.image}
+                                    >
+                                        Agregar +
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="content">
+                                <span class="category-tag">
+                                    {product.category.toUpperCase()}
+                                </span>
                                 <h4>{product.name}</h4>
+                                <p class="price">{product.price}</p>
                             </div>
-                        ))
-                    }
-                </div>
+                        </div>
+                    ))
+                }
             </div>
+            <p
+                id="no-results"
+                style="display:none; text-align:center; margin-top: 2rem;"
+            >
+                No se encontraron productos.
+            </p>
+        </section>
 
-            <div class="service-item">
-                <h3>Diseño Gráfico</h3>
-                <div class="feature-grid">
-                    {
-                        graphicDesign.map((item, index) => (
-                            <div class="feature-card">
-                                <img
-                                    src={
-                                        [
-                                            `/assets/19.jpeg`,
-                                            `/assets/20.jpeg`,
-                                            `/assets/21.jpeg`,
-                                            `/assets/22.jpeg`,
-                                        ][index]
-                                    }
-                                    alt={item.name}
-                                    loading="lazy"
-                                    class="app-image"
-                                />
-                                <h4>{item.name}</h4>
-                                <p>{item.price}</p>
-                            </div>
-                        ))
-                    }
-                </div>
+        <!-- Features Banner -->
+        <section class="features-banner">
+            <div class="banner-item">
+                <div class="icon">🚀</div>
+                <h3>Entrega Inmediata</h3>
+                <p>Para productos digitales y servicios urgentes.</p>
             </div>
-
-            <div class="service-item">
-                <h3>Ropa Exclusiva</h3>
-                <div class="feature-grid">
-                    {
-                        ropaExclusiva.map((item) => (
-                            <div class="feature-card">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    loading="lazy"
-                                    class="app-image"
-                                />
-                                <h4>{item.name}</h4>
-                            </div>
-                        ))
-                    }
-                </div>
+            <div class="banner-item">
+                <div class="icon">💎</div>
+                <h3>Calidad Garantizada</h3>
+                <p>Soporte posventa y garantía en todos nuestros servicios.</p>
             </div>
-
-            <div class="service-item">
-                <h3>Asesorías Matemáticas</h3>
-                <div class="feature-grid">
-                    {
-                        asesoriasMatematicas.map((item) => (
-                            <div class="feature-card">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    loading="lazy"
-                                    class="app-image"
-                                />
-                                <h4>{item.name}</h4>
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-
-            <div class="service-item">
-                <h3>Asesorías Tecnológicas</h3>
-                <div class="feature-grid">
-                    {
-                        asesoriasTecnologicas.map((item) => (
-                            <div class="feature-card">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    loading="lazy"
-                                    class="app-image"
-                                />
-                                <h4>{item.name}</h4>
-                            </div>
-                        ))
-                    }
-                </div>
-            </div>
-
-            <div class="service-item">
-                <h3>Manager Redes Sociales</h3>
-                <div class="feature-grid">
-                    {
-                        managerRedesSociales.map((item) => (
-                            <div class="feature-card">
-                                <img
-                                    src={item.image}
-                                    alt={item.name}
-                                    loading="lazy"
-                                    class="app-image"
-                                />
-                                <h4>{item.name}</h4>
-                            </div>
-                        ))
-                    }
-                </div>
+            <div class="banner-item">
+                <div class="icon">🔒</div>
+                <h3>Pagos Seguros</h3>
+                <p>Transacciones protegidas y múltiples medios de pago.</p>
             </div>
         </section>
 
         <!-- Testimonials -->
         <section class="testimonials-section">
-            <h2 class="text-center">Reseñas</h2>
+            <h2 class="section-title">Lo que dicen nuestros clientes</h2>
             <div class="testimonials-grid">
                 {
                     testimonials.map((testimonial) => (
@@ -414,7 +336,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
                             <div class="stars">
                                 {Array(5)
                                     .fill(0)
-                                    .map((_, i) => (
+                                    .map(() => (
                                         <svg
                                             class="star-icon"
                                             viewBox="0 0 24 24"
@@ -423,206 +345,660 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
                                         </svg>
                                     ))}
                             </div>
-                            <p class="rating-text">Puntuación: 5 de 5.</p>
-                            <p class="quote">«{testimonial.quote}»</p>
-                            <p class="author">{testimonial.author}</p>
-                            <p class="role">{testimonial.role}</p>
+                            <p class="quote">"{testimonial.quote}"</p>
+                            <div class="author-info">
+                                <p class="author">{testimonial.author}</p>
+                                <p class="role">{testimonial.role}</p>
+                            </div>
                         </div>
                     ))
                 }
             </div>
         </section>
 
-        <!-- Contact -->
-        <section class="contact-section text-center" id="contact">
-            <h2>Ponte en contacto con nosotros</h2>
-            <p>El único límite es el alcance de su imaginación.</p>
-            <div class="contact-details">
-                <p>
-                    <strong>Ubicación:</strong> Zipaquirá, Colombia.<br />
-                    <strong>Teléfono:</strong> +57 300 505 9987
-                </p>
-                <div class="social-links">
-                    <a href="#">Facebook</a> | <a href="#">Twitter</a> | <a
-                        href="#">Instagram</a
-                    >
-                </div>
+        <!-- Contact CTA -->
+        <section class="cta-section">
+            <div class="cta-content">
+                <h2>¿Tienes un proyecto especial?</h2>
+                <p>Contáctanos para una cotización personalizada.</p>
+                <a href="mailto:contact@mateoferrer.com" class="primary-btn"
+                    >Contactar Ahora</a
+                >
             </div>
-        </section>
-
-        <!-- Map Section -->
-        <section class="map-section">
-            <h2 class="text-center">Nuestra Ubicación</h2>
-            <iframe
-                src="https://maps.google.com/maps?q=Zipaquirá&t=&z=13&ie=UTF8&iwloc=&output=embed"
-                width="100%"
-                height="450"
-                style="border:0; border-radius: 12px;"
-                allowfullscreen=""
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-            >
-            </iframe>
-        </section>
-
-        <!-- Subscription -->
-        <section class="subscription-section text-center">
-            <h2>Suscríbete</h2>
-            <form class="subscription-form">
-                <input
-                    type="email"
-                    placeholder="Escribe tu correo electrónico..."
-                    required
-                />
-                <button type="submit">Suscribirse</button>
-            </form>
         </section>
     </div>
 </BaseLayout>
 
+<script>
+    // --- APP LOGIC ---
+    interface Product {
+        id: string;
+        name: string;
+        price: string;
+        image: string;
+    }
+
+    let cart: Product[] = JSON.parse(
+        localStorage.getItem("mf_shop_cart") || "[]",
+    );
+
+    // Selectors
+    const cartToggle = document.getElementById("cart-toggle");
+    const cartSidebar = document.getElementById("cart-sidebar");
+    const cartOverlay = document.getElementById("cart-overlay");
+    const cartClose = document.getElementById("cart-close");
+    const cartItemsContainer = document.getElementById("cart-items");
+    const cartCount = document.getElementById("cart-count");
+    const addButtons = document.querySelectorAll(".add-cart-btn");
+    const searchInput = document.getElementById(
+        "product-search",
+    ) as HTMLInputElement | null;
+    const filterBtns = document.querySelectorAll(".filter-btn");
+    const productCards = document.querySelectorAll(".product-card");
+
+    // --- CART FUNCTIONS ---
+    function updateCartUI() {
+        // Update badge
+        if (cartCount) {
+            cartCount.textContent = cart.length.toString();
+        }
+
+        if (!cartItemsContainer) return;
+
+        // Render items
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML =
+                '<p class="empty-msg">Tu carrito está vacío.</p>';
+        } else {
+            cartItemsContainer.innerHTML = cart
+                .map(
+                    (item: Product, index: number) => `
+                <div class="cart-item">
+                    <img src="${item.image}" alt="${item.name}" />
+                    <div class="cart-item-info">
+                        <h5>${item.name}</h5>
+                        <p>${item.price}</p>
+                    </div>
+                     <button class="remove-btn" data-index="${index}">&times;</button>
+                </div>
+            `,
+                )
+                .join("");
+
+            // Add event listeners to remove buttons
+            document.querySelectorAll(".remove-btn").forEach((btn) => {
+                btn.addEventListener("click", (e) => {
+                    const target = e.target as HTMLElement;
+                    const idx = target.getAttribute("data-index");
+                    if (idx) removeFromCart(parseInt(idx));
+                });
+            });
+        }
+
+        // Save
+        localStorage.setItem("mf_shop_cart", JSON.stringify(cart));
+
+        // Update WhatsApp Link
+        const checkoutBtn = document.querySelector(
+            ".checkout-btn",
+        ) as HTMLAnchorElement;
+        if (checkoutBtn) {
+            if (cart.length > 0) {
+                const itemsList = cart
+                    .map((item) => `- ${item.name} (${item.price})`)
+                    .join("%0A");
+                const totalText =
+                    document.getElementById("cart-total-price")?.textContent ||
+                    "";
+                const message = `Hola Mateo, estoy interesado en cotizar los siguientes productos:%0A%0A${itemsList}%0A%0ATotal estimado: ${totalText}`;
+                checkoutBtn.href = `https://wa.me/573005059987?text=${message}`;
+                checkoutBtn.style.pointerEvents = "auto";
+                checkoutBtn.style.opacity = "1";
+            } else {
+                checkoutBtn.href = "#";
+                checkoutBtn.style.pointerEvents = "none";
+                checkoutBtn.style.opacity = "0.5";
+            }
+        }
+    }
+
+    function addToCart(product: Product) {
+        cart.push(product);
+        updateCartUI();
+        // Visual feedback
+        const btn = document.querySelector(
+            `.add-cart-btn[data-id="${product.id}"]`,
+        );
+        if (btn) {
+            const originalText = btn.textContent;
+            btn.textContent = "Agregado!";
+            btn.classList.add("added");
+            setTimeout(() => {
+                btn.textContent = "Agregar +";
+                btn.classList.remove("added");
+            }, 1000);
+        }
+
+        // Open cart feedback
+        if (cartSidebar) cartSidebar.classList.add("open");
+        if (cartOverlay) cartOverlay.classList.add("open");
+    }
+
+    function removeFromCart(index: number) {
+        cart.splice(index, 1);
+        updateCartUI();
+    }
+
+    // Event Listeners
+    if (cartToggle) {
+        cartToggle.addEventListener("click", () => {
+            if (cartSidebar) cartSidebar.classList.add("open");
+            if (cartOverlay) cartOverlay.classList.add("open");
+        });
+    }
+
+    function closeCart() {
+        if (cartSidebar) cartSidebar.classList.remove("open");
+        if (cartOverlay) cartOverlay.classList.remove("open");
+    }
+
+    if (cartClose) cartClose.addEventListener("click", closeCart);
+    if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
+
+    addButtons.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            const product: Product = {
+                id: btn.getAttribute("data-id") || "",
+                name: btn.getAttribute("data-name") || "",
+                price: btn.getAttribute("data-price") || "",
+                image: btn.getAttribute("data-image") || "",
+            };
+            addToCart(product);
+        });
+    });
+
+    // --- SEARCH & FILTER LOGIC ---
+    function filterProducts() {
+        if (!searchInput) return;
+        const query = searchInput.value.toLowerCase();
+
+        const activeBtn = document.querySelector(".filter-btn.active");
+        const activeCategory = activeBtn
+            ? activeBtn.getAttribute("data-filter")
+            : "all";
+
+        let visibleCount = 0;
+
+        productCards.forEach((card) => {
+            const name = card.getAttribute("data-name") || "";
+            const category = card.getAttribute("data-category") || "";
+
+            const matchQuery = name.includes(query);
+            const matchCategory =
+                activeCategory === "all" || category === activeCategory;
+
+            if (matchQuery && matchCategory) {
+                (card as HTMLElement).style.display = "block";
+                visibleCount++;
+            } else {
+                (card as HTMLElement).style.display = "none";
+            }
+        });
+
+        const noResults = document.getElementById("no-results");
+        if (noResults) {
+            if (visibleCount === 0) {
+                noResults.style.display = "block";
+            } else {
+                noResults.style.display = "none";
+            }
+        }
+    }
+
+    if (searchInput) searchInput.addEventListener("input", filterProducts);
+
+    filterBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+            filterBtns.forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            filterProducts();
+        });
+    });
+
+    // Init
+    updateCartUI();
+</script>
+
 <style>
-    html {
-        scroll-behavior: smooth;
+    /* Variables & Reset */
+    :root {
+        --primary: #7611a6;
+        --secondary: #1c0056;
+        --surface: #ffffff;
+        --text-main: var(--gray-100);
+        --text-muted: var(--gray-300);
+        --radius: 16px;
+        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Floating Cart */
+    .cart-float-btn {
+        position: fixed;
+        bottom: 6rem;
+        right: 2rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 25px rgba(118, 17, 166, 0.4);
+        z-index: 1000;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .cart-float-btn:hover {
+        transform: scale(1.1);
+    }
+
+    #cart-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ff4757;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    /* Cart Sidebar */
+    .cart-sidebar {
+        position: fixed;
+        top: 0;
+        right: -400px;
+        width: 100%;
+        max-width: 400px;
+        height: 100vh;
+        background: var(--gray-999);
+        box-shadow: -5px 0 30px rgba(0, 0, 0, 0.2);
+        z-index: 1001;
+        transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+    }
+
+    .cart-sidebar.open {
+        right: 0;
+    }
+
+    .cart-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        display: none;
+        backdrop-filter: blur(4px);
+    }
+
+    .cart-overlay.open {
+        display: block;
+    }
+
+    .cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--gray-800);
+        padding-bottom: 1rem;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: var(--gray-200);
+        cursor: pointer;
+    }
+
+    .cart-items {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .cart-item {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        background: var(--gray-800);
+        padding: 1rem;
+        border-radius: 12px;
+        position: relative;
+    }
+
+    .cart-item img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .cart-item-info h5 {
+        margin: 0 0 0.5rem 0;
+        font-size: 1rem;
+    }
+
+    .remove-btn {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: none;
+        border: none;
+        color: var(--gray-400);
+        cursor: pointer;
+        font-size: 1.25rem;
+    }
+
+    .cart-footer {
+        border-top: 1px solid var(--gray-800);
+        padding-top: 1.5rem;
+    }
+
+    .cart-total {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.25rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+    }
+
+    .checkout-btn {
+        background: #25d366; /* WhatsApp green */
+        color: white;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        padding: 1rem;
+        border-radius: 12px;
+        font-weight: bold;
     }
 
     .main-container {
-        max-width: 960px;
+        max-width: 1200px;
         margin: 0 auto;
         padding: 2rem;
-        font-family: var(--font-family-sans);
-        color: var(--color-text-primary);
-        --color-accent: #7611a6;
     }
-    .text-center {
-        text-align: center;
+
+    /* Hero Section */
+    .shop-hero {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+        margin-bottom: 6rem;
+        background: linear-gradient(
+            135deg,
+            rgba(118, 17, 166, 0.1) 0%,
+            rgba(28, 0, 86, 0.05) 100%
+        );
+        padding: 4rem;
+        border-radius: 24px;
+        position: relative;
+        overflow: hidden;
     }
-    section {
+
+    .hero-content h1 {
+        font-size: 3.5rem;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        background: linear-gradient(to right, var(--primary), #a855f7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .badge {
+        background: var(--primary);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: bold;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-text {
+        font-size: 1.25rem;
+        color: var(--gray-200);
+        margin-bottom: 2.5rem;
+        line-height: 1.6;
+    }
+
+    .hero-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        transform: rotate(2deg);
+        transition: transform 0.3s ease;
+    }
+
+    /* Search */
+    .search-container {
+        position: relative;
+        max-width: 400px;
+    }
+
+    .search-container input {
+        width: 100%;
+        padding: 1rem 1.5rem;
+        border-radius: 50px;
+        border: 2px solid var(--gray-800);
+        background: var(--gray-999);
+        color: var(--gray-200);
+        font-size: 1rem;
+    }
+
+    .search-btn {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--primary);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    /* Filters */
+    .filters-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
         margin-bottom: 4rem;
     }
 
-    h1 {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-    }
-    h2 {
-        font-size: 2.2rem;
+    .filter-btn {
+        background: transparent;
+        border: 2px solid var(--gray-800);
+        color: var(--gray-300);
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        cursor: pointer;
         font-weight: 600;
-        margin-bottom: 1.5rem;
-    }
-    h3 {
-        font-size: 1.5rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--color-accent);
-    }
-    h4 {
-        font-size: 1.2rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    p {
-        line-height: 1.7;
-        color: var(--color-text-secondary);
-        margin-bottom: 1rem;
-    }
-    .large-text {
-        font-size: 1.1rem;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
+        transition: all 0.3s ease;
     }
 
-    .cta-button,
-    .cta-button-small {
-        display: inline-block;
-        background-color: var(--color-accent);
+    .filter-btn:hover,
+    .filter-btn.active {
+        background: var(--primary);
+        border-color: var(--primary);
         color: white;
-        text-decoration: none;
-        font-weight: 600;
-        transition: transform 0.3s ease;
-        border-radius: 8px;
-    }
-    .cta-button {
-        padding: 1rem 2.5rem;
-        font-size: 1.1rem;
-    }
-    .cta-button-small {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-    .cta-button:hover,
-    .cta-button-small:hover {
-        transform: scale(1.05);
-        background-color: #1c0056;
+        transform: translateY(-2px);
     }
 
-    .feature-section {
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .feature-section p {
-        margin-bottom: 1.5rem;
-    }
-
-    .feature-section-grid {
+    /* Product Grid */
+    .products-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        align-items: center;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2.5rem;
+        margin-bottom: 6rem;
     }
 
-    .image-mosaic {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
+    .product-card {
+        background: var(--gray-999);
+        border-radius: var(--radius);
+        overflow: hidden;
+        border: 1px solid var(--gray-800);
+        transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+        animation: fadeIn 0.5s ease;
     }
 
-    .image-mosaic img {
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border-color: var(--primary);
+    }
+
+    .image-wrapper {
+        position: relative;
+        height: 250px;
+        overflow: hidden;
+    }
+
+    .image-wrapper img {
         width: 100%;
-        height: auto;
-        border-radius: 8px;
+        height: 100%;
         object-fit: cover;
+        transition: transform 0.5s ease;
     }
 
-    .feature-grid-centered {
-        margin-bottom: 2rem;
-    }
-    .feature-grid-centered .feature-card {
-        max-width: 800px;
-        margin: 0 auto;
+    .product-card:hover .image-wrapper img {
+        transform: scale(1.1);
     }
 
-    .feature-grid {
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .product-card:hover .overlay {
+        opacity: 1;
+    }
+
+    .add-cart-btn {
+        background: white;
+        color: black;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        font-weight: bold;
+        cursor: pointer;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .product-card:hover .add-cart-btn {
+        transform: translateY(0);
+    }
+
+    .add-cart-btn.added {
+        background-color: #25d366;
+        color: white;
+    }
+
+    .content {
+        padding: 1.5rem;
+    }
+
+    .category-tag {
+        font-size: 0.75rem;
+        color: var(--primary);
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    .content h4 {
+        margin: 0.5rem 0;
+        font-size: 1.25rem;
+    }
+
+    .price {
+        font-size: 1.1rem;
+        color: var(--gray-200);
+        font-weight: 500;
+    }
+
+    /* Features Banner */
+    .features-banner {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 2rem;
-    }
-    .feature-card {
-        background-color: var(--color-bg-secondary);
-        padding: 2rem;
-        border-radius: 12px;
-    }
-    .feature-card h3 {
-        margin-top: 0;
+        background: var(--gray-999);
+        border: 1px solid var(--gray-800);
+        padding: 3rem;
+        border-radius: 20px;
+        margin-bottom: 6rem;
     }
 
-    .detailed-services .service-item {
-        background-color: var(--color-bg-secondary);
-        padding: 2rem;
-        border-radius: 12px;
-        margin-bottom: 2rem;
+    .banner-item {
+        text-align: center;
     }
-    .service-grid-container {
-        margin-bottom: 2rem;
-    }
-    .app-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        border-radius: 8px;
+
+    .banner-item .icon {
+        font-size: 3rem;
         margin-bottom: 1rem;
+    }
+
+    .banner-item h3 {
+        color: var(--gray-100);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Testimonials */
+    .testimonials-section {
+        margin-bottom: 6rem;
+        text-align: center;
+    }
+
+    .section-title {
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
     }
 
     .testimonials-grid {
@@ -630,80 +1006,108 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 2rem;
     }
+
     .testimonial-card {
-        background-color: var(--color-bg-secondary);
+        background: var(--gray-999);
         padding: 2rem;
-        border-radius: 12px;
-        text-align: center;
+        border-radius: 16px;
+        border: 1px solid var(--gray-800);
     }
+
     .stars {
         color: #ffc107;
-        margin-bottom: 0.5rem;
-    }
-    .star-icon {
-        width: 22px;
-        height: 22px;
-        fill: currentColor;
-        display: inline-block;
-    }
-    .rating-text {
-        font-size: 0.9rem;
-        color: var(--color-text-secondary);
         margin-bottom: 1rem;
-    }
-    .quote {
-        font-style: italic;
-        margin-bottom: 1rem;
-    }
-    .author {
-        font-weight: 700;
-        margin-bottom: 0.25rem;
-    }
-    .role {
-        font-size: 0.9rem;
-        color: var(--color-text-secondary);
-    }
-
-    .contact-details p {
-        margin-bottom: 0.5rem;
-    }
-    .social-links a {
-        margin: 0 0.5rem;
-        color: var(--color-accent);
-        text-decoration: none;
-    }
-
-    .map-section {
-        margin-top: 4rem;
-    }
-
-    .subscription-form {
         display: flex;
         justify-content: center;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-    .subscription-form input {
-        min-width: 280px;
-        padding: 0.75rem;
-        border: 1px solid var(--color-border);
-        border-radius: 8px;
-        font-size: 1rem;
-    }
-    .subscription-form button {
-        background-color: var(--color-accent);
-        color: white;
-        border: none;
-        padding: 0.75rem 1.5rem;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
+        gap: 4px;
     }
 
-    @media (min-width: 50em) {
-        .feature-grid-centered .feature-card {
-            border-radius: 1.5rem;
+    .star-icon {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+    }
+
+    .quote {
+        font-style: italic;
+        color: var(--gray-300);
+        margin-bottom: 1.5rem;
+    }
+
+    .author {
+        font-weight: bold;
+        color: var(--primary);
+    }
+
+    /* CTA Section */
+    .cta-section {
+        background: var(--gradient-accent-orange);
+        padding: 4rem 2rem;
+        border-radius: 24px;
+        text-align: center;
+        color: var(--gray-999);
+    }
+
+    .cta-section h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+        font-size: 1.25rem;
+        margin-bottom: 2rem;
+        opacity: 0.9;
+    }
+
+    .primary-btn {
+        background: white;
+        color: var(--primary);
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        font-weight: bold;
+        text-decoration: none;
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
+
+    .primary-btn:hover {
+        transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .shop-hero {
+            grid-template-columns: 1fr;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .hero-stats {
+            justify-content: center;
+        }
+
+        .hero-image {
+            display: none;
+        }
+
+        .hero-content h1 {
+            font-size: 2.5rem;
+        }
+
+        .cart-sidebar {
+            width: 85%;
+            right: -85%;
         }
     }
 </style>

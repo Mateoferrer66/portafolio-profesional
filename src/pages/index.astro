@@ -30,7 +30,7 @@ const projects = (await getCollection("work"))
 
 <BaseLayout>
 	<div class="stack gap-20 lg:gap-48">
-		<div class="wrapper stack gap-8 lg:gap-20">
+		<div class="wrapper stack gap-8 lg:gap-20 reveal">
 			<header class="hero">
 				<Hero
 					title="Hello, My name is Mateo Ferrer!"
@@ -76,14 +76,37 @@ const projects = (await getCollection("work"))
 					width="480"
 					height="620"
 					src="/assets/portrait.jpg"
+					id="hero-portrait"
 				/>
 			</header>
+
+			<script>
+				const portrait = document.getElementById("hero-portrait");
+				if (portrait) {
+					document.addEventListener("mousemove", (e) => {
+						const { clientX, clientY } = e;
+						const { innerWidth, innerHeight } = window;
+
+						// Calculate rotation (max 15 degrees)
+						const yRotation = (clientX / innerWidth - 0.5) * 30; // Rotate around Y axis based on X position
+						const xRotation = -(clientY / innerHeight - 0.5) * 30; // Rotate around X axis based on Y position
+
+						portrait.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale3d(1.05, 1.05, 1.05)`;
+					});
+
+					// Reset on mouse leave
+					document.addEventListener("mouseleave", () => {
+						portrait.style.transform =
+							"perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
+					});
+				}
+			</script>
 
 			<Skills />
 		</div>
 
 		<!-- Statistics Section -->
-		<section class="stats-section wrapper">
+		<section class="stats-section wrapper reveal">
 			<header class="section-header stack gap-2 lg:gap-4">
 				<h2>By The Numbers</h2>
 				<p>A snapshot of my professional journey and impact.</p>
@@ -113,7 +136,7 @@ const projects = (await getCollection("work"))
 		</section>
 
 		<!-- Services Section -->
-		<section class="services-section wrapper">
+		<section class="services-section wrapper reveal">
 			<header class="section-header stack gap-2 lg:gap-4">
 				<h2>Services I Offer</h2>
 				<p>Comprehensive solutions tailored to your needs.</p>
@@ -153,7 +176,7 @@ const projects = (await getCollection("work"))
 		</section>
 
 		<main class="wrapper stack gap-20 lg:gap-48">
-			<section class="section with-background with-cta">
+			<section class="section with-background with-cta reveal">
 				<header class="section-header stack gap-2 lg:gap-4">
 					<h3>Featured Projects</h3>
 					<p>
@@ -183,7 +206,7 @@ const projects = (await getCollection("work"))
 			</section>
 
 			<!-- Testimonials Section -->
-			<section class="testimonials-section">
+			<section class="testimonials-section reveal">
 				<header class="section-header stack gap-2 lg:gap-4">
 					<h3>What Clients Say</h3>
 					<p>

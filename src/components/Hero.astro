@@ -12,12 +12,38 @@ const { align = "center", tagline, title } = Astro.props;
 
 <div class:list={["hero stack gap-4", align]}>
 	<div class="stack gap-2">
-		<h1 class="title">{title}</h1>
+		<h1 class="title typewriter">{title}</h1>
 		{tagline && <p class="tagline">{tagline}</p>}
 	</div>
 	<slot />
 	<AnimatedBackground />
 </div>
+
+<script>
+	const titles = document.querySelectorAll(".typewriter");
+	titles.forEach((title) => {
+		const text = title.textContent || "";
+		title.textContent = "";
+		let i = 0;
+		const type = () => {
+			if (i < text.length) {
+				title.textContent += text.charAt(i);
+				i++;
+				setTimeout(type, 50); // Speed of typing
+			}
+		};
+		// intersection observer to start typing when visible
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry) => {
+				if (entry.isIntersecting) {
+					type();
+					observer.unobserve(entry.target);
+				}
+			});
+		});
+		observer.observe(title);
+	});
+</script>
 
 <style>
 	.hero {

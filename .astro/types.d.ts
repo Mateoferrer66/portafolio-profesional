@@ -175,6 +175,13 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"work": {
+"api-gateway.md": {
+	id: "api-gateway.md";
+  slug: "api-gateway";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
 "appgoals.md": {
 	id: "appgoals.md";
   slug: "appgoals";
@@ -220,6 +227,13 @@ declare module 'astro:content' {
 "nested/webpages.md": {
 	id: "nested/webpages.md";
   slug: "nested/webpages";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"saas-dashboard.md": {
+	id: "saas-dashboard.md";
+  slug: "saas-dashboard";
   body: string;
   collection: "work";
   data: InferEntrySchema<"work">

@@ -1,7 +1,7 @@
 ---
 title: MilMexico
 publishDate: 2024-03-20 00:00:00
-img: /assets/stock-3.jpg
+img: /assets/stock-4.jpg
 img_alt: MilMexico - Plataforma digital para la comunidad mexicana
 description: |
   Community-driven platform connecting Mexican entrepreneurs, creators, and professionals with opportunities and resources.

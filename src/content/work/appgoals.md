@@ -1,7 +1,7 @@
 ---
 title: App Goals 
 publishDate: 2023-08-23 00:00:00
-img: /assets/stock-2.jpg
+img: /assets/atwork.jpg
 img_alt: Aplicacion para llevar control de tareas diarias por medio de checklist
 description: |
  Application to keep track of daily tasks by means of checklists.

@@ -1,7 +1,7 @@
 ---
 title: Tradership
 publishDate: 2024-08-10 00:00:00
-img: /assets/stock-1.jpg
+img: /assets/tradership-cover.png
 img_alt: Tradership - Trading analytics and portfolio management platform
 description: |
   Advanced trading analytics platform helping traders make data-driven decisions with real-time market data and portfolio tracking.
