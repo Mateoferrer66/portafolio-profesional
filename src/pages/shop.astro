@@ -36,6 +36,46 @@ const products = [
         image: "/assets/app-duolingo.png",
         tags: ["education", "languages"],
     },
+    {
+        id: 16,
+        name: "Netflix Premium",
+        price: "$60.000 / Año",
+        category: "apps",
+        image: "/assets/app-netflix.png",
+        tags: ["streaming", "video"],
+    },
+    {
+        id: 17,
+        name: "Disney+ Premium",
+        price: "$60.000 / Año",
+        category: "apps",
+        image: "/assets/app-disney.png",
+        tags: ["streaming", "video"],
+    },
+    {
+        id: 18,
+        name: "Canva Pro",
+        price: "$40.000 / Año",
+        category: "apps",
+        image: "/assets/app-canva.png",
+        tags: ["design", "tools"],
+    },
+    {
+        id: 19,
+        name: "Amazon Prime",
+        price: "$55.000 / Año",
+        category: "apps",
+        image: "/assets/app-amazon.png",
+        tags: ["streaming", "shopping"],
+    },
+    {
+        id: 20,
+        name: "Microsoft 365",
+        price: "$80.000 / Año",
+        category: "apps",
+        image: "/assets/app-office.png",
+        tags: ["productivity", "office"],
+    },
 
     // 3D Products
     {
@@ -69,6 +109,30 @@ const products = [
         category: "3d",
         image: "/assets/shop-3d-health.png",
         tags: ["health"],
+    },
+    {
+        id: 21,
+        name: "Lámparas Lithoplana",
+        price: "Cotizar",
+        category: "3d",
+        image: "/assets/shop-3d-lamp.png",
+        tags: ["decor", "lighting"],
+    },
+    {
+        id: 22,
+        name: "Soportes Audífonos",
+        price: "Cotizar",
+        category: "3d",
+        image: "/assets/shop-3d-stand.png",
+        tags: ["accessories", "tech"],
+    },
+    {
+        id: 23,
+        name: "Macetas Geométricas",
+        price: "Cotizar",
+        category: "3d",
+        image: "/assets/shop-3d-pot.png",
+        tags: ["decor", "plants"],
     },
 
     // Graphic Design
@@ -104,6 +168,22 @@ const products = [
         image: "/assets/shop-design-logo.png",
         tags: ["logo", "branding"],
     },
+    {
+        id: 24,
+        name: "Diseño UI/UX App",
+        price: "Cotizar",
+        category: "design",
+        image: "/assets/shop-design-ui.png",
+        tags: ["ui", "app"],
+    },
+    {
+        id: 25,
+        name: "Edición de Video",
+        price: "Cotizar",
+        category: "design",
+        image: "/assets/shop-design-video.png",
+        tags: ["video", "social"],
+    },
 
     // Tech Consulting
     {
@@ -129,6 +209,22 @@ const products = [
         category: "tech",
         image: "/assets/shop-tech-support.png",
         tags: ["support", "hardware"],
+    },
+    {
+        id: 26,
+        name: "Armado de PC",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-pc.png",
+        tags: ["hardware", "pc"],
+    },
+    {
+        id: 27,
+        name: "Consultoría TI",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-consulting.png",
+        tags: ["consulting", "business"],
     },
 ];
 const testimonials = [
@@ -435,6 +531,24 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
             });
         }
 
+        // Calculate Total
+        let total = 0;
+        cart.forEach((item) => {
+            // Remove '$', '.', and non-numeric chars except for digits.
+            // Assume format like "$50.000 / Año" -> 50000
+            const priceString = item.price.replace(/[^0-9]/g, "");
+            const priceVal = parseInt(priceString);
+            if (!isNaN(priceVal)) {
+                total += priceVal;
+            }
+        });
+
+        const totalFormatted = "$" + total.toLocaleString("es-CO");
+        const cartTotalEl = document.getElementById("cart-total-price");
+        if (cartTotalEl) {
+            cartTotalEl.textContent = totalFormatted;
+        }
+
         // Save
         localStorage.setItem("mf_shop_cart", JSON.stringify(cart));
 
@@ -447,10 +561,8 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
                 const itemsList = cart
                     .map((item) => `- ${item.name} (${item.price})`)
                     .join("%0A");
-                const totalText =
-                    document.getElementById("cart-total-price")?.textContent ||
-                    "";
-                const message = `Hola Mateo, estoy interesado en cotizar los siguientes productos:%0A%0A${itemsList}%0A%0ATotal estimado: ${totalText}`;
+
+                const message = `Hola Mateo, estoy interesado en cotizar los siguientes productos:%0A%0A${itemsList}%0A%0ATotal estimado: ${totalFormatted}`;
                 checkoutBtn.href = `https://wa.me/573005059987?text=${message}`;
                 checkoutBtn.style.pointerEvents = "auto";
                 checkoutBtn.style.opacity = "1";

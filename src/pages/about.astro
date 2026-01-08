@@ -20,135 +20,176 @@ import Hero from "../components/Hero.astro";
         />
       </Hero>
 
-      <section>
-        <h2 class="section-title">Professional Summary</h2>
-        <div class="content">
-          <p>
-            Master's degree in Software Engineering | Specialist in Artificial
-            Intelligence and DevOps | Full Stack Developer | Frontend Specialist
-          </p>
-          <p>
-            Software Engineer and Full Stack developer specialized in Frontend
-            developments through technologies and frameworks such as React,
-            Angular, Astro, Java, JavaScript, Yii2, SQL, and Python. I create
-            professional web applications with connections to relational and
-            non-relational databases, interactive features, and modern
-            JavaScript/TypeScript functionalities.
-          </p>
-          <p>
-            Motivated professional committed to continuous learning and
-            development. Daily practitioner of self-improvement through
-            platforms like Platzi, with expertise in software design, graphic
-            design, UI/UX, digital marketing, and social media management.
-            Bilingual professional (English & Spanish) with experience in remote
-            and on-site environments.
-          </p>
-          <p>
-            <strong>Specialties:</strong> Frontend Development, Full Stack Web Applications,
-            Graphic Design, UI/UX, Digital Marketing, DevOps, Artificial Intelligence,
-            Data Engineering
-          </p>
+      <div class="tabs-container">
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="summary">Resumen</button>
+          <button class="tab-btn" data-tab="experience">Experiencia</button>
+          <button class="tab-btn" data-tab="education">Educación</button>
+          <button class="tab-btn" data-tab="skills">Habilidades</button>
         </div>
-      </section>
 
-      <section>
-        <h2 class="section-title">Professional Experience</h2>
-        <div class="content">
-          <p>
-            <strong>Software Engineer / Data Engineer</strong><br />
-            IPG Mediabrands · Full-time<br />
-            Apr 2024 - Mar 2025<br />
-            Associate Apps Support Analyst Engineer specializing in software design
-            and data engineering.
-          </p>
-          <p>
-            <strong
-              >Software Engineer - Support and Applications Engineer</strong
-            ><br />
-            iDigital · Full-time<br />
-            Feb 2022 - Sep 2022<br />
-            Software design and support engineering with expertise in application
-            infrastructure.
-          </p>
-          <p>
-            <strong>Web Designer, Graphic Design and UI/UX</strong><br />
-            Freelance (Self-employed) · Freelance<br />
-            Jan 2021 - Present (5 years)<br />
-            Web design, graphic design, and UI/UX services with remote capabilities.
-          </p>
-          <p>
-            <strong>Club Waiter</strong><br />
-            Anabel · Part-time<br />
-            Jan 2016 - Dec 2021
-          </p>
+        <div class="tab-content active" id="summary">
+          <section>
+            <h2 class="section-title">Professional Summary</h2>
+            <div class="content">
+              <p>
+                Master's degree in Software Engineering | Specialist in
+                Artificial Intelligence and DevOps | Full Stack Developer |
+                Frontend Specialist
+              </p>
+              <p>
+                Software Engineer and Full Stack developer specialized in
+                Frontend developments through technologies and frameworks such
+                as React, Angular, Astro, Java, JavaScript, Yii2, SQL, and
+                Python. I create professional web applications with connections
+                to relational and non-relational databases, interactive
+                features, and modern JavaScript/TypeScript functionalities.
+              </p>
+              <p>
+                Motivated professional committed to continuous learning and
+                development. Daily practitioner of self-improvement through
+                platforms like Platzi, with expertise in software design,
+                graphic design, UI/UX, digital marketing, and social media
+                management. Bilingual professional (English & Spanish) with
+                experience in remote and on-site environments.
+              </p>
+              <p>
+                <strong>Specialties:</strong> Frontend Development, Full Stack Web
+                Applications, Graphic Design, UI/UX, Digital Marketing, DevOps, Artificial
+                Intelligence, Data Engineering
+              </p>
+            </div>
+          </section>
         </div>
-      </section>
-      <section>
-        <h2 class="section-title">Education</h2>
-        <div class="content">
-          <p>
-            <strong>Master of Engineering (MEng)</strong><br />
-            UNIR | Universidad Internacional de La Rioja<br />
-            Apr 2025 - Nov 2026<br />
-            Specialization: Artificial Intelligence and DevOps
-          </p>
-          <p>
-            <strong>Software Engineer</strong><br />
-            Universidad Manuela Beltrán<br />
-            Feb 2017 - Apr 2024<br />
-            Computer Software Engineering
-          </p>
-          <p>
-            <strong>3D Animation Technologist</strong><br />
-            Servicio Nacional de Aprendizaje (SENA)<br />
-            Oct 2024 - Oct 2026<br />
-            Animation, Interactive Technology, Video Graphics and Special Effects
-          </p>
-          <p>
-            <strong>Platzi Legend</strong><br />
-            Jan 2018 - Nov 2026<br />
-            +200 Certifications in software development, design, and digital marketing
-          </p>
+
+        <div class="tab-content" id="experience">
+          <section>
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="content">
+              <p>
+                <strong>Software Engineer / Data Engineer</strong><br />
+                IPG Mediabrands · Full-time<br />
+                Apr 2024 - Mar 2025<br />
+                Associate Apps Support Analyst Engineer specializing in software design
+                and data engineering.
+              </p>
+              <p>
+                <strong
+                  >Software Engineer - Support and Applications Engineer</strong
+                ><br />
+                iDigital · Full-time<br />
+                Feb 2022 - Sep 2022<br />
+                Software design and support engineering with expertise in application
+                infrastructure.
+              </p>
+              <p>
+                <strong>Web Designer, Graphic Design and UI/UX</strong><br />
+                Freelance (Self-employed) · Freelance<br />
+                Jan 2021 - Present (5 years)<br />
+                Web design, graphic design, and UI/UX services with remote capabilities.
+              </p>
+              <p>
+                <strong>Club Waiter</strong><br />
+                Anabel · Part-time<br />
+                Jan 2016 - Dec 2021
+              </p>
+            </div>
+          </section>
         </div>
-      </section>
-      <section>
-        <h2 class="section-title">Technical Skills</h2>
-        <div class="content">
-          <p>
-            <strong>Frontend Development:</strong> React, Angular, Astro, JavaScript,
-            TypeScript, HTML, CSS, UI/UX Design
-          </p>
-          <p>
-            <strong>Backend Development:</strong> Java, Python, Yii2, Node.js, RESTful
-            APIs
-          </p>
-          <p>
-            <strong>Databases:</strong> Microsoft SQL Server, Relational and Non-relational
-            databases, Database Design
-          </p>
-          <p>
-            <strong>DevOps & Cloud:</strong> DevOps, Cloud Infrastructure, Software
-            Installation, Software Infrastructure
-          </p>
-          <p>
-            <strong>AI & Data:</strong> Artificial Intelligence, Data Engineering,
-            Data Analysis
-          </p>
-          <p>
-            <strong>Design & Multimedia:</strong> Graphic Design, UI/UX Design, 3D
-            Animation, Web Design
-          </p>
-          <p>
-            <strong>Project Management:</strong> Software Project Management, Agile
-            Methodologies, Team Leadership
-          </p>
-          <p>
-            <strong>Digital Marketing:</strong> Digital Marketing, Social Media Management,
-            Marketing Campaigns, Advertising
-          </p>
+
+        <div class="tab-content" id="education">
+          <section>
+            <h2 class="section-title">Education</h2>
+            <div class="content">
+              <p>
+                <strong>Master of Engineering (MEng)</strong><br />
+                UNIR | Universidad Internacional de La Rioja<br />
+                Apr 2025 - Nov 2026<br />
+                Specialization: Artificial Intelligence and DevOps
+              </p>
+              <p>
+                <strong>Software Engineer</strong><br />
+                Universidad Manuela Beltrán<br />
+                Feb 2017 - Apr 2024<br />
+                Computer Software Engineering
+              </p>
+              <p>
+                <strong>3D Animation Technologist</strong><br />
+                Servicio Nacional de Aprendizaje (SENA)<br />
+                Oct 2024 - Oct 2026<br />
+                Animation, Interactive Technology, Video Graphics and Special Effects
+              </p>
+              <p>
+                <strong>Platzi Legend</strong><br />
+                Jan 2018 - Nov 2026<br />
+                +200 Certifications in software development, design, and digital marketing
+              </p>
+            </div>
+          </section>
         </div>
-      </section>
+
+        <div class="tab-content" id="skills">
+          <section>
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="content">
+              <p>
+                <strong>Frontend Development:</strong> React, Angular, Astro, JavaScript,
+                TypeScript, HTML, CSS, UI/UX Design
+              </p>
+              <p>
+                <strong>Backend Development:</strong> Java, Python, Yii2, Node.js,
+                RESTful APIs
+              </p>
+              <p>
+                <strong>Databases:</strong> Microsoft SQL Server, Relational and Non-relational
+                databases, Database Design
+              </p>
+              <p>
+                <strong>DevOps & Cloud:</strong> DevOps, Cloud Infrastructure, Software
+                Installation, Software Infrastructure
+              </p>
+              <p>
+                <strong>AI & Data:</strong> Artificial Intelligence, Data Engineering,
+                Data Analysis
+              </p>
+              <p>
+                <strong>Design & Multimedia:</strong> Graphic Design, UI/UX Design,
+                3D Animation, Web Design
+              </p>
+              <p>
+                <strong>Project Management:</strong> Software Project Management,
+                Agile Methodologies, Team Leadership
+              </p>
+              <p>
+                <strong>Digital Marketing:</strong> Digital Marketing, Social Media
+                Management, Marketing Campaigns, Advertising
+              </p>
+            </div>
+          </section>
+        </div>
+      </div>
     </main>
+
+    <script>
+      const tabBtns = document.querySelectorAll(".tab-btn");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      tabBtns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          // Remove active class
+          tabBtns.forEach((b) => b.classList.remove("active"));
+          tabContents.forEach((c) => c.classList.remove("active"));
+
+          // Add active class
+          btn.classList.add("active");
+          const tabId = btn.getAttribute("data-tab");
+          const targetContent = document.getElementById(tabId || "");
+          if (targetContent) {
+            targetContent.classList.add("active");
+          }
+        });
+      });
+    </script>
 
     <ContactCTA />
   </div>
@@ -208,6 +249,62 @@ import Hero from "../components/Hero.astro";
     section {
       display: contents;
       font-size: var(--text-lg);
+    }
+  }
+
+  /* Tabs CSS */
+  .tabs-container {
+    grid-column: 2;
+    width: 100%;
+  }
+
+  .tabs-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    background: transparent;
+    border: 2px solid var(--accent-regular);
+    color: var(--gray-0);
+    padding: 0.5rem 1.5rem;
+    border-radius: 999px;
+    font-size: var(--text-md);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-btn:hover {
+    background: var(--accent-regular);
+    color: white;
+  }
+
+  .tab-btn.active {
+    background: var(--accent-regular);
+    color: white;
+    box-shadow: var(--shadow-md);
+  }
+
+  .tab-content {
+    display: none;
+    animation: fadeIn 0.5s ease;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 </style>

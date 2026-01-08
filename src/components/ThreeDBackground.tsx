@@ -70,7 +70,7 @@ const ThreeDBackground: React.FC = () => {
       sceneRef.current = scene;
       scene.fog = new THREE.Fog(0x0a0a1a, 150, 600);
       scene.background = new THREE.Color(0x0a0a1a);
-      
+
       const camera = new THREE.PerspectiveCamera(
         75,
         window.innerWidth / window.innerHeight,
@@ -80,8 +80,8 @@ const ThreeDBackground: React.FC = () => {
       camera.position.z = 50;
 
       // Advanced Renderer setup
-      const renderer = new THREE.WebGLRenderer({ 
-        antialias: true, 
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
         alpha: false,
         powerPreference: 'high-performance',
         precision: 'highp',
@@ -93,7 +93,7 @@ const ThreeDBackground: React.FC = () => {
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFShadowMap;
       renderer.toneMappingExposure = 1.2;
-      
+
       containerRef.current.appendChild(renderer.domElement);
 
       // Bloom effect
@@ -127,7 +127,7 @@ const ThreeDBackground: React.FC = () => {
         pointLight.castShadow = true;
         pointLight.shadow.mapSize.width = 1024;
         pointLight.shadow.mapSize.height = 1024;
-        
+
         // Add glow sphere around light
         const glowGeo = new THREE.SphereGeometry(0.5, 8, 8);
         const glowMat = new THREE.MeshStandardMaterial({
@@ -139,7 +139,7 @@ const ThreeDBackground: React.FC = () => {
         });
         const glowSphere = new THREE.Mesh(glowGeo, glowMat);
         glowSphere.position.copy(pointLight.position);
-        
+
         scene.add(pointLight);
         scene.add(glowSphere);
       });
@@ -163,7 +163,7 @@ const ThreeDBackground: React.FC = () => {
       // Create multiple animated shapes with glow
       for (let i = 0; i < 8; i++) {
         const geometry = geometries[i % geometries.length];
-        
+
         const hue = 0.6 + i * 0.05;
         const saturation = 0.9;
         const lightness = 0.55;
@@ -179,10 +179,10 @@ const ThreeDBackground: React.FC = () => {
         });
 
         const mesh = new THREE.Mesh(geometry, material);
-        
+
         // Enable bloom on this mesh
         bloomEffect.enableBloom(mesh);
-        
+
         // Position shapes in space
         const angle = (i / 8) * Math.PI * 2;
         const distance = 25 + Math.sin(i) * 10;
@@ -299,27 +299,79 @@ const ThreeDBackground: React.FC = () => {
 
       window.addEventListener('resize', handleResize);
 
-      // Time tracking for wave effects
+      // --- CURSOR TRACKER ---
+      const cursorGroup = new THREE.Group();
+      scene.add(cursorGroup);
+
+      // 1. The main glowing core
+      const cursorGeo = new THREE.SphereGeometry(0.8, 32, 32);
+      const cursorMat = new THREE.MeshStandardMaterial({
+        color: 0xffffff,
+        emissive: 0xffffff,
+        emissiveIntensity: 4,
+        toneMapped: false,
+      });
+      const cursorOrb = new THREE.Mesh(cursorGeo, cursorMat);
+      bloomEffect.enableBloom(cursorOrb);
+      cursorGroup.add(cursorOrb);
+
+      // 2. The interactive light source
+      const cursorLight = new THREE.PointLight(0x00ffff, 4, 35); // Cyan light, range 35
+      cursorLight.castShadow = true;
+      cursorGroup.add(cursorLight);
+
+      // 3. A secondary ring for style (like a sci-fi cursor)
+      const ringGeo = new THREE.TorusGeometry(1.5, 0.05, 16, 100);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x00ffff,
+        transparent: true,
+        opacity: 0.5
+      });
+      const cursorRing = new THREE.Mesh(ringGeo, ringMat);
+      cursorGroup.add(cursorRing);
+
+      // Mouse vector for 3D projection
+      const mouseVector = new THREE.Vector3();
+
       let time = 0;
 
       // Animation loop
       const animate = () => {
         animationIdRef.current = requestAnimationFrame(animate);
-        time += 0.016; // Approximately 60fps
+        time += 0.016;
 
-        // Smooth mouse movement
-        mouseX += (targetMouseX - mouseX) * 0.05;
-        mouseY += (targetMouseY - mouseY) * 0.05;
+        // Smooth global input tracking
+        mouseX += (targetMouseX - mouseX) * 0.1; // Increased speed for responsiveness
+        mouseY += (targetMouseY - mouseY) * 0.1;
         scrollY += (targetScrollY - scrollY) * 0.1;
+
+        // --- UPDATE CURSOR POSITION ---
+        // We project the 2D mouse pos to a 3D plane at Z=0 (roughly where shapes are)
+        mouseVector.set(mouseX, mouseY, 0.5);
+        mouseVector.unproject(camera);
+
+        const dir = mouseVector.sub(camera.position).normalize();
+        const distance = -camera.position.z / dir.z + 15; // Target Z plane ~15 units in front
+        const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+
+        // Lerp cursor group to this position
+        cursorGroup.position.lerp(pos, 0.15); // Fast smooth follow
+
+        // Animate tracker parts
+        cursorRing.rotation.x += 0.05;
+        cursorRing.rotation.y += 0.05;
+        const pulse = 1 + Math.sin(time * 10) * 0.1;
+        cursorOrb.scale.setScalar(pulse);
+
 
         // Animate shapes with enhanced effects
         meshesRef.current.forEach((mesh, index) => {
           const userData = mesh.userData;
-          
+
           // Orbital motion with wave effect
           userData.orbitAngle += userData.orbitSpeed;
           const orbitRadius = 30 + Math.sin(index + time * 0.2) * 15;
-          
+
           mesh.position.x = Math.cos(userData.orbitAngle) * orbitRadius;
           mesh.position.y = Math.sin(userData.orbitAngle * 0.5) * 20 + Math.sin(time * 0.3 + index) * 5 + scrollY * 0.001;
           mesh.position.z = Math.sin(userData.orbitAngle * 0.7) * orbitRadius - 30;
@@ -329,32 +381,44 @@ const ThreeDBackground: React.FC = () => {
           mesh.rotation.y += userData.rotY + time * 0.0001;
           mesh.rotation.z += userData.rotZ;
 
-          // Enhanced pulse effect
-          const pulse = 1 + Math.sin(time * 1.5 + index) * 0.25;
-          mesh.scale.set(
-            userData.scale * pulse,
-            userData.scale * pulse,
-            userData.scale * pulse
-          );
+          // INTERACTIVITY: React to cursor proximity
+          const distToCursor = mesh.position.distanceTo(cursorGroup.position);
+          const hoverEffect = Math.max(0, 15 - distToCursor) / 15; // 0 to 1 based on nearness
 
-          // Color shift effect
+          // Scale up when cursor is close
+          const targetScale = userData.scale * (1 + hoverEffect * 0.5);
+          mesh.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.1);
+
+          // Spin faster when cursor is close
+          if (distToCursor < 15) {
+            mesh.rotation.x += 0.05;
+            mesh.rotation.y += 0.05;
+          }
+
+          // Color shift effect + Hover highlight
           const material = mesh.material as THREE.MeshStandardMaterial;
           const hueShift = Math.sin(time * 0.3 + index) * 0.05;
-          material.emissive.setHSL(
-            userData.originalHue + hueShift,
-            0.9,
-            0.4 + Math.sin(time * 0.5) * 0.1
-          );
+
+          // Base emissive
+          const baseH = userData.originalHue + hueShift;
+          const baseS = 0.9;
+          const baseL = 0.4 + Math.sin(time * 0.5) * 0.1;
+
+          // Mix with white when hovered
+          const r = new THREE.Color().setHSL(baseH, baseS, baseL);
+          const white = new THREE.Color(0xffffff);
+          material.emissive.copy(r).lerp(white, hoverEffect * 0.8);
+          material.emissiveIntensity = 0.6 + hoverEffect * 2; // Super bright when close
         });
 
         // Animate particles with wave motion
         if (particles) {
           particles.rotation.x += 0.00005;
           particles.rotation.y += 0.00008;
-          
+
           const positionAttribute = particlesGeometry.getAttribute('position') as THREE.BufferAttribute;
           const positions = positionAttribute.array as Float32Array;
-          
+
           for (let i = 0; i < positions.length; i += 3) {
             positions[i + 1] += Math.sin(time * 0.5 + positions[i] * 0.01) * 0.02;
           }
@@ -364,12 +428,12 @@ const ThreeDBackground: React.FC = () => {
         // Camera follow mouse smoothly with bounds
         camera.position.x = THREE.MathUtils.lerp(
           camera.position.x,
-          mouseX * 8,
+          mouseX * 4, // Reduced camera sway to focus on cursor
           0.01
         );
         camera.position.y = THREE.MathUtils.lerp(
           camera.position.y,
-          mouseY * 8,
+          mouseY * 4,
           0.01
         );
 
