@@ -398,4 +398,129 @@ export const products: Product[] = [
         tags: ["network", "setup"],
         description: "Diseño e instalación de redes cableadas y Wi-Fi empresariales o domésticas."
     },
+
+    // Education (NEW)
+    {
+        id: 101,
+        name: "Asesorías Matemáticas",
+        price: "Cotizar",
+        category: "education",
+        image: "/assets/shop-math.png",
+        tags: ["education", "math", "tutoring"],
+        description: "Clases personalizadas de matemáticas, cálculo, álgebra y estadística para todos los niveles."
+    },
+    {
+        id: 102,
+        name: "Trabajos Académicos",
+        price: "Cotizar",
+        category: "education",
+        image: "/assets/shop-edu-coursework.png",
+        tags: ["education", "homework"],
+        description: "Apoyo en la realización de trabajos, ensayos y actividades académicas."
+    },
+    {
+        id: 103,
+        name: "Realización de Talleres",
+        price: "Cotizar",
+        category: "education",
+        image: "/assets/shop-edu-workshop.png",
+        tags: ["education", "workshop"],
+        description: "Desarrollo completo de talleres y guías de estudio paso a paso."
+    },
+    {
+        id: 104,
+        name: "Tesis y Grados",
+        price: "Cotizar",
+        category: "education",
+        image: "/assets/shop-edu-thesis.png",
+        tags: ["education", "thesis", "research"],
+        description: "Asesoría y redacción de tesis, monografías y proyectos de grado."
+    },
+    {
+        id: 105,
+        name: "Parciales Virtuales",
+        price: "Cotizar",
+        category: "education",
+        image: "/assets/shop-edu-exam.png",
+        tags: ["education", "exam"],
+        description: "Acompañamiento y soporte en exámenes y evaluaciones virtuales."
+    },
+
+    // Tech Services Expansion
+    {
+        id: 106,
+        name: "Asesorías Tecnológicas",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-consulting.png",
+        tags: ["tech", "consulting"],
+        description: "Consultoría experta para resolver dudas y optimizar tu uso de la tecnología."
+    },
+    {
+        id: 107,
+        name: "Creación de E-commerce",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-ecommerce.png",
+        tags: ["web", "ecommerce", "business"],
+        description: "Tiendas online completas con pasarelas de pago y gestión de inventario."
+    },
+    {
+        id: 108,
+        name: "Páginas Web Corporativas",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-web.png",
+        tags: ["web", "business"],
+        description: "Sitios web profesionales para potenciar la presencia digital de tu empresa."
+    },
+    {
+        id: 109,
+        name: "Software a la Medida",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-custom-soft.png",
+        tags: ["software", "development"],
+        description: "Desarrollo de aplicaciones y sistemas específicos para necesidades únicas."
+    },
+    {
+        id: 110,
+        name: "Modernización de Software",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-maintenance.png",
+        tags: ["software", "legacy", "upgrade"],
+        description: "Actualización y mejora de proyectos existentes a tecnologías recientes."
+    },
+
+    // Fashion/Clothing (NEW)
+    {
+        id: 111,
+        name: "Ropa a Medida",
+        price: "Cotizar",
+        category: "clothing",
+        image: "/assets/shop-fashion.png",
+        tags: ["fashion", "custom"],
+        description: "Confección de prendas al gusto y a la medida, con los materiales que elijas."
+    },
+
+    // Marketing/Design Expansion
+    {
+        id: 112,
+        name: "Creación de Marca",
+        price: "Cotizar",
+        category: "marketing",
+        image: "/assets/shop-design-branding.png",
+        tags: ["branding", "marketing"],
+        description: "Estrategia completa de branding para diferenciar y posicionar tu negocio."
+    },
+    {
+        id: 113,
+        name: "Publicidad Digital",
+        price: "Cotizar",
+        category: "marketing",
+        image: "/assets/shop-design-social.png",
+        tags: ["marketing", "ads"],
+        description: "Gestión de campañas publicitarias en redes sociales y Google Ads."
+    },
 ];
