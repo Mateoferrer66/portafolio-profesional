@@ -523,4 +523,78 @@ export const products: Product[] = [
         tags: ["marketing", "ads"],
         description: "Gestión de campañas publicitarias en redes sociales y Google Ads."
     },
+
+    // Digital Products (Inventory Free)
+    {
+        id: 201,
+        name: "Notion Life OS Template",
+        price: "$40.000",
+        category: "templates",
+        image: "/assets/shop-digital-notion.jpg",
+        tags: ["productivity", "notion", "template"],
+        description: "Organiza toda tu vida, proyectos y metas con este sistema operativo completo para Notion."
+    },
+    {
+        id: 202,
+        name: "Pack de Presets Lightroom - Urban",
+        price: "$25.000",
+        category: "templates",
+        image: "/assets/shop-digital-presets.jpg",
+        tags: ["design", "photography", "assets"],
+        description: "15 Presets profesionales para darle un estilo urbano y moody a tus fotografías."
+    },
+    {
+        id: 203,
+        name: "E-book: Guía de SEO para Principiantes",
+        price: "$35.000",
+        category: "ebooks",
+        image: "/assets/shop-digital-ebook-seo.jpg",
+        tags: ["education", "seo", "marketing"],
+        description: "Aprende los fundamentos del posicionamiento web y cómo rankear en Google paso a paso."
+    },
+    {
+        id: 204,
+        name: "Kit de Contratos para Freelancers",
+        price: "$45.000",
+        category: "templates",
+        image: "/assets/shop-tech-consulting.png",
+        tags: ["business", "legal", "freelance"],
+        description: "Plantillas de contratos legales editables para proteger tu trabajo y asegurar tus pagos."
+    },
+    {
+        id: 205,
+        name: "Curso: Intro a Programación Web",
+        price: "$60.000",
+        category: "education",
+        image: "/assets/shop-digital-course-code.jpg",
+        tags: ["education", "coding", "course"],
+        description: "Guía intensiva de 4 semanas para aprender HTML, CSS y JS desde cero. (Contenido Digital)"
+    },
+    {
+        id: 206,
+        name: "Plantilla CV Moderno + Portafolio",
+        price: "$20.000",
+        category: "templates",
+        image: "/assets/shop-design-ui.png",
+        tags: ["design", "career", "template"],
+        description: "Destaca en tus entrevistas con esta plantilla de hoja de vida y portafolio editable."
+    },
+    {
+        id: 207,
+        name: "Pack de Iconos 3D Premium",
+        price: "$30.000",
+        category: "design",
+        image: "/assets/shop-3d-figures.png",
+        tags: ["design", "3d", "assets"],
+        description: "Colección de 50+ iconos 3D en alta resolución para tus proyectos web y apps."
+    },
+    {
+        id: 208,
+        name: "Planner Digital 2026 (iPad/Tablet)",
+        price: "$30.000",
+        category: "templates",
+        image: "/assets/shop-apps.png",
+        tags: ["productivity", "planning", "digital"],
+        description: "Agenda digital interactiva para GoodNotes y Notability. Planifica tu éxito."
+    },
 ];
