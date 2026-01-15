@@ -834,6 +834,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         margin: 0 auto;
         padding: 0 1.5rem 4rem;
         position: relative;
+        overflow-x: hidden; /* Prevent horizontal scroll */
     }
 
     /* Hero Section */
@@ -1615,12 +1616,23 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     @media (max-width: 768px) {
         /* Hero */
         .shop-hero {
-            min-height: 50vh;
-            padding: 6rem 1rem 2rem;
+            min-height: 40vh;
+            padding: 4rem 1rem 1rem;
+            margin-bottom: 2rem;
         }
 
         .shop-hero h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .shop-hero .hero-text {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
         }
 
         /* Cart */
@@ -1638,8 +1650,9 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
         /* Grid */
         .products-grid {
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+            gap: 0.8rem;
+            margin-bottom: 2rem;
         }
 
         .product-card .image-wrapper {
