@@ -422,7 +422,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         // Update badge
         if (cartCount) {
             const totalItems = cart.reduce(
-                (acc, item) => acc + item.quantity,
+                (acc, item) => acc + (Number(item.quantity) || 0),
                 0,
             );
             cartCount.textContent = totalItems.toString();
@@ -1598,7 +1598,103 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         font-size: 1.5rem;
         color: var(--accent);
         font-weight: bold;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .modal-desc {
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 2rem;
+    }
+
+    .modal-actions {
+        margin-top: auto;
+    }
+
+    /* --- RESPONSIVE DESIGN --- */
+    @media (max-width: 768px) {
+        /* Hero */
+        .shop-hero {
+            min-height: 50vh;
+            padding: 6rem 1rem 2rem;
+        }
+
+        .shop-hero h1 {
+            font-size: 2.5rem;
+        }
+
+        /* Cart */
+        .cart-sidebar {
+            width: 85%;
+            max-width: 320px;
+        }
+
+        .cart-float-btn {
+            width: 55px;
+            height: 55px;
+            bottom: 2rem;
+            right: 1.5rem;
+        }
+
+        /* Grid */
+        .products-grid {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+
+        .product-card .image-wrapper {
+            margin: 0.5rem;
+            border-radius: 12px;
+        }
+
+        .add-cart-btn {
+            transform: translateY(0);
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .category-tag {
+            font-size: 0.65rem;
+        }
+
+        .content h4 {
+            font-size: 1rem;
+        }
+
+        /* Features Banner */
+        .features-banner {
+            padding: 2rem 1rem;
+            gap: 1.5rem;
+        }
+
+        /* Modal */
+        .modal-content {
+            height: 100vh;
+            max-height: 100vh;
+            border-radius: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .modal-image {
+            min-height: 250px;
+            flex: none;
+        }
+
+        .modal-details {
+            padding: 1.5rem;
+        }
+
+        .modal-close {
+            top: 1rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+        }
     }
 
     .modal-desc {
