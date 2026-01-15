@@ -1616,23 +1616,27 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     @media (max-width: 768px) {
         /* Hero */
         .shop-hero {
-            min-height: 40vh;
-            padding: 4rem 1rem 1rem;
+            min-height: auto;
+            padding: 7rem 1rem 2rem; /* More top padding for nav, less bottom */
             margin-bottom: 2rem;
         }
 
         .shop-hero h1 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
+            font-size: 1.7rem; /* Smaller font */
+            margin-bottom: 0.8rem;
+            word-wrap: break-word; /* Ensure wrapping */
         }
 
         .shop-hero .hero-text {
-            font-size: 1rem;
+            font-size: 0.95rem;
             margin-bottom: 1.5rem;
+            padding: 0 0.5rem;
         }
 
         .section-header h2 {
-            font-size: 1.8rem;
+            font-size: 1.5rem; /* Smaller font */
+            padding: 0 1rem;
+            text-align: center;
         }
 
         /* Cart */
@@ -1644,8 +1648,9 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         .cart-float-btn {
             width: 55px;
             height: 55px;
-            bottom: 2rem;
-            right: 1.5rem;
+            bottom: 1.5rem;
+            left: 1.5rem; /* Move to left to avoid WhatsApp overlap (right) */
+            right: auto;
         }
 
         /* Grid */
