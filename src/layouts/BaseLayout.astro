@@ -4,6 +4,8 @@
 
 // Component Imports
 import GoogleAnalytics from "../components/GoogleAnalytics.astro";
+import GoogleTagManager from "../components/GoogleTagManager.astro";
+import GoogleTagManagerNoScript from "../components/GoogleTagManagerNoScript.astro";
 import MainHead from "../components/MainHead.astro";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
@@ -23,11 +25,14 @@ const { title, description } = Astro.props;
 <html lang="en">
 	<head>
 		<ViewTransitions />
+		<!-- Google Tag Manager -->
+		<GoogleTagManager />
 		<!-- Google analytics code -->
 		<GoogleAnalytics />
 		<MainHead title={title} description={description} />
 	</head>
 	<body>
+		<GoogleTagManagerNoScript />
 		<div id="scroll-progress"></div>
 		<ThreeDBackground client:load />
 		<div class="stack backgrounds">
