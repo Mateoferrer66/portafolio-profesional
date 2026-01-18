@@ -180,70 +180,105 @@ declare module 'astro:content' {
   slug: "api-gateway";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
 } & { render(): Render[".md"] };
 "appgoals.md": {
 	id: "appgoals.md";
   slug: "appgoals";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
+} & { render(): Render[".md"] };
+"cryptovault.md": {
+	id: "cryptovault.md";
+  slug: "cryptovault";
+  body: string;
+  collection: "work";
+  data: any
 } & { render(): Render[".md"] };
 "cursos-react.md": {
 	id: "cursos-react.md";
   slug: "cursos-react";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
+} & { render(): Render[".md"] };
+"ecomarket.md": {
+	id: "ecomarket.md";
+  slug: "ecomarket";
+  body: string;
+  collection: "work";
+  data: any
 } & { render(): Render[".md"] };
 "ecommerce.md": {
 	id: "ecommerce.md";
   slug: "ecommerce";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
 } & { render(): Render[".md"] };
 "freelance.md": {
 	id: "freelance.md";
   slug: "freelance";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
 } & { render(): Render[".md"] };
 "homeofcode.md": {
 	id: "homeofcode.md";
   slug: "homeofcode";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
 } & { render(): Render[".md"] };
 "milmexico.md": {
 	id: "milmexico.md";
   slug: "milmexico";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
+} & { render(): Render[".md"] };
+"neobank.md": {
+	id: "neobank.md";
+  slug: "neobank";
+  body: string;
+  collection: "work";
+  data: any
 } & { render(): Render[".md"] };
 "nested/webpages.md": {
 	id: "nested/webpages.md";
   slug: "nested/webpages";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
 } & { render(): Render[".md"] };
 "saas-dashboard.md": {
 	id: "saas-dashboard.md";
   slug: "saas-dashboard";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
+} & { render(): Render[".md"] };
+"studyflow.md": {
+	id: "studyflow.md";
+  slug: "studyflow";
+  body: string;
+  collection: "work";
+  data: any
 } & { render(): Render[".md"] };
 "tradership.md": {
 	id: "tradership.md";
   slug: "tradership";
   body: string;
   collection: "work";
-  data: InferEntrySchema<"work">
+  data: any
+} & { render(): Render[".md"] };
+"vitality.md": {
+	id: "vitality.md";
+  slug: "vitality";
+  body: string;
+  collection: "work";
+  data: any
 } & { render(): Render[".md"] };
 };
 
@@ -255,5 +290,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	type ContentConfig = typeof import("../src/content/config");
+	type ContentConfig = never;
 }

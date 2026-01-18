@@ -46,24 +46,7 @@ export const products: Product[] = [
         tags: ["education", "languages"],
         description: "Aprende idiomas más rápido, sin anuncios y con vidas ilimitadas."
     },
-    {
-        id: 16,
-        name: "Netflix Premium",
-        price: "$60.000 / Año",
-        category: "apps",
-        image: "/assets/app-netflix.png",
-        tags: ["streaming", "video"],
-        description: "Películas, series y documentales ilimitados en 4K UHD."
-    },
-    {
-        id: 17,
-        name: "Disney+ Premium",
-        price: "$60.000 / Año",
-        category: "apps",
-        image: "/assets/app-disney.png",
-        tags: ["streaming", "video"],
-        description: "Las mejores historias de Disney, Pixar, Marvel, Star Wars y National Geographic."
-    },
+
     {
         id: 18,
         name: "Canva Pro",
@@ -73,15 +56,7 @@ export const products: Product[] = [
         tags: ["design", "tools"],
         description: "Diseña profesionalmente con acceso ilimitado a plantillas y herramientas premium."
     },
-    {
-        id: 19,
-        name: "Amazon Prime",
-        price: "$55.000 / Año",
-        category: "apps",
-        image: "/assets/app-amazon.png",
-        tags: ["streaming", "shopping"],
-        description: "Envíos rápidos y gratuitos, Prime Video y mucho más."
-    },
+
     {
         id: 20,
         name: "Microsoft 365",
@@ -91,15 +66,7 @@ export const products: Product[] = [
         tags: ["productivity", "office"],
         description: "La suite de productividad más completa con Word, Excel, PowerPoint y 1TB de nube."
     },
-    {
-        id: 28,
-        name: "HBO Max",
-        price: "$45.000 / Año",
-        category: "apps",
-        image: "/assets/app-hbo.png",
-        tags: ["streaming", "video"],
-        description: "El hogar de las series y películas más icónicas de Warner Bros, DC y HBO."
-    },
+
     {
         id: 29,
         name: "Adobe Creative Cloud",
@@ -109,44 +76,7 @@ export const products: Product[] = [
         tags: ["design", "tools"],
         description: "Todas las aplicaciones creativas de Adobe: Photoshop, Illustrator, Premiere y más."
     },
-    {
-        id: 30,
-        name: "Apple TV+",
-        price: "$50.000 / Año",
-        category: "apps",
-        image: "/assets/app-apple.png",
-        tags: ["streaming", "video"],
-        description: "Apple Originals: series y películas exclusivas con las estrellas más grandes."
-    },
 
-    // Gaming (NEW)
-    {
-        id: 37,
-        name: "Xbox Game Pass Ultimate",
-        price: "$120.000 / Año",
-        category: "gaming",
-        image: "/assets/app-xbox.png",
-        tags: ["gaming", "cloud"],
-        description: "Accede a más de 100 juegos de alta calidad en consola, PC y la nube."
-    },
-    {
-        id: 38,
-        name: "PlayStation Plus Deluxe",
-        price: "$150.000 / Año",
-        category: "gaming",
-        image: "/assets/app-psplus.png",
-        tags: ["gaming", "console"],
-        description: "Juegos mensuales, multijugador online y catálogo de clásicos."
-    },
-    {
-        id: 39,
-        name: "Nintendo Switch Online",
-        price: "$70.000 / Año",
-        category: "gaming",
-        image: "/assets/app-nintendo.png",
-        tags: ["gaming", "console"],
-        description: "Juego en línea, guardado en la nube y catálogo de juegos clásicos de NES y SNES."
-    },
 
     // Software (NEW)
     {
@@ -362,15 +292,7 @@ export const products: Product[] = [
         tags: ["support", "hardware"],
         description: "Diagnóstico y resolución de problemas de hardware y software."
     },
-    {
-        id: 26,
-        name: "Armado de PC",
-        price: "Cotizar",
-        category: "tech",
-        image: "/assets/shop-tech-pc.png",
-        tags: ["hardware", "pc"],
-        description: "Asesoría y ensamblaje de computadoras gaming o de trabajo profesional."
-    },
+
     {
         id: 27,
         name: "Consultoría TI",
@@ -389,15 +311,7 @@ export const products: Product[] = [
         tags: ["hardware", "support"],
         description: "Limpieza profunda, cambio de pasta térmica y optimización del sistema."
     },
-    {
-        id: 36,
-        name: "Instalación Redes",
-        price: "Cotizar",
-        category: "tech",
-        image: "/assets/shop-tech-network.png",
-        tags: ["network", "setup"],
-        description: "Diseño e instalación de redes cableadas y Wi-Fi empresariales o domésticas."
-    },
+
 
     // Education (NEW)
     {
@@ -534,24 +448,8 @@ export const products: Product[] = [
         tags: ["productivity", "notion", "template"],
         description: "Organiza toda tu vida, proyectos y metas con este sistema operativo completo para Notion."
     },
-    {
-        id: 202,
-        name: "Pack de Presets Lightroom - Urban",
-        price: "$25.000",
-        category: "templates",
-        image: "/assets/shop-digital-presets.jpg",
-        tags: ["design", "photography", "assets"],
-        description: "15 Presets profesionales para darle un estilo urbano y moody a tus fotografías."
-    },
-    {
-        id: 203,
-        name: "E-book: Guía de SEO para Principiantes",
-        price: "$35.000",
-        category: "ebooks",
-        image: "/assets/shop-digital-ebook-seo.jpg",
-        tags: ["education", "seo", "marketing"],
-        description: "Aprende los fundamentos del posicionamiento web y cómo rankear en Google paso a paso."
-    },
+
+
     {
         id: 204,
         name: "Kit de Contratos para Freelancers",
@@ -588,13 +486,5 @@ export const products: Product[] = [
         tags: ["design", "3d", "assets"],
         description: "Colección de 50+ iconos 3D en alta resolución para tus proyectos web y apps."
     },
-    {
-        id: 208,
-        name: "Planner Digital 2026 (iPad/Tablet)",
-        price: "$30.000",
-        category: "templates",
-        image: "/assets/shop-apps.png",
-        tags: ["productivity", "planning", "digital"],
-        description: "Agenda digital interactiva para GoodNotes y Notability. Planifica tu éxito."
-    },
+
 ];
