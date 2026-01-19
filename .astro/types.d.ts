@@ -180,105 +180,182 @@ declare module 'astro:content' {
   slug: "api-gateway";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "appgoals.md": {
 	id: "appgoals.md";
   slug: "appgoals";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"codelearn.md": {
+	id: "codelearn.md";
+  slug: "codelearn";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "cryptovault.md": {
 	id: "cryptovault.md";
   slug: "cryptovault";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "cursos-react.md": {
 	id: "cursos-react.md";
   slug: "cursos-react";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"deploywizard-cli.md": {
+	id: "deploywizard-cli.md";
+  slug: "deploywizard-cli";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "ecomarket.md": {
 	id: "ecomarket.md";
   slug: "ecomarket";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "ecommerce.md": {
 	id: "ecommerce.md";
   slug: "ecommerce";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"fittrack-pro.md": {
+	id: "fittrack-pro.md";
+  slug: "fittrack-pro";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "freelance.md": {
 	id: "freelance.md";
   slug: "freelance";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"gusto-pos.md": {
+	id: "gusto-pos.md";
+  slug: "gusto-pos";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "homeofcode.md": {
 	id: "homeofcode.md";
   slug: "homeofcode";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"medicare-portal.md": {
+	id: "medicare-portal.md";
+  slug: "medicare-portal";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "milmexico.md": {
 	id: "milmexico.md";
   slug: "milmexico";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "neobank.md": {
 	id: "neobank.md";
   slug: "neobank";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "nested/webpages.md": {
 	id: "nested/webpages.md";
   slug: "nested/webpages";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"netguard-security.md": {
+	id: "netguard-security.md";
+  slug: "netguard-security";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"nexus-law.md": {
+	id: "nexus-law.md";
+  slug: "nexus-law";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "saas-dashboard.md": {
 	id: "saas-dashboard.md";
   slug: "saas-dashboard";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"smarthome-iot.md": {
+	id: "smarthome-iot.md";
+  slug: "smarthome-iot";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "studyflow.md": {
 	id: "studyflow.md";
   slug: "studyflow";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"taskmaster-ai.md": {
+	id: "taskmaster-ai.md";
+  slug: "taskmaster-ai";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "tradership.md": {
 	id: "tradership.md";
   slug: "tradership";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"urban-real-estate.md": {
+	id: "urban-real-estate.md";
+  slug: "urban-real-estate";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 "vitality.md": {
 	id: "vitality.md";
   slug: "vitality";
   body: string;
   collection: "work";
-  data: any
+  data: InferEntrySchema<"work">
+} & { render(): Render[".md"] };
+"wanderlust-journal.md": {
+	id: "wanderlust-journal.md";
+  slug: "wanderlust-journal";
+  body: string;
+  collection: "work";
+  data: InferEntrySchema<"work">
 } & { render(): Render[".md"] };
 };
 
@@ -290,5 +367,5 @@ declare module 'astro:content' {
 
 	type AnyEntryMap = ContentEntryMap & DataEntryMap;
 
-	type ContentConfig = never;
+	type ContentConfig = typeof import("../src/content/config");
 }

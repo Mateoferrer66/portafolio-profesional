@@ -34,22 +34,60 @@ const clientProjects = allProjects.filter(
 				align="start"
 			/>
 
+			<!-- Search Bar -->
+			<div class="search-container">
+				<input
+					type="text"
+					id="work-search"
+					placeholder="Search projects..."
+				/>
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="search-icon"
+				>
+					<circle cx="11" cy="11" r="8"></circle>
+					<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+				</svg>
+			</div>
+
+			<!-- Filter Tags -->
+			<div class="filter-container">
+				<button class="filter-tag active" data-tag="all">All</button>
+				{
+					[...new Set(allProjects.flatMap((p) => p.data.tags || []))]
+						.sort()
+						.map((tag) => (
+							<button class="filter-tag" data-tag={tag}>
+								{tag}
+							</button>
+						))
+				}
+			</div>
+
 			<!-- Cursos de React Section -->
 			{
 				courseProjects.length > 0 && (
 					<section class="category-section">
 						<header class="section-header">
 							<h2 class="section-title">
-								<span class="icon">📚</span> Cursos de React
+								<span class="icon">📚</span> Cursos
 							</h2>
 							<p class="section-description">
-								Comprehensive React training courses covering
+								Comprehensive training courses covering
 								fundamentals to advanced topics.
 							</p>
 						</header>
 						<Grid variant="offset">
 							{courseProjects.map((project) => (
-								<li>
+								<li class="project-item">
 									<PortfolioPreview project={project} />
 								</li>
 							))}
@@ -73,7 +111,7 @@ const clientProjects = allProjects.filter(
 						</header>
 						<Grid variant="offset">
 							{personalProjects.map((project) => (
-								<li>
+								<li class="project-item">
 									<PortfolioPreview project={project} />
 								</li>
 							))}
@@ -97,7 +135,7 @@ const clientProjects = allProjects.filter(
 						</header>
 						<Grid variant="offset">
 							{clientProjects.map((project) => (
-								<li>
+								<li class="project-item">
 									<PortfolioPreview project={project} />
 								</li>
 							))}
@@ -109,6 +147,63 @@ const clientProjects = allProjects.filter(
 		<ContactCTA />
 	</div>
 </BaseLayout>
+
+<script>
+	const filterTags = document.querySelectorAll(".filter-tag");
+	const projectItems = document.querySelectorAll(".project-item");
+	const sections = document.querySelectorAll(".category-section");
+	const searchInput = document.getElementById(
+		"work-search",
+	) as HTMLInputElement;
+
+	function filterProjects() {
+		const activeTagBtn = document.querySelector(".filter-tag.active");
+		const activeTag = activeTagBtn
+			? activeTagBtn.getAttribute("data-tag")
+			: "all";
+		const searchTerm = searchInput ? searchInput.value.toLowerCase() : "";
+
+		// Show/Hide projects
+		projectItems.forEach((item) => {
+			const card = item.querySelector(".card");
+			const title =
+				card?.querySelector(".title")?.textContent?.toLowerCase() || "";
+			const projectTags =
+				card?.getAttribute("data-tags")?.split(",") || [];
+
+			const matchTag =
+				activeTag === "all" || projectTags.includes(activeTag || "");
+			const matchSearch = title.includes(searchTerm);
+
+			if (matchTag && matchSearch) {
+				(item as HTMLElement).style.display = "block";
+			} else {
+				(item as HTMLElement).style.display = "none";
+			}
+		});
+
+		// Hide empty sections
+		sections.forEach((section) => {
+			const visibleItems = section.querySelectorAll(
+				'.project-item[style="display: block;"], .project-item:not([style*="display: none"])',
+			);
+			if (visibleItems.length === 0) {
+				(section as HTMLElement).style.display = "none";
+			} else {
+				(section as HTMLElement).style.display = "block";
+			}
+		});
+	}
+
+	filterTags.forEach((btn) => {
+		btn.addEventListener("click", () => {
+			filterTags.forEach((b) => b.classList.toggle("active", b === btn));
+			filterProjects();
+		});
+	});
+
+	searchInput?.addEventListener("input", filterProjects);
+</script>
 
 <style>
 	.category-section {
@@ -161,5 +256,63 @@ const clientProjects = allProjects.filter(
 		.section-header {
 			margin-bottom: 3rem;
 		}
+	}
+
+	.search-container {
+		position: relative;
+		max-width: 400px;
+		margin: 0 auto 1.5rem auto;
+	}
+
+	.search-container input {
+		width: 100%;
+		padding: 0.75rem 1rem 0.75rem 2.5rem;
+		border-radius: 9999px;
+		border: 1px solid var(--gray-800);
+		background: var(--surface-2);
+		color: var(--gray-200);
+		font-size: var(--text-base);
+		transition: all 0.2s ease;
+	}
+
+	.search-container input:focus {
+		outline: none;
+		border-color: var(--accent-regular);
+		box-shadow: 0 0 0 2px var(--accent-regular);
+	}
+
+	.search-icon {
+		position: absolute;
+		left: 1rem;
+		top: 50%;
+		transform: translateY(-50%);
+		color: var(--gray-400);
+		pointer-events: none;
+	}
+
+	.filter-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		justify-content: center;
+		margin-bottom: 2rem;
+	}
+
+	.filter-tag {
+		background: var(--surface-2);
+		color: var(--text-main);
+		border: 1px solid var(--gray-800);
+		padding: 0.5rem 1rem;
+		border-radius: 9999px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		font-size: var(--text-sm);
+	}
+
+	.filter-tag:hover,
+	.filter-tag.active {
+		background: var(--accent-regular);
+		color: white;
+		border-color: var(--accent-regular);
 	}
 </style>

@@ -438,6 +438,66 @@ export const products: Product[] = [
         description: "Gestión de campañas publicitarias en redes sociales y Google Ads."
     },
 
+    // Clothing (Expanded)
+    {
+        id: 114,
+        name: "Camiseta Developer",
+        price: "$45.000",
+        category: "clothing",
+        image: "/assets/shop-fashion.png",
+        tags: ["fashion", "clothing", "dev"],
+        description: "Camiseta 100% algodón con diseños minimalistas para desarrolladores."
+    },
+    {
+        id: 115,
+        name: "Hoodie Minimalista",
+        price: "$120.000",
+        category: "clothing",
+        image: "/assets/shop-pants.png",
+        tags: ["fashion", "clothing", "winter"],
+        description: "Hoodie cómodo y cálido, perfecto para largas sesiones de código."
+    },
+    {
+        id: 116,
+        name: "Gorra Tech",
+        price: "$35.000",
+        category: "clothing",
+        image: "/assets/shop-hero.png",
+        tags: ["fashion", "accessories"],
+        description: "Estilo urbano con el toque tech que te identifica."
+    },
+
+    // Tech Gadgets (New)
+    {
+        id: 117,
+        name: "Teclado Mecánico Custom",
+        price: "Cotizar",
+        category: "tech",
+        image: "/assets/shop-tech-pc.png",
+        tags: ["tech", "hardware", "gaming"],
+        description: "Teclados mecánicos personalizados a tu gusto, switches y keycaps a elección."
+    },
+    {
+        id: 118,
+        name: "Mouse Ergonómico",
+        price: "$150.000",
+        category: "tech",
+        image: "/assets/shop-tech-network.png",
+        tags: ["tech", "hardware", "office"],
+        description: "Diseño vertical para evitar el túnel carpiano y mejorar tu productividad."
+    },
+
+    // Design Assets (Expanded)
+    {
+        id: 119,
+        name: "Pack de Texturas 4K",
+        price: "$25.000",
+        category: "design",
+        image: "/assets/shop-design-pack.png",
+        tags: ["design", "assets", "3d"],
+        description: "Más de 100 texturas en alta resolución para tus renders y diseños."
+    },
+
     // Digital Products (Inventory Free)
     {
         id: 201,
