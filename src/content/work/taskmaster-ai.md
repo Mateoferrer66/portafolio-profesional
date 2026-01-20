@@ -1,5 +1,5 @@
 ---
-title: TaskMaster AI
+title: TaskMaster
 publishDate: 2024-11-15 00:00:00
 img: /assets/project-saas.png
 img_alt: Interface of TaskMaster AI dashboard

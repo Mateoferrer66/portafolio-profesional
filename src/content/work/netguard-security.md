@@ -1,7 +1,7 @@
 ---
 title: NetGuard Security Tool
 publishDate: 2023-12-05 00:00:00
-img: /assets/app-nordvpn.png
+img: /assets/netguard-new.png
 img_alt: Security shield icon
 description: |
   A network vulnerability scanner built for system administrators to identify and patch security loopholes.

@@ -1,7 +1,7 @@
 ---
 title: Wanderlust Journal
 publishDate: 2023-11-15 00:00:00
-img: /assets/stock-4.jpg
+img: /assets/wanderlust-new.png
 img_alt: Travel scenery
 description: |
   A digital diary for travelers to document their journeys, pin locations, and share stories with friends.

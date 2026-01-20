@@ -1,7 +1,7 @@
 ---
 title: MediCare Portal
 publishDate: 2024-03-01 00:00:00
-img: /assets/shop-3d-health.png
+img: /assets/medicare-new.png
 img_alt: Medical health icons
 description: |
   A HIPAA-compliant patient management system designed for private clinics to manage appointments, records, and billing.
