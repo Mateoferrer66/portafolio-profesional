@@ -7,20 +7,69 @@ interface Props {
 }
 
 const {
-	title = "Mateo Ferrer: Portafolio Profesional ",
-	description = "El sitio personal de Mateo Ferrer!",
+	title = "Mateo Ferrer | Desarrollador & Emprendedor Digital",
+	description = "Portafolio profesional de Mateo Ferrer. Descubre proyectos de desarrollo web, recursos digitales y servicios tecnológicos.",
 } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <meta charset="UTF-8" />
-<meta name="description" property="og:description" content={description} />
 <meta name="viewport" content="width=device-width" />
 <meta name="generator" content={Astro.generator} />
 <title>{title}</title>
+<meta name="description" content={description} />
+<meta
+	name="keywords"
+	content="Mateo Ferrer, Desarrollo Web, Astro, React, Frontend, E-commerce, Portafolio"
+/>
+<link rel="canonical" href={canonicalURL} />
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta
+	property="og:image"
+	content="https://mateoferrer.com/assets/og-image.jpg"
+/>
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={Astro.url} />
+<meta property="twitter:title" content={title} />
+<meta property="twitter:description" content={description} />
+<meta
+	property="twitter:image"
+	content="https://mateoferrer.com/assets/og-image.jpg"
+/>
+
+<!-- Performance Optimizations -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+<link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+<!-- Favicon Complete Set -->
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<!-- PWA & Mobile -->
+<meta name="theme-color" content="#7611a6" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta
+	name="apple-mobile-web-app-status-bar-style"
+	content="black-translucent"
+/>
+<meta name="apple-mobile-web-app-title" content="Mateo Ferrer" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="format-detection" content="telephone=no" />
+
+<!-- Fonts with preload for performance -->
 <link
 	href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,700;1,400&family=Rubik:wght@500;600&display=swap"
 	rel="stylesheet"

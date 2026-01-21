@@ -14,6 +14,9 @@ import ThreeDBackground from "../components/ThreeDBackground";
 import { ViewTransitions } from "astro:transitions";
 import ScrollReveal from "../components/ScrollReveal.astro";
 import ScrollToTop from "../components/ScrollToTop.astro";
+import ChatWidget from "../components/ChatWidget";
+import MagicCursor from "../components/MagicCursor";
+import FAQSchema from "../components/FAQSchema.astro";
 
 interface Props {
 	title?: string | undefined;
@@ -31,6 +34,42 @@ const { title, description } = Astro.props;
 		<!-- Google analytics code -->
 		<GoogleAnalytics />
 		<MainHead title={title} description={description} />
+		<script type="application/ld+json">
+			{
+				"@context": "https://schema.org",
+				"@graph": [
+					{
+						"@type": "Person",
+						"name": "Mateo Ferrer",
+						"url": "https://mateoferrer.com",
+						"image": "https://mateoferrer.com/assets/portrait.jpg",
+						"sameAs": [
+							"https://twitter.com/mateoferrer66",
+							"https://github.com/Mateoferrer66",
+							"https://www.linkedin.com/in/mateo-ferrer-a679a713a/"
+						],
+						"jobTitle": "Desarrollador Web & Emprendedor",
+						"worksFor": {
+							"@type": "Organization",
+							"name": "Freelance"
+						}
+					},
+					{
+						"@type": "ProfessionalService",
+						"name": "Mateo Ferrer - Servicios Digitales",
+						"url": "https://mateoferrer.com",
+						"image": "https://mateoferrer.com/assets/og-image.jpg",
+						"description": "Desarrollo de sitios web, aplicaciones y venta de recursos digitales.",
+						"address": {
+							"@type": "PostalAddress",
+							"addressCountry": "CO"
+						},
+						"priceRange": "$$"
+					}
+				]
+			}
+		</script>
+		<FAQSchema />
 	</head>
 	<body>
 		<GoogleTagManagerNoScript />
@@ -44,6 +83,8 @@ const { title, description } = Astro.props;
 		<WhatsAppButton />
 		<ScrollReveal />
 		<ScrollToTop />
+		<ChatWidget client:load />
+		<MagicCursor client:only="react" />
 
 		<script>
 			// Add “loaded” class once the document has completely loaded.

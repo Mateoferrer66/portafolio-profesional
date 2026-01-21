@@ -1,0 +1,24 @@
+{
+  "name": "Mateo Ferrer - Desarrollador & Emprendedor",
+  "short_name": "Mateo Ferrer",
+  "description": "Portafolio profesional de Mateo Ferrer. Desarrollo web, recursos digitales y servicios tecnológicos.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090b11",
+  "theme_color": "#7611a6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity", "technology"],
+  "lang": "es-CO"
+}
