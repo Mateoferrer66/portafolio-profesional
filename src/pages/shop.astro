@@ -26,10 +26,67 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 ---
 
 <BaseLayout
-    title="Tienda Digital | Mateo Ferrer"
-    description="Explora nuestra selección de productos digitales, plantillas, e-books y servicios tecnológicos exclusivos. Potencia tu productividad y creatividad."
+    title="Tienda Digital | Mateo Ferrer - Productos Digitales, Plantillas y Servicios"
+    description="Tienda online de Mateo Ferrer. Compra productos digitales, plantillas Notion, e-books, cursos, apps y servicios tecnológicos en Colombia. Entrega inmediata y soporte dedicado."
 >
-    <!-- SEO Schema -->
+    <!-- SEO Schema: Store -->
+    <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Store",
+            name: "Tienda Digital Mateo Ferrer",
+            url: "https://mateoferrer.com/shop/",
+            image: "https://mateoferrer.com/assets/shop-hero.png",
+            description:
+                "Tienda online de productos digitales, plantillas, e-books, cursos y servicios tecnológicos.",
+            address: {
+                "@type": "PostalAddress",
+                addressCountry: "CO",
+            },
+            priceRange: "$$",
+            paymentAccepted: "Nequi, Daviplata, Bancolombia, Transferencia",
+            openingHoursSpecification: {
+                "@type": "OpeningHoursSpecification",
+                dayOfWeek: [
+                    "Monday",
+                    "Tuesday",
+                    "Wednesday",
+                    "Thursday",
+                    "Friday",
+                    "Saturday",
+                    "Sunday",
+                ],
+                opens: "00:00",
+                closes: "23:59",
+            },
+        })}
+    />
+
+    <!-- SEO Schema: BreadcrumbList -->
+    <script
+        type="application/ld+json"
+        set:html={JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+                {
+                    "@type": "ListItem",
+                    position: 1,
+                    name: "Inicio",
+                    item: "https://mateoferrer.com/",
+                },
+                {
+                    "@type": "ListItem",
+                    position: 2,
+                    name: "Tienda Digital",
+                    item: "https://mateoferrer.com/shop/",
+                },
+            ],
+        })}
+    />
+
+    <!-- SEO Schema: Product List -->
     <script
         type="application/ld+json"
         set:html={JSON.stringify({
@@ -53,6 +110,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
     <div class="main-container">
         <!-- Floating Cart Button -->
+
         <button id="cart-toggle" class="cart-float-btn" aria-label="Open Cart">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -323,15 +381,65 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         <!-- Contact CTA -->
         <section class="cta-section">
             <div class="cta-content glass-panel">
-                <h2>¿Necesitas algo a la medida?</h2>
-                <p>
-                    Desarrollamos soluciones de software y diseño específicas
-                    para ti.
-                </p>
-                <a
-                    href="mailto:contact@mateoferrer.com"
-                    class="primary-btn glow-effect">Contactar Ahora</a
-                >
+                <!-- Decorative elements -->
+                <div class="cta-decoration cta-decoration-1"></div>
+                <div class="cta-decoration cta-decoration-2"></div>
+                <div class="cta-decoration cta-decoration-3"></div>
+                <div class="cta-particles">
+                    <span></span><span></span><span></span><span></span><span
+                    ></span>
+                </div>
+
+                <div class="cta-inner">
+                    <span class="cta-badge-shop">✨ Desarrollo a Medida</span>
+                    <h2>¿Necesitas algo a la medida?</h2>
+                    <p>
+                        Desarrollamos soluciones de software y diseño
+                        específicas para ti. Desde aplicaciones web hasta
+                        sistemas completos.
+                    </p>
+                    <div class="cta-buttons">
+                        <a
+                            href="https://wa.me/573005059987?text=Hola%20Mateo,%20me%20interesa%20un%20proyecto%20personalizado"
+                            class="primary-btn glow-effect whatsapp-cta"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                            >
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+                                ></path>
+                            </svg>
+                            Contactar Ahora
+                        </a>
+                        <a
+                            href="mailto:contact@mateoferrer.com"
+                            class="secondary-btn"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="18"
+                                height="18"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                ></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            Email
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -438,6 +546,12 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
             cartItemsContainer.innerHTML =
                 '<p class="empty-msg">Tu carrito está vacío.</p>';
         } else {
+            // Find full product info from products array
+            const getProductDescription = (id: string | number) => {
+                const product = products.find((p) => p.id == id);
+                return product?.description || "";
+            };
+
             cartItemsContainer.innerHTML = cart
                 .map(
                     (item: CartItem, index: number) => `
@@ -445,7 +559,8 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
                     <img src="${item.image}" alt="${item.name}" />
                     <div class="cart-item-info">
                         <h5>${item.name}</h5>
-                        <p>${item.price}</p>
+                        <p class="cart-item-desc">${getProductDescription(item.id)}</p>
+                        <p class="cart-item-price">${item.price}</p>
                         <div class="quantity-controls">
                             <button class="qty-btn minus" data-id="${item.id}">-</button>
                             <span>${item.quantity}</span>
@@ -1246,6 +1361,8 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     }
 
     .stars {
+        display: flex;
+        gap: 0.25rem;
         color: #fbbf24;
         margin-bottom: 1rem;
     }
@@ -1277,6 +1394,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     .cta-section {
         display: flex;
         justify-content: center;
+        padding: 2rem 0;
     }
 
     .cta-content {
@@ -1286,38 +1404,206 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         max-width: 900px;
         position: relative;
         overflow: hidden;
-        margin: 0 1rem; /* Add margin on small screens */
-    }
-
-    .cta-content::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        margin: 0 1rem;
         background: linear-gradient(
-            45deg,
-            rgba(139, 92, 246, 0.1),
+            135deg,
+            rgba(139, 92, 246, 0.15),
             rgba(217, 70, 239, 0.1)
         );
-        z-index: -1;
+    }
+
+    .cta-inner {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Decorative elements */
+    .cta-decoration {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .cta-decoration-1 {
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(
+            circle,
+            rgba(139, 92, 246, 0.4),
+            transparent 70%
+        );
+        top: -50px;
+        right: -50px;
+        animation: float-slow 6s ease-in-out infinite;
+    }
+
+    .cta-decoration-2 {
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(
+            circle,
+            rgba(217, 70, 239, 0.3),
+            transparent 70%
+        );
+        bottom: -30px;
+        left: -30px;
+        animation: float-slow 8s ease-in-out infinite reverse;
+    }
+
+    .cta-decoration-3 {
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(
+            circle,
+            rgba(59, 130, 246, 0.4),
+            transparent 70%
+        );
+        top: 50%;
+        left: 10%;
+        animation: float-slow 5s ease-in-out infinite;
+    }
+
+    @keyframes float-slow {
+        0%,
+        100% {
+            transform: translateY(0px) scale(1);
+        }
+        50% {
+            transform: translateY(-20px) scale(1.05);
+        }
+    }
+
+    /* Particles */
+    .cta-particles {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    .cta-particles span {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: rgba(139, 92, 246, 0.6);
+        border-radius: 50%;
+        animation: particle-float 4s ease-in-out infinite;
+    }
+
+    .cta-particles span:nth-child(1) {
+        top: 20%;
+        left: 15%;
+        animation-delay: 0s;
+    }
+    .cta-particles span:nth-child(2) {
+        top: 60%;
+        left: 85%;
+        animation-delay: 1s;
+    }
+    .cta-particles span:nth-child(3) {
+        top: 80%;
+        left: 25%;
+        animation-delay: 2s;
+    }
+    .cta-particles span:nth-child(4) {
+        top: 30%;
+        left: 75%;
+        animation-delay: 0.5s;
+    }
+    .cta-particles span:nth-child(5) {
+        top: 70%;
+        left: 55%;
+        animation-delay: 1.5s;
+    }
+
+    @keyframes particle-float {
+        0%,
+        100% {
+            opacity: 0.4;
+            transform: translateY(0) scale(1);
+        }
+        50% {
+            opacity: 1;
+            transform: translateY(-15px) scale(1.5);
+        }
+    }
+
+    /* Badge */
+    .cta-badge-shop {
+        display: inline-block;
+        background: linear-gradient(90deg, #7611a6, #d946ef);
+        color: white;
+        padding: 0.5rem 1.2rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        letter-spacing: 0.5px;
     }
 
     .cta-content h2 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
         color: var(--text-main);
+        background: linear-gradient(to right, var(--text-main), var(--accent));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
 
     .cta-content p {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         color: var(--text-muted);
         margin-bottom: 2rem;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+
+    /* CTA Buttons */
+    .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .whatsapp-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #25d366, #128c7e) !important;
+        box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .whatsapp-cta:hover {
+        background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+        box-shadow: 0 8px 30px rgba(37, 211, 102, 0.5);
+    }
+
+    .secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: transparent;
+        color: var(--text-main);
+        padding: 1rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: 2px solid rgba(139, 92, 246, 0.5);
+    }
+
+    .secondary-btn:hover {
+        background: rgba(139, 92, 246, 0.1);
+        border-color: var(--primary);
+        transform: translateY(-2px);
     }
 
     .primary-btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
         background: var(--primary);
         color: white;
         padding: 1rem 2.5rem;
@@ -1387,8 +1673,10 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         width: 100%;
         max-width: 420px;
         height: 100vh;
-        background: var(--surface);
-        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.3);
+        /* Always dark theme for cart sidebar */
+        background: linear-gradient(180deg, #0f172a 0%, #1e1b4b 100%);
+        border-left: 1px solid rgba(139, 92, 246, 0.2);
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5);
         z-index: 1002;
         transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         display: flex;
@@ -1396,9 +1684,10 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         padding: 2rem;
     }
 
-    :global(.theme-dark) .cart-sidebar {
-        background: #0f172a;
-        border-left: 1px solid var(--glass-border);
+    .cart-sidebar .cart-header h2 {
+        color: #f3f4f6;
+        font-size: 1.5rem;
+        font-weight: 700;
     }
 
     .cart-sidebar.open {
@@ -1470,8 +1759,27 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
     .cart-item-info h5 {
         font-size: 1rem;
-        margin-bottom: 0.2rem;
-        color: var(--text-main);
+        margin-bottom: 0.3rem;
+        color: #f3f4f6;
+        font-weight: 600;
+    }
+
+    .cart-item-desc {
+        font-size: 0.75rem;
+        color: #9ca3af;
+        line-height: 1.4;
+        margin-bottom: 0.4rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .cart-item-price {
+        color: #a78bfa;
+        font-weight: 700;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
     }
 
     .cart-total {
@@ -1480,23 +1788,106 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         display: flex;
         justify-content: space-between;
         margin-bottom: 1.5rem;
-        color: var(--text-main);
+        color: #f3f4f6;
+        padding: 1rem;
+        background: rgba(139, 92, 246, 0.1);
+        border-radius: 12px;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .cart-total span:last-child {
+        color: #a78bfa;
+    }
+
+    .cart-sidebar .close-btn {
+        color: #9ca3af;
+    }
+
+    .cart-sidebar .close-btn:hover {
+        color: #f3f4f6;
+    }
+
+    .cart-sidebar .empty-msg {
+        color: #9ca3af;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .cart-sidebar .cart-header {
+        border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .cart-item {
+        border-bottom: 1px solid rgba(139, 92, 246, 0.1) !important;
+    }
+
+    .cart-item .remove-btn {
+        color: #9ca3af;
+        background: rgba(239, 68, 68, 0.1);
+        border: none;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .cart-item .remove-btn:hover {
+        background: rgba(239, 68, 68, 0.3);
+        color: #f87171;
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .quantity-controls .qty-btn {
+        background: rgba(139, 92, 246, 0.2);
+        border: none;
+        color: #a78bfa;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+
+    .quantity-controls .qty-btn:hover {
+        background: rgba(139, 92, 246, 0.4);
+        color: #fff;
+    }
+
+    .quantity-controls span {
+        color: #f3f4f6;
+        font-weight: 600;
+        min-width: 24px;
+        text-align: center;
     }
 
     .checkout-btn {
         display: block;
-        background: #25d366; /* WhatsApp Green */
+        background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
         color: white;
         text-align: center;
         padding: 1rem;
         border-radius: 12px;
         text-decoration: none;
         font-weight: bold;
-        transition: opacity 0.3s;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
     }
 
     .checkout-btn:hover {
-        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
     }
 
     /* Modal */

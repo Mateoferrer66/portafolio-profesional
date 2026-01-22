@@ -32,6 +32,19 @@ const featuredProducts = products.slice(0, 4);
 ---
 
 <BaseLayout>
+	<script type="application/ld+json" slot="head">
+		{
+			"@context": "https://schema.org",
+			"@type": "WebSite",
+			"name": "Mateo Ferrer - Desarrollador Web",
+			"url": "https://portafolio-profesional.pages.dev/",
+			"potentialAction": {
+				"@type": "SearchAction",
+				"target": "https://portafolio-profesional.pages.dev/shop/?search={search_term_string}",
+				"query-input": "required name=search_term_string"
+			}
+		}
+	</script>
 	<div class="stack gap-20 lg:gap-48">
 		<div class="wrapper stack gap-8 lg:gap-20 reveal">
 			<header class="hero">
