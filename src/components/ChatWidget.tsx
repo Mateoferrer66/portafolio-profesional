@@ -10,7 +10,12 @@ type Message = {
     type?: 'text' | 'image' | 'link';
 };
 
-const ChatWidget = () => {
+interface ChatWidgetProps {
+    className?: string; // Allow overriding classes
+    client?: string; // Astro specific, but fine to ignore or type
+}
+
+const ChatWidget = ({ className }: ChatWidgetProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
     const [isTyping, setIsTyping] = useState(false);
@@ -111,7 +116,7 @@ const ChatWidget = () => {
     };
 
     return (
-        <div className="fixed right-5 z-[5000] flex flex-col items-end gap-4 bottom-24">
+        <div className={className || "fixed right-5 z-[5000] flex flex-col items-end gap-4 bottom-24"}>
             {/* Chat Window */}
             <div
                 className={`
@@ -198,8 +203,6 @@ const ChatWidget = () => {
                     group relative flex items-center justify-center w-14 h-14 rounded-full 
                     bg-violet-600 hover:bg-violet-700 text-white shadow-lg shadow-violet-500/30 
                     transition-all duration-300 hover:scale-110
-                    fixed right-5 z-[5000]
-                    bottom-24
                     ${isOpen ? 'rotate-90 scale-0 opacity-0 hidden' : 'scale-100 opacity-100'}
                 `}
                 aria-label="Chatbot"

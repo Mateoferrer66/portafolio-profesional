@@ -22,9 +22,21 @@ interface Props {
 	title?: string | undefined;
 	description?: string | undefined;
 	robots?: string | undefined;
+	keywords?: string | undefined;
 }
 
-const { title, description, robots } = Astro.props;
+const { title, description, robots, keywords } = Astro.props;
+// Logic for Floating Buttons Stacking
+const { pathname } = Astro.url;
+const isHome = pathname === "/" || pathname === "";
+const isWork = pathname.startsWith("/work");
+const isAbout = pathname.startsWith("/about");
+const isShop = pathname.startsWith("/shop");
+const shouldStack = isHome || isWork || isAbout || isShop;
+
+const chatWidgetClass = shouldStack
+	? "relative flex flex-col items-end gap-4" // Stacked: Relative to container
+	: undefined; // Default: Fixed positioning (handled by default prop)
 ---
 
 <html lang="en">
@@ -34,7 +46,12 @@ const { title, description, robots } = Astro.props;
 		<GoogleTagManager />
 		<!-- Google analytics code -->
 		<GoogleAnalytics />
-		<MainHead title={title} description={description} robots={robots} />
+		<MainHead
+			title={title}
+			description={description}
+			robots={robots}
+			keywords={keywords}
+		/>
 		<script type="application/ld+json">
 			{
 				"@context": "https://schema.org",
@@ -58,8 +75,8 @@ const { title, description, robots } = Astro.props;
 					{
 						"@type": "ProfessionalService",
 						"name": "Mateo Ferrer - Servicios Digitales",
-						"url": "https://mateoferrer.com",
-						"image": "https://mateoferrer.com/assets/og-image.jpg",
+						"url": "https://portafolio-profesional.pages.dev/",
+						"image": "https://portafolio-profesional.pages.dev/assets/og-image.jpg",
 						"description": "Desarrollo de sitios web, aplicaciones y venta de recursos digitales.",
 						"address": {
 							"@type": "PostalAddress",
@@ -77,15 +94,19 @@ const { title, description, robots } = Astro.props;
 		<GoogleTagManagerNoScript />
 		<div id="scroll-progress"></div>
 		<ThreeDBackground client:load />
-		<div class="stack backgrounds">
+		<div class="stack gap-20 backgrounds">
 			<Nav />
 			<slot />
 			<Footer />
 		</div>
-		<WhatsAppButton />
+
+		<div id="floating-buttons" class:list={[{ stacked: shouldStack }]}>
+			<WhatsAppButton />
+			<ChatWidget client:load className={chatWidgetClass} />
+		</div>
+
 		<ScrollReveal />
 		<ScrollToTop />
-		<ChatWidget client:load />
 		<MagicCursor client:only="react" />
 
 		<script>
@@ -195,6 +216,26 @@ const { title, description, robots } = Astro.props;
 					background-blend-mode: none;
 					--bg-gradient-size: none;
 				}
+			}
+
+			/* Floating Buttons Container */
+			#floating-buttons {
+				pointer-events: none; /* Let clicks pass through container */
+			}
+
+			#floating-buttons > * {
+				pointer-events: auto; /* Re-enable pointer events for children */
+			}
+
+			#floating-buttons.stacked {
+				position: fixed;
+				bottom: 5px;
+				right: 20px;
+				z-index: 5000;
+				display: flex;
+				flex-direction: column;
+				gap: 15px;
+				align-items: flex-end;
 			}
 		</style>
 	</body>

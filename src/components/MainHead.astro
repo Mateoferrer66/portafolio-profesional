@@ -5,12 +5,14 @@ interface Props {
 	title?: string | undefined;
 	description?: string | undefined;
 	robots?: string | undefined;
+	keywords?: string | undefined;
 }
 
 const {
 	title = "Mateo Ferrer | Desarrollador & Emprendedor Digital",
 	description = "Portafolio profesional de Mateo Ferrer. Descubre proyectos de desarrollo web, recursos digitales y servicios tecnológicos.",
 	robots = "index, follow",
+	keywords = "Mateo Ferrer, Desarrollo Web, Astro, React, Frontend, E-commerce, Portafolio, Tienda Digital, Productos Digitales, Plantillas Notion, E-books, Cursos Online, Servicios Tecnológicos, Desarrollo de Software, Diseño Web, Colombia, Freelance, Recursos Digitales, Apps, Gaming, Tech",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -21,10 +23,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <meta name="generator" content={Astro.generator} />
 <title>{title}</title>
 <meta name="description" content={description} />
-<meta
-	name="keywords"
-	content="Mateo Ferrer, Desarrollo Web, Astro, React, Frontend, E-commerce, Portafolio, Tienda Digital, Productos Digitales, Plantillas Notion, E-books, Cursos Online, Servicios Tecnológicos, Desarrollo de Software, Diseño Web, Colombia, Freelance, Recursos Digitales, Apps, Gaming, Tech"
-/>
+<meta name="keywords" content={keywords} />
 <meta name="author" content="Mateo Ferrer" />
 <meta name="robots" content={robots} />
 <meta name="language" content="Spanish" />

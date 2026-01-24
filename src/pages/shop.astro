@@ -28,6 +28,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 <BaseLayout
     title="Tienda Digital | Mateo Ferrer - Productos Digitales, Plantillas y Servicios"
     description="Tienda online de Mateo Ferrer. Compra productos digitales, plantillas Notion, e-books, cursos, apps y servicios tecnológicos en Colombia. Entrega inmediata y soporte dedicado."
+    keywords="tienda digital, mateo ferrer, productos digitales, plantillas notion, e-books tecnologia, cursos desarrollo web, servicios de software, apps colombia, gaming, recursos para creadores"
 >
     <!-- SEO Schema: Store -->
     <script
@@ -463,45 +464,20 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         quantity: number;
     }
 
-    let cart: CartItem[] = JSON.parse(
-        localStorage.getItem("mf_shop_cart") || "[]",
-    );
+    let cart: CartItem[] = [];
+    let wishlist: (string | number)[] = [];
 
-    let wishlist: (string | number)[] = JSON.parse(
-        localStorage.getItem("mf_shop_wishlist") || "[]",
-    );
-
-    // Selectors
-    const cartToggle = document.getElementById("cart-toggle");
-    const cartSidebar = document.getElementById("cart-sidebar");
-    const cartOverlay = document.getElementById("cart-overlay");
-    const cartClose = document.getElementById("cart-close");
-    const cartItemsContainer = document.getElementById("cart-items");
-    const cartCount = document.getElementById("cart-count");
-    const addButtons = document.querySelectorAll(".add-cart-btn");
-    const searchInput = document.getElementById(
-        "product-search",
-    ) as HTMLInputElement | null;
-    const filterBtns = document.querySelectorAll(".filter-btn");
-    const productCards = document.querySelectorAll(".product-card");
-    const toastContainer = document.getElementById("toast-container");
-
-    // Modal Selectors
-    const modal = document.getElementById("product-modal");
-    const modalClose = document.getElementById("modal-close");
-    const modalImg = document.getElementById("modal-img") as HTMLImageElement;
-    const modalTitle = document.getElementById("modal-title");
-    const modalPrice = document.getElementById("modal-price");
-    const modalDesc = document.getElementById("modal-description");
-    const modalCategory = document.getElementById("modal-category");
-    const modalAddBtn = document.getElementById("modal-add-btn");
-    const productTriggers = document.querySelectorAll(".product-trigger");
-
-    // Wishlist Selectors
-    const wishlistBtns = document.querySelectorAll(".wishlist-btn");
+    // --- STATE MANAGEMENT ---
+    function loadState() {
+        cart = JSON.parse(localStorage.getItem("mf_shop_cart") || "[]");
+        wishlist = JSON.parse(localStorage.getItem("mf_shop_wishlist") || "[]");
+        updateCartUI();
+        updateWishlistUI();
+    }
 
     // --- TOAST FUNCTIONS ---
     function showToast(message: string, type: "success" | "error" = "success") {
+        const toastContainer = document.getElementById("toast-container");
         if (!toastContainer) return;
 
         const toast = document.createElement("div");
@@ -515,7 +491,6 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
         toastContainer.appendChild(toast);
 
-        // Trigger animation
         requestAnimationFrame(() => {
             toast.classList.add("show");
         });
@@ -530,6 +505,13 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
     // --- CART FUNCTIONS ---
     function updateCartUI() {
+        const cartCount = document.getElementById("cart-count");
+        const cartItemsContainer = document.getElementById("cart-items");
+        const cartTotalEl = document.getElementById("cart-total-price");
+        const checkoutBtn = document.querySelector(
+            ".checkout-btn",
+        ) as HTMLAnchorElement;
+
         // Update badge
         if (cartCount) {
             const totalItems = cart.reduce(
@@ -539,22 +521,20 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
             cartCount.textContent = totalItems.toString();
         }
 
-        if (!cartItemsContainer) return;
-
         // Render items
-        if (cart.length === 0) {
-            cartItemsContainer.innerHTML =
-                '<p class="empty-msg">Tu carrito está vacío.</p>';
-        } else {
-            // Find full product info from products array
-            const getProductDescription = (id: string | number) => {
-                const product = products.find((p) => p.id == id);
-                return product?.description || "";
-            };
+        if (cartItemsContainer) {
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML =
+                    '<p class="empty-msg">Tu carrito está vacío.</p>';
+            } else {
+                const getProductDescription = (id: string | number) => {
+                    const product = products.find((p) => p.id == id);
+                    return product?.description || "";
+                };
 
-            cartItemsContainer.innerHTML = cart
-                .map(
-                    (item: CartItem, index: number) => `
+                cartItemsContainer.innerHTML = cart
+                    .map(
+                        (item: CartItem) => `
                 <div class="cart-item">
                     <img src="${item.image}" alt="${item.name}" />
                     <div class="cart-item-info">
@@ -570,38 +550,14 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
                      <button class="remove-btn" data-id="${item.id}">&times;</button>
                 </div>
             `,
-                )
-                .join("");
-
-            // Add event listeners
-            document.querySelectorAll(".qty-btn").forEach((btn) => {
-                btn.addEventListener("click", (e) => {
-                    const target = e.target as HTMLElement;
-                    const id = target.getAttribute("data-id");
-                    if (id) {
-                        if (target.classList.contains("plus")) {
-                            updateQuantity(id, 1);
-                        } else {
-                            updateQuantity(id, -1);
-                        }
-                    }
-                });
-            });
-
-            document.querySelectorAll(".remove-btn").forEach((btn) => {
-                btn.addEventListener("click", (e) => {
-                    const target = e.target as HTMLElement;
-                    const id = target.getAttribute("data-id");
-                    if (id) removeFromCart(id);
-                });
-            });
+                    )
+                    .join("");
+            }
         }
 
         // Calculate Total
         let total = 0;
         cart.forEach((item) => {
-            // Remove '$', '.', and non-numeric chars except for digits.
-            // Assume format like "$50.000 / Año" -> 50000
             const priceString = item.price.replace(/[^0-9]/g, "");
             const priceVal = parseInt(priceString);
             if (!isNaN(priceVal)) {
@@ -610,7 +566,6 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         });
 
         const totalFormatted = "$" + total.toLocaleString("es-CO");
-        const cartTotalEl = document.getElementById("cart-total-price");
         if (cartTotalEl) {
             cartTotalEl.textContent = totalFormatted;
         }
@@ -619,15 +574,16 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         localStorage.setItem("mf_shop_cart", JSON.stringify(cart));
 
         // Update WhatsApp Link
-        const checkoutBtn = document.querySelector(
-            ".checkout-btn",
-        ) as HTMLAnchorElement;
         if (checkoutBtn) {
             if (cart.length > 0) {
+                const getProductDescription = (id: string | number) => {
+                    const product = products.find((p) => p.id == id);
+                    return product?.description || "";
+                };
                 const itemsList = cart
                     .map(
                         (item) =>
-                            `- ${item.quantity}x ${item.name} (${item.price})`,
+                            `- ${item.quantity}x ${item.name} (${item.price}) - ${getProductDescription(item.id)}`,
                     )
                     .join("%0A");
 
@@ -644,7 +600,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     }
 
     function addToCart(product: Product) {
-        const existingItem = cart.find((item) => item.id === product.id);
+        const existingItem = cart.find((item) => item.id == product.id);
 
         if (existingItem) {
             existingItem.quantity += 1;
@@ -657,18 +613,19 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         updateCartUI();
 
         // Open cart feedback
+        const cartSidebar = document.getElementById("cart-sidebar");
+        const cartOverlay = document.getElementById("cart-overlay");
         if (cartSidebar) cartSidebar.classList.add("open");
         if (cartOverlay) cartOverlay.classList.add("open");
     }
 
     function updateQuantity(id: string, change: number) {
-        const itemIndex = cart.findIndex((item) => item.id === id);
+        const itemIndex = cart.findIndex((item) => item.id == id);
         if (itemIndex > -1) {
             const newQuantity = cart[itemIndex].quantity + change;
             if (newQuantity > 0) {
                 cart[itemIndex].quantity = newQuantity;
             } else {
-                // If quantity goes to 0, ask to remove or just remove
                 cart.splice(itemIndex, 1);
             }
             updateCartUI();
@@ -676,50 +633,186 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     }
 
     function removeFromCart(id: string) {
-        cart = cart.filter((item) => item.id !== id);
+        cart = cart.filter((item) => item.id != id);
         updateCartUI();
     }
 
-    // Event Listeners
-    if (cartToggle) {
-        cartToggle.addEventListener("click", () => {
-            if (cartSidebar) cartSidebar.classList.add("open");
-            if (cartOverlay) cartOverlay.classList.add("open");
+    // --- WISHLIST FUNCTIONS ---
+    function toggleWishlist(id: string | number) {
+        // loose comparison
+        const index = wishlist.findIndex((wId) => wId == id);
+        if (index === -1) {
+            wishlist.push(id);
+            showToast("Agregado a favoritos");
+        } else {
+            wishlist.splice(index, 1);
+            showToast("Eliminado de favoritos");
+        }
+        localStorage.setItem("mf_shop_wishlist", JSON.stringify(wishlist));
+        updateWishlistUI();
+    }
+
+    function updateWishlistUI() {
+        document.querySelectorAll(".wishlist-btn").forEach((btn) => {
+            const id = btn.getAttribute("data-id");
+            if (id && wishlist.some((wId) => wId == id)) {
+                btn.classList.add("active");
+                btn.querySelector(".heart-icon")?.setAttribute(
+                    "fill",
+                    "currentColor",
+                );
+            } else {
+                btn.classList.remove("active");
+                btn.querySelector(".heart-icon")?.setAttribute("fill", "none");
+            }
         });
     }
 
-    function closeCart() {
-        if (cartSidebar) cartSidebar.classList.remove("open");
-        if (cartOverlay) cartOverlay.classList.remove("open");
+    // --- MODAL FUNCTIONS ---
+    function openModal(productId: string | number) {
+        const product = products.find((p) => p.id == productId);
+        const modal = document.getElementById("product-modal");
+        const modalImg = document.getElementById(
+            "modal-img",
+        ) as HTMLImageElement;
+        const modalTitle = document.getElementById("modal-title");
+        const modalPrice = document.getElementById("modal-price");
+        const modalDesc = document.getElementById("modal-description");
+        const modalCategory = document.getElementById("modal-category");
+        const modalAddBtn = document.getElementById("modal-add-btn");
+
+        if (!product || !modal) return;
+
+        if (modalImg) modalImg.src = product.image;
+        if (modalTitle) modalTitle.textContent = product.name;
+        if (modalPrice) modalPrice.textContent = product.price;
+        if (modalCategory)
+            modalCategory.textContent = product.category.toUpperCase();
+        if (modalDesc)
+            modalDesc.textContent =
+                product.description || "Sin descripción disponible.";
+
+        // Update Add Button in Modal
+        if (modalAddBtn) {
+            // Store product data on the button for delegator
+            modalAddBtn.setAttribute("data-id", String(product.id));
+            modalAddBtn.setAttribute("data-name", product.name);
+            modalAddBtn.setAttribute("data-price", product.price);
+            modalAddBtn.setAttribute("data-image", product.image);
+            modalAddBtn.setAttribute("data-from-modal", "true");
+        }
+
+        modal.classList.add("open");
     }
 
-    if (cartClose) cartClose.addEventListener("click", closeCart);
-    if (cartOverlay) cartOverlay.addEventListener("click", closeCart);
+    // --- GLOBAL EVENT DELEGATION ---
+    function handleGlobalClick(e: MouseEvent) {
+        const target = e.target as HTMLElement;
 
-    addButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
+        // 1. Add to Cart Button (Card or Modal)
+        const addBtn = target.closest(".add-cart-btn, #modal-add-btn");
+        if (addBtn) {
+            e.preventDefault();
             const product: Product = {
-                id: btn.getAttribute("data-id") || "",
-                name: btn.getAttribute("data-name") || "",
-                price: btn.getAttribute("data-price") || "",
-                image: btn.getAttribute("data-image") || "",
+                id: addBtn.getAttribute("data-id") || "",
+                name: addBtn.getAttribute("data-name") || "",
+                price: addBtn.getAttribute("data-price") || "",
+                image: addBtn.getAttribute("data-image") || "",
                 category: "",
                 tags: [],
             };
             addToCart(product);
-        });
-    });
 
-    // --- SEARCH & FILTER LOGIC ---
+            // Close modal if it came from modal
+            if (addBtn.id === "modal-add-btn") {
+                document
+                    .getElementById("product-modal")
+                    ?.classList.remove("open");
+            }
+            return;
+        }
+
+        // 2. Wishlist Button
+        const wishBtn = target.closest(".wishlist-btn");
+        if (wishBtn) {
+            e.preventDefault();
+            e.stopPropagation();
+            const id = wishBtn.getAttribute("data-id");
+            if (id) toggleWishlist(id);
+            return;
+        }
+
+        // 3. Cart Controls (Plus/Minus/Remove)
+        if (target.closest(".qty-btn")) {
+            const btn = target.closest(".qty-btn")!;
+            const id = btn.getAttribute("data-id");
+            if (id) {
+                if (btn.classList.contains("plus")) updateQuantity(id, 1);
+                else updateQuantity(id, -1);
+            }
+            return;
+        }
+        if (target.closest(".remove-btn")) {
+            const id = target.closest(".remove-btn")!.getAttribute("data-id");
+            if (id) removeFromCart(id);
+            return;
+        }
+
+        // 4. Cart Toggles
+        if (target.closest("#cart-toggle")) {
+            document.getElementById("cart-sidebar")?.classList.add("open");
+            document.getElementById("cart-overlay")?.classList.add("open");
+            return;
+        }
+        if (target.closest("#cart-close") || target.closest("#cart-overlay")) {
+            document.getElementById("cart-sidebar")?.classList.remove("open");
+            document.getElementById("cart-overlay")?.classList.remove("open");
+            return;
+        }
+
+        // 5. Product Card Click (Open Modal) - Ignore if hit existing interaction buttons
+        const productCard = target.closest(".product-card");
+        if (productCard && !target.closest("button") && !target.closest("a")) {
+            const id = productCard.getAttribute("id")?.replace("product-", "");
+            if (id) openModal(id);
+            return;
+        }
+
+        // 6. Modal Close
+        if (
+            target.closest("#modal-close") ||
+            target === document.getElementById("product-modal")
+        ) {
+            document.getElementById("product-modal")?.classList.remove("open");
+            return;
+        }
+
+        // 7. Filters
+        const filterBtn = target.closest(".filter-btn");
+        if (filterBtn) {
+            document
+                .querySelectorAll(".filter-btn")
+                .forEach((b) => b.classList.remove("active"));
+            filterBtn.classList.add("active");
+            filterProducts();
+            return;
+        }
+    }
+
+    // --- SEARCH ---
     function filterProducts() {
+        const searchInput = document.getElementById(
+            "product-search",
+        ) as HTMLInputElement;
         if (!searchInput) return;
-        const query = searchInput.value.toLowerCase();
 
+        const query = searchInput.value.toLowerCase();
         const activeBtn = document.querySelector(".filter-btn.active");
         const activeCategory = activeBtn
             ? activeBtn.getAttribute("data-filter")
             : "all";
 
+        const productCards = document.querySelectorAll(".product-card");
         let visibleCount = 0;
 
         productCards.forEach((card) => {
@@ -740,113 +833,34 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
         const noResults = document.getElementById("no-results");
         if (noResults) {
-            if (visibleCount === 0) {
-                noResults.style.display = "block";
-            } else {
-                noResults.style.display = "none";
-            }
+            noResults.style.display = visibleCount === 0 ? "block" : "none";
         }
     }
 
-    if (searchInput) searchInput.addEventListener("input", filterProducts);
+    // --- INITIALIZATION ---
+    function init() {
+        loadState();
 
-    filterBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            filterBtns.forEach((b) => b.classList.remove("active"));
-            btn.classList.add("active");
-            filterProducts();
-        });
-    });
-
-    // --- MODAL FUNCTIONS ---
-    function openModal(productId: string | number) {
-        const product = products.find((p) => p.id == productId);
-        if (!product || !modal) return;
-
-        if (modalImg) modalImg.src = product.image;
-        if (modalTitle) modalTitle.textContent = product.name;
-        if (modalPrice) modalPrice.textContent = product.price;
-        if (modalCategory)
-            modalCategory.textContent = product.category.toUpperCase();
-        if (modalDesc)
-            modalDesc.textContent =
-                product.description || "Sin descripción disponible.";
-
-        // Update Add Button in Modal
-        if (modalAddBtn) {
-            // Clone to remove old listeners
-            const newBtn = modalAddBtn.cloneNode(true);
-            modalAddBtn.parentNode?.replaceChild(newBtn, modalAddBtn);
-            newBtn.addEventListener("click", () => {
-                addToCart(product);
-                if (modal) modal.classList.remove("open");
-            });
+        // Re-attach Search Listener specifically (input event isn't click)
+        const searchInput = document.getElementById("product-search");
+        if (searchInput) {
+            searchInput.removeEventListener("input", filterProducts); // cleanup to be safe
+            searchInput.addEventListener("input", filterProducts);
         }
-
-        modal.classList.add("open");
     }
 
-    if (modalClose) {
-        modalClose.addEventListener("click", () => {
-            if (modal) modal.classList.remove("open");
-        });
-    }
+    // One-time global listener setup (idempotent checks or just run once)
+    // Since this script runs on page load, we should remove the old listener if it exists to prevent duplicates on re-navigation if Astro re-runs scripts.
+    // However, in Astro ViewTransitions, scripts in <script> tags run once unless marked otherwise.
+    // To be safe, we'll attach to document body.
+    document.removeEventListener("click", handleGlobalClick);
+    document.addEventListener("click", handleGlobalClick);
 
-    // Close on click outside
-    if (modal) {
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) modal.classList.remove("open");
-        });
-    }
+    // Initial load
+    init();
 
-    productTriggers.forEach((trigger) => {
-        trigger.addEventListener("click", () => {
-            const id = trigger.getAttribute("data-id");
-            if (id) openModal(id);
-        });
-    });
-
-    // --- WISHLIST FUNCTIONS ---
-    function toggleWishlist(id: string | number) {
-        const index = wishlist.indexOf(id);
-        if (index === -1) {
-            wishlist.push(id);
-            showToast("Agregado a favoritos");
-        } else {
-            wishlist.splice(index, 1);
-            showToast("Eliminado de favoritos");
-        }
-        localStorage.setItem("mf_shop_wishlist", JSON.stringify(wishlist));
-        updateWishlistUI();
-    }
-
-    function updateWishlistUI() {
-        wishlistBtns.forEach((btn) => {
-            const id = btn.getAttribute("data-id");
-            // Check loosely for number/string match
-            if (id && wishlist.some((wId) => wId == id)) {
-                btn.classList.add("active");
-                const icon = btn.querySelector(".heart-icon");
-                if (icon) icon.setAttribute("fill", "currentColor");
-            } else {
-                btn.classList.remove("active");
-                const icon = btn.querySelector(".heart-icon");
-                if (icon) icon.setAttribute("fill", "none");
-            }
-        });
-    }
-
-    wishlistBtns.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-            e.stopPropagation(); // Prevent card click
-            const id = btn.getAttribute("data-id");
-            if (id) toggleWishlist(parseInt(id) || id);
-        });
-    });
-
-    // Init
-    updateCartUI();
-    updateWishlistUI();
+    // Re-run init on navigation
+    document.addEventListener("astro:after-swap", init);
 </script>
 
 <style>
@@ -1628,7 +1642,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     /* Cart Floating & Sidebar */
     .cart-float-btn {
         position: fixed;
-        bottom: 7rem;
+        bottom: 10rem;
         right: 2rem;
         background: var(--primary);
         color: white;
@@ -2052,9 +2066,9 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         .cart-float-btn {
             width: 55px;
             height: 55px;
-            bottom: 1.5rem;
-            left: 1.5rem; /* Move to left to avoid WhatsApp overlap (right) */
-            right: auto;
+            bottom: 220px;
+            left: auto;
+            right: 20px;
         }
 
         /* Grid */
