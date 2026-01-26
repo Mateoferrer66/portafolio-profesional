@@ -23,9 +23,10 @@ interface Props {
 	description?: string | undefined;
 	robots?: string | undefined;
 	keywords?: string | undefined;
+	image?: string | undefined;
 }
 
-const { title, description, robots, keywords } = Astro.props;
+const { title, description, robots, keywords, image } = Astro.props;
 // Logic for Floating Buttons Stacking
 const { pathname } = Astro.url;
 const isHome = pathname === "/" || pathname === "";
@@ -51,6 +52,7 @@ const chatWidgetClass = shouldStack
 			description={description}
 			robots={robots}
 			keywords={keywords}
+			image={image}
 		/>
 		<script type="application/ld+json">
 			{
