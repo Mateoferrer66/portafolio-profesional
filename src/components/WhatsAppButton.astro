@@ -12,8 +12,9 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
+    z-index: 9999;
     transition: transform 0.3s;
+    pointer-events: auto;
   }
 
   /* When inside a stacked container, reset position */
@@ -34,11 +35,13 @@
   }
 </style>
 <a
-  href="https://wa.me/573005059987"
+  href="https://api.whatsapp.com/send?phone=573005059987&text=Hola%20Mateo,%20vi%20tu%20portafolio%20y%20me%20gustar%C3%ADa%20m%C3%A1s%20informaci%C3%B3n."
   target="_blank"
   rel="noopener noreferrer"
   class="whatsapp-button"
   aria-label="Contact us on WhatsApp"
+  title="Chat with us on WhatsApp"
+  id="whatsapp-btn"
 >
   <svg viewBox="0 0 24 24"
     ><path
@@ -46,3 +49,19 @@
     ></path></svg
   >
 </a>
+
+<script>
+  const btn = document.getElementById("whatsapp-btn");
+  if (btn) {
+    btn.addEventListener("click", (e) => {
+      // If the default behavior is failing for some reason, we can force it.
+      // But usually <a> with target blank works.
+      // We'll log it to be sure it's clicking.
+      console.log("WhatsApp button clicked");
+
+      // Optional: Force window open if normal navigation fails
+      // e.preventDefault();
+      // window.open(btn.getAttribute('href'), '_blank');
+    });
+  }
+</script>
