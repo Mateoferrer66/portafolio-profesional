@@ -54,6 +54,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 
+<!-- Preload Critical Images for LCP -->
+<!-- Default (Light) -->
+<link
+	rel="preload"
+	as="image"
+	href="/assets/backgrounds/bg-main-light-800w.jpg"
+	media="(max-width: 50em) and (prefers-color-scheme: light)"
+/>
+<link
+	rel="preload"
+	as="image"
+	href="/assets/backgrounds/bg-main-light-1440w.jpg"
+	media="(min-width: 50em) and (prefers-color-scheme: light)"
+/>
+<!-- Dark Mode (Default in JS but good to have if prefers-color-scheme matches or for fast discovery) -->
+<link
+	rel="preload"
+	as="image"
+	href="/assets/backgrounds/bg-main-dark-800w.jpg"
+	media="(max-width: 50em) and (prefers-color-scheme: dark)"
+/>
+<link
+	rel="preload"
+	as="image"
+	href="/assets/backgrounds/bg-main-dark-1440w.jpg"
+	media="(min-width: 50em) and (prefers-color-scheme: dark)"
+/>
+
 <!-- Favicon Complete Set -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -80,17 +108,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <script is:inline>
 	// This code is inlined in the head to make dark mode instant & blocking.
 	const getThemePreference = () => {
-		if (
-			typeof localStorage !== "undefined" &&
-			localStorage.getItem("theme")
-		) {
-			return localStorage.getItem("theme");
-		}
-		// Default to dark mode
 		return "dark";
 	};
 	const isDark = getThemePreference() === "dark";
 	document.documentElement.classList[isDark ? "add" : "remove"]("theme-dark");
+	document.documentElement.classList.remove("theme-light"); // Ensure light mode is removed
 
 	if (typeof localStorage !== "undefined") {
 		// Watch the document element and persist user preference when it changes.
@@ -106,13 +128,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 	}
 
 	document.addEventListener("astro:after-swap", () => {
-		const saved =
-			typeof localStorage !== "undefined"
-				? localStorage.getItem("theme")
-				: null;
-		const isDark = saved ? saved === "dark" : true; // Default to dark if no preference
-		document.documentElement.classList[isDark ? "add" : "remove"](
-			"theme-dark",
-		);
+		document.documentElement.classList.add("theme-dark");
+		document.documentElement.classList.remove("theme-light");
 	});
 </script>

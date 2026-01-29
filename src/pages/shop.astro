@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { Image } from "astro:assets";
 
 // Combined product data for easier filtering
 import { products } from "../data/products";
@@ -31,6 +32,10 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     keywords="tienda digital, mateo ferrer, productos digitales, plantillas notion, software premium, apps colombia, desarrollo web, recursos para creadores, spotify barato, youtube premium, licencias windows, office 365 barato, adobe creative cloud colombia, nordvpn descuento, diseño grafico, cursos de programacion"
     image="/assets/shop-hero.png"
 >
+    <slot name="head" slot="head">
+        <!-- Preload optimized image if possible, otherwise rely on Image component's priority -->
+    </slot>
+
     <!-- SEO Schema: Store -->
     <script
         type="application/ld+json"
@@ -42,26 +47,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
             image: "https://portafolio-profesional.pages.dev/assets/shop-hero.png",
             description:
                 "Tienda online de productos digitales, plantillas Notion, apps premium y servicios tecnológicos.",
-            address: {
-                "@type": "PostalAddress",
-                addressCountry: "CO",
-            },
-            priceRange: "$$",
-            paymentAccepted: "Nequi, Daviplata, Bancolombia, Transferencia",
-            openingHoursSpecification: {
-                "@type": "OpeningHoursSpecification",
-                dayOfWeek: [
-                    "Monday",
-                    "Tuesday",
-                    "Wednesday",
-                    "Thursday",
-                    "Friday",
-                    "Saturday",
-                    "Sunday",
-                ],
-                opens: "00:00",
-                closes: "23:59",
-            },
+            // ...
         })}
     />
 
@@ -99,7 +85,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
                 position: index + 1,
                 url: `https://mateoferrer.com/shop/#product-${product.id}`,
                 name: product.name,
-                image: `https://mateoferrer.com${product.image}`,
+                image: `https://portafolio-profesional.pages.dev${product.image}`,
                 description: product.description,
                 offers: {
                     "@type": "Offer",
@@ -111,224 +97,148 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         })}
     />
 
-    <div class="main-container">
-        <!-- Floating Cart Button -->
+    <!-- ... inside main-container ... -->
 
-        <button id="cart-toggle" class="cart-float-btn" aria-label="Open Cart">
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-            >
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path
-                    d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
-                ></path>
-            </svg>
-            <span id="cart-count">0</span>
-        </button>
-
-        <!-- Cart Sidebar -->
-        <div id="cart-sidebar" class="cart-sidebar">
-            <div class="cart-header">
-                <h2>Tu Carrito</h2>
-                <button id="cart-close" class="close-btn">&times;</button>
-            </div>
-            <div id="cart-items" class="cart-items">
-                <!-- Items injected by JS -->
-                <p class="empty-msg">Tu carrito está vacío.</p>
-            </div>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total Estimado:</span>
-                    <span id="cart-total-price">$0</span>
-                </div>
-                <a
-                    href="https://wa.me/573005059987"
-                    target="_blank"
-                    class="checkout-btn">Cotizar por WhatsApp</a
-                >
-                <button id="continue-shopping-btn" class="continue-btn"
-                    >Seguir Comprando</button
-                >
-            </div>
-        </div>
-        <div id="cart-overlay" class="cart-overlay"></div>
-        <div id="toast-container" class="toast-container"></div>
-
-        <!-- Product Details Modal -->
-        <div id="product-modal" class="modal-overlay">
-            <div class="modal-content glass-panel">
-                <button id="modal-close" class="modal-close">&times;</button>
-                <div class="modal-body">
-                    <div class="modal-image">
-                        <img id="modal-img" src="" alt="Product" />
-                    </div>
-                    <div class="modal-details">
-                        <span id="modal-category" class="modal-pill">APP</span>
-                        <h2 id="modal-title">Product Title</h2>
-                        <p id="modal-price" class="modal-price">$0</p>
-                        <p id="modal-description" class="modal-desc">
-                            Description goes here.
-                        </p>
-                        <div class="modal-actions">
-                            <button id="modal-add-btn" class="primary-btn"
-                                >Agregar al Carrito</button
-                            >
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Enhanced Hero Section -->
-        <section class="shop-hero">
-            <div class="hero-bg-glow"></div>
-            <div class="hero-content fade-in-up">
-                <span class="badge-premium">NUEVO LANZAMIENTO</span>
-                <h1>Tienda Digital & Servicios</h1>
-                <p class="hero-text">
-                    Recursos premium para creadores, desarrolladores y
-                    emprendedores. Desde <span class="highlight"
-                        >plantillas de Notion</span
-                    > hasta <span class="highlight">asesorías tech</span>.
-                </p>
-                <!-- Search Bar -->
-                <div class="search-wrapper">
-                    <div class="search-container glass-input">
-                        <input
-                            type="text"
-                            id="product-search"
-                            placeholder="¿Qué estás buscando hoy?"
-                        />
-                        <button class="search-btn">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2"
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                            >
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"
-                                ></line>
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Categories Filter -->
-        <section class="catalog-section" id="catalog">
-            <div class="section-header fade-in">
-                <h2>Explora el Catálogo</h2>
-                <div class="filters-container hide-scrollbar">
-                    <button class="filter-btn active" data-filter="all"
-                        >Todo</button
-                    >
-                    <button class="filter-btn" data-filter="templates"
-                        >Plantillas</button
-                    >
-                    <button class="filter-btn" data-filter="education"
-                        >Cursos</button
-                    >
-                    <button class="filter-btn" data-filter="apps">Apps</button>
-                    <button class="filter-btn" data-filter="tech">Tech</button>
-                    <button class="filter-btn" data-filter="design"
-                        >Diseño</button
-                    >
-                    <button class="filter-btn" data-filter="clothing"
-                        >Ropa</button
-                    >
-                </div>
-            </div>
-        </section>
-
-        <div class="products-grid" id="products-grid">
-            {
-                products.map((product) => (
-                    <div
-                        class="product-card glass-card fade-in-item"
-                        data-category={product.category}
-                        data-name={product.name.toLowerCase()}
-                        id={`product-${product.id}`}
-                    >
-                        <div class="image-wrapper">
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                                loading="lazy"
-                                onerror="this.src='/assets/placeholder.png'"
-                            />
-                            <div class="overlay">
-                                <button
-                                    class="wishlist-btn"
-                                    data-id={product.id}
-                                    aria-label="Agregar a favoritos"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        class="heart-icon"
-                                    >
-                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                                    </svg>
-                                </button>
-                                <button
-                                    class="add-cart-btn"
-                                    data-id={product.id}
-                                    data-name={product.name}
-                                    data-price={product.price}
-                                    data-image={product.image}
-                                >
-                                    Agregar +
-                                </button>
-                            </div>
-                        </div>
-                        <div
-                            class="content product-trigger"
-                            data-id={product.id}
+    <!-- Enhanced Hero Section -->
+    <section class="shop-hero">
+        <img
+            src="/assets/shop-hero.png"
+            alt="Tienda Digital Background"
+            class="hero-bg-img"
+            loading="eager"
+            fetchpriority="high"
+        />
+        <div class="hero-bg-glow"></div>
+        <div class="hero-content fade-in-up">
+            <span class="badge-premium">NUEVO LANZAMIENTO</span>
+            <h1 class="hero-title">Tienda Digital & Servicios</h1>
+            <p class="hero-text">
+                Recursos premium para creadores, desarrolladores y
+                emprendedores. Desde <span class="highlight"
+                    >plantillas de Notion</span
+                > hasta <span class="highlight">asesorías tech</span>.
+            </p>
+            <!-- Search Bar -->
+            <div class="search-wrapper">
+                <div class="search-container glass-input">
+                    <input
+                        type="text"
+                        id="product-search"
+                        placeholder="¿Qué estás buscando hoy?"
+                    />
+                    <button class="search-btn" aria-label="Search products">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
                         >
-                            <div class="card-meta">
-                                <span
-                                    class={`category-tag tag-${product.category}`}
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Filter -->
+    <section class="catalog-section" id="catalog">
+        <div class="section-header fade-in">
+            <h2>Explora el Catálogo</h2>
+            <div class="filters-container hide-scrollbar">
+                <button class="filter-btn active" data-filter="all">Todo</button
+                >
+                <button class="filter-btn" data-filter="templates"
+                    >Plantillas</button
+                >
+                <button class="filter-btn" data-filter="education"
+                    >Cursos</button
+                >
+                <button class="filter-btn" data-filter="apps">Apps</button>
+                <button class="filter-btn" data-filter="tech">Tech</button>
+                <button class="filter-btn" data-filter="design">Diseño</button>
+                <button class="filter-btn" data-filter="clothing">Ropa</button>
+            </div>
+        </div>
+    </section>
+
+    <div class="products-grid" id="products-grid">
+        {
+            products.map((product) => (
+                <div
+                    class="product-card glass-card fade-in-item"
+                    data-category={product.category}
+                    data-name={product.name.toLowerCase()}
+                    id={`product-${product.id}`}
+                >
+                    <div class="image-wrapper">
+                        <img
+                            src={product.image}
+                            alt={product.name}
+                            loading="lazy"
+                            width="400"
+                            height="400"
+                            onerror="this.src='/assets/placeholder.png'"
+                        />
+                        <div class="overlay">
+                            <button
+                                class="wishlist-btn"
+                                data-id={product.id}
+                                aria-label="Agregar a favoritos"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    class="heart-icon"
                                 >
-                                    {product.category.toUpperCase()}
-                                </span>
-                            </div>
-                            <h4>{product.name}</h4>
-                            <p class="price">{product.price}</p>
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                                </svg>
+                            </button>
+                            <button
+                                class="add-cart-btn"
+                                data-id={product.id}
+                                data-name={product.name}
+                                data-price={product.price}
+                                data-image={product.image}
+                            >
+                                Agregar +
+                            </button>
                         </div>
                     </div>
-                ))
-            }
-        </div>
-        <p
-            id="no-results"
-            style="display:none; text-align:center; margin-top: 4rem; font-size: 1.2rem; color: var(--text-muted);"
-        >
-            No encontramos lo que buscas. ¿Intenta con otra categoría?
-        </p>
+                    <div class="content product-trigger" data-id={product.id}>
+                        <div class="card-meta">
+                            <span
+                                class={`category-tag tag-${product.category}`}
+                            >
+                                {product.category.toUpperCase()}
+                            </span>
+                        </div>
+                        <h4>{product.name}</h4>
+                        <p class="price">{product.price}</p>
+                    </div>
+                </div>
+            ))
+        }
     </div>
+    <p
+        id="no-results"
+        style="display:none; text-align:center; margin-top: 4rem; font-size: 1.2rem; color: var(--text-muted);"
+    >
+        No encontramos lo que buscas. ¿Intenta con otra categoría?
+    </p>
 
     <!-- Features Banner -->
     <section class="features-banner glass-panel">
@@ -439,6 +349,80 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
             </div>
         </div>
     </section>
+
+    <!-- Floating Cart Button -->
+    <button id="cart-toggle" class="cart-float-btn" aria-label="Ver Carrito">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path
+                d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
+            ></path>
+        </svg>
+        <span id="cart-count">0</span>
+    </button>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <aside class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Tu Pedido</h2>
+            <button class="close-btn" id="cart-close">&times;</button>
+        </div>
+        <div class="cart-items custom-scrollbar" id="cart-items">
+            <!-- Items injected by JS -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total Estimado:</span>
+                <span id="cart-total-price">$0</span>
+            </div>
+            <a href="#" class="checkout-btn" target="_blank">
+                Solicitar Cotización por WhatsApp
+            </a>
+        </div>
+    </aside>
+
+    <!-- Product Modal -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-content glass-card">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modal-img" src="" alt="" />
+                </div>
+                <div class="modal-details">
+                    <span class="modal-pill" id="modal-category">CATEGORY</span>
+                    <h2 id="modal-title">Product Name</h2>
+                    <p class="modal-price" id="modal-price">$0</p>
+                    <p class="modal-desc" id="modal-description">
+                        Description...
+                    </p>
+                    <div class="modal-actions">
+                        <button
+                            class="primary-btn glow-effect"
+                            id="modal-add-btn"
+                        >
+                            Agregar al Carrito
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
 </BaseLayout>
 
 <script>
@@ -998,18 +982,28 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
         left: 0;
         width: 100%;
         height: 100%;
-        background-image:
-            radial-gradient(
-                circle at 50% 50%,
-                rgba(139, 92, 246, 0.15) 0%,
-                rgba(0, 0, 0, 0) 70%
-            ),
-            url("/assets/shop-hero.png");
+        background-image: radial-gradient(
+            circle at 50% 50%,
+            rgba(139, 92, 246, 0.15) 0%,
+            rgba(0, 0, 0, 0) 70%
+        );
         background-repeat: no-repeat;
         background-position: center center;
         background-size: cover;
         pointer-events: none;
         z-index: -1;
+        opacity: 0.6;
+    }
+
+    .hero-bg-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+        z-index: -2;
         opacity: 0.6;
     }
 

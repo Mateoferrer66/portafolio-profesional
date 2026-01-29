@@ -29,3 +29,5 @@ Trust and professionalism were the key requirements for Nexus Law. The site comb
 - **CMS**: WordPress (Custom Theme)
 - **Frontend**: PHP, jQuery, SASS
 - **Security**: 2FA, SSL, Firewall
+
+

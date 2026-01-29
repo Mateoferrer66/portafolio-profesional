@@ -25,3 +25,5 @@ El uso de gradientes de color naranja y verde azulado sobre un fondo oscuro no s
 *   **Insights Personalizados:** Recomendaciones basadas en tus datos de actividad.
 
 Este proyecto destaca la importancia de la micro-interacción y la animación en la retención del usuario en aplicaciones móviles.
+
+

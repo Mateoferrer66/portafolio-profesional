@@ -19,3 +19,5 @@ StudyFlow transforma la educación digital con una interfaz centrada en el estud
 *   **Aulas Virtuales:** Videoconferencias integradas con herramientas colaborativas.
 *   **Gamificación:** Sistema de medallas y puntos para incentivar el aprendizaje.
 *   **Analíticas:** Reportes detallados de rendimiento por estudiante y curso.
+
+

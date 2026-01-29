@@ -19,3 +19,5 @@ CryptoVault ofrece una experiencia de usuario de nivel institucional para el inv
 *   **Multi-chain Support:** Gestión de activos en Ethereum, Solana y Polygon.
 *   **Visualización 3D:** Gráficos interactivos de tendencias de mercado.
 *   **Seguridad Biométrica:** Integración con hardware keys y autenticación avanzada.
+
+

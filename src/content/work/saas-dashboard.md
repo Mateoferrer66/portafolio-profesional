@@ -37,3 +37,4 @@ To ensure consistency and speed up future development, I built a custom design s
 ## Outcome
 
 The new dashboard was launched to over 500 enterprise clients. User engagement increased by **200%**, and the "time-to-insight" metric dropped from minutes to seconds. This project solidified my expertise in building scalable, performance-critical web applications.
+

@@ -19,3 +19,5 @@ EcoMarket conecta a consumidores conscientes con productores locales. La aplicac
 *   **Rastreo de Origen:** Conoce la historia detrás de cada producto escaneando un QR.
 *   **Diseño Sostenible:** UI minimalista inspirada en la naturaleza.
 *   **Logística Verde:** Optimización de rutas de entrega para minimizar emisiones.
+
+

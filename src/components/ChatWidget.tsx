@@ -142,7 +142,7 @@ const ChatWidget = ({ className }: ChatWidgetProps) => {
                             <p className="text-xs text-indigo-200">En línea ahora</p>
                         </div>
                     </div>
-                    <button onClick={toggleChat} className="text-white/80 hover:text-white transition p-1 hover:bg-white/10 rounded-full">
+                    <button onClick={toggleChat} aria-label="Cerrar chat" className="text-white/80 hover:text-white transition p-1 hover:bg-white/10 rounded-full">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
                     </button>
                 </div>
@@ -192,7 +192,7 @@ const ChatWidget = ({ className }: ChatWidgetProps) => {
 
                 {/* Input Placeholder (Disabled for now as it's guided flow, but visually present) */}
                 <div className="p-3 bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800">
-                    <p className="text-xs text-center text-slate-400">Selecciona una opción para continuar</p>
+                    <p className="text-xs text-center text-slate-500 dark:text-slate-400">Selecciona una opción para continuar</p>
                 </div>
             </div>
 

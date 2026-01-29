@@ -29,3 +29,4 @@ TaskMaster AI redefines project management by integrating machine learning to an
 - **Backend**: Python, FastAPI
 - **AI Engine**: TensorFlow, OpenAI API
 - **Database**: PostgreSQL
+

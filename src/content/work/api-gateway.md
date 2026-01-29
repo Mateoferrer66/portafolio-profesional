@@ -48,3 +48,5 @@ I designed a custom API Gateway to act as the single entry point for all externa
 - **Developer Experience**: Removed 90% of boilerplate code from individual microservices, allowing teams to focus on business logic.
 
 This project demonstrates my strong grasp of backend engineering principles, distributed systems, and infrastructure-as-code.
+
+

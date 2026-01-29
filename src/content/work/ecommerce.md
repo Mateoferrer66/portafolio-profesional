@@ -30,3 +30,4 @@ featured: true
 - **SEO Strategy**: Implemented structured data (Schema.org) for products, resulting in rich snippets in search results and a **30% increase** in organic traffic.
 
 This project showcases my ability to deliver end-to-end commercial solutions that prioritize both user experience and business metrics.
+

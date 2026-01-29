@@ -20,8 +20,12 @@ export default defineConfig({
     }
   },
   vite: {
-    ssr: {
-      noExternal: ['three']
+    build: {
+      rollupOptions: {
+        output: {
+          // Automatic chunk splitting is usually sufficient when using React.lazy
+        }
+      }
     }
   }
 });

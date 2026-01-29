@@ -29,3 +29,5 @@ Built for a chain of Italian restaurants, Gusto POS handles the chaos of a busy 
 - **Frontend**: React, Socket.io
 - **Backend**: Node.js, Express
 - **Database**: PostgreSQL
+
+

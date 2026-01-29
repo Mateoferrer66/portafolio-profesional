@@ -29,3 +29,5 @@ Built for a leading real estate agency, this platform focuses on high-quality vi
 - **Frontend**: Vue.js, Nuxt.js
 - **Backend**: Laravel API
 - **Maps**: Google Maps Platform
+
+

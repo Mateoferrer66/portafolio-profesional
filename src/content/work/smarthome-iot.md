@@ -29,3 +29,5 @@ Frustrated by having ten different apps for my lightbulbs, plugs, and sensors, I
 - **Frontend**: React, D3.js
 - **Backend**: Node.js, MQTT
 - **Hardware**: Raspberry Pi 4, Zigbee2MQTT
+
+

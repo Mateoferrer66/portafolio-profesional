@@ -28,3 +28,5 @@ FitTrack Pro goes beyond counting steps. It's a complete health companion that h
 - **Mobile**: Flutter (iOS & Android)
 - **Backend**: Firebase, Node.js
 - **Wearable Integration**: HealthKit, Google Fit API
+
+

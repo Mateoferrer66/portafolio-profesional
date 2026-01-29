@@ -25,3 +25,5 @@ Utilizando una paleta de colores limpia con acentos de verde eléctrico, cada el
 *   **Diseño Responsivo:** Perfectamente funcional en tablets y escritorio.
 
 Este dashboard demuestra cómo una interfaz bien diseñada puede hacer que la gestión financiera sea una tarea sencilla y hasta agradable.
+
+

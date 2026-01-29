@@ -107,3 +107,5 @@ Panel de control para visualización de métricas de negocio en tiempo real.
 > "Profesional, puntual y con gran atención al detalle. Definitivamente trabajaré con él nuevamente." - **Carlos R., Entrepreneur**
 
 **¿Tienes un proyecto en mente?** Contáctame para discutir cómo puedo ayudarte a convertir tu visión en realidad.
+
+

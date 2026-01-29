@@ -93,6 +93,8 @@ const featuredProducts = products.slice(0, 4);
 					height="620"
 					src="/assets/portrait.jpg"
 					id="hero-portrait"
+					fetchpriority="high"
+					loading="eager"
 				/>
 			</header>
 
@@ -194,7 +196,7 @@ const featuredProducts = products.slice(0, 4);
 		<main class="wrapper stack gap-20 lg:gap-48">
 			<section class="section with-background with-cta reveal">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Featured Projects</h3>
+					<h2>Featured Projects</h2>
 					<p>
 						Take a look below at some of my featured work for
 						clients from the past few years.
@@ -224,7 +226,7 @@ const featuredProducts = products.slice(0, 4);
 			<!-- Testimonials Section -->
 			<section class="testimonials-section reveal">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>What Clients Say</h3>
+					<h2>What Clients Say</h2>
 					<p>
 						Don't just take my word for it. Here's what my clients
 						have to say about working with me.
@@ -255,7 +257,7 @@ const featuredProducts = products.slice(0, 4);
 
 			<section class="section with-background bg-variant">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h3>Featured In</h3>
+					<h2>Featured In</h2>
 					<p>
 						I have been fortunate enough to recieve praise for my
 						work in several publications.
@@ -270,6 +272,10 @@ const featuredProducts = products.slice(0, 4);
 									<img
 										src={`/assets/mentions/${index}.png`}
 										alt={`Publication ${index}`}
+										width="150"
+										height="75"
+										loading="lazy"
+										decoding="async"
 									/>
 
 									<p>{brand}</p>
@@ -481,6 +487,8 @@ const featuredProducts = products.slice(0, 4);
 
 	/* ====================================================== */
 
+	/* ====================================================== */
+
 	.mention-card {
 		display: flex;
 		height: 7rem;
@@ -492,6 +500,13 @@ const featuredProducts = products.slice(0, 4);
 		color: var(--gray-300);
 		background: var(--gradient-subtle);
 		box-shadow: var(--shadow-sm);
+	}
+
+	.mention-card img {
+		height: auto;
+		max-height: 60%;
+		max-width: 80%;
+		object-fit: contain;
 	}
 
 	/* Statistics Section */

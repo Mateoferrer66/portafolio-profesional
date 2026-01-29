@@ -30,3 +30,4 @@ MediCare Portal streamlines clinic operations, reducing administrative overhead 
 - **Backend**: .NET Core
 - **Database**: SQL Server
 - **Security**: AES-256 Encryption
+

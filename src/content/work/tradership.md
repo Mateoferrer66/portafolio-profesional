@@ -200,3 +200,5 @@ Este proyecto me enseñó:
 **Open Source**: Planeado liberar componentes como OSS
 
 Interesado en el proyecto o quieres ser beta tester? Contáctame para acceso temprano!
+
+
