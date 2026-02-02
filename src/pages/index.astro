@@ -98,27 +98,7 @@ const featuredProducts = products.slice(0, 4);
 				/>
 			</header>
 
-			<script>
-				const portrait = document.getElementById("hero-portrait");
-				if (portrait) {
-					document.addEventListener("mousemove", (e) => {
-						const { clientX, clientY } = e;
-						const { innerWidth, innerHeight } = window;
-
-						// Calculate rotation (max 15 degrees)
-						const yRotation = (clientX / innerWidth - 0.5) * 30; // Rotate around Y axis based on X position
-						const xRotation = -(clientY / innerHeight - 0.5) * 30; // Rotate around X axis based on Y position
-
-						portrait.style.transform = `perspective(1000px) rotateX(${xRotation}deg) rotateY(${yRotation}deg) scale3d(1.05, 1.05, 1.05)`;
-					});
-
-					// Reset on mouse leave
-					document.addEventListener("mouseleave", () => {
-						portrait.style.transform =
-							"perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)";
-					});
-				}
-			</script>
+			<script src="../scripts/homeUtils.ts"></script>
 
 			<Skills />
 		</div>
