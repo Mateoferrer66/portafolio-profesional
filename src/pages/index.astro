@@ -25,7 +25,12 @@ const projects = (await getCollection("work"))
 	.slice(0, 4);
 
 import { products } from "../data/products";
-const featuredProducts = products.slice(0, 4);
+const featuredProducts = products.filter((p) =>
+	[2, 40, 201].includes(Number(p.id)),
+);
+
+// Component Imports
+import ThreeBackground from "../components/ThreeBackground.jsx";
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
@@ -86,6 +91,8 @@ const featuredProducts = products.slice(0, 4);
 						</a>
 					</div>
 				</Hero>
+
+				<ThreeBackground client:only="react" />
 
 				<img
 					alt="Portada Mateo Ferrer"
@@ -203,6 +210,57 @@ const featuredProducts = products.slice(0, 4);
 				</div>
 			</section>
 
+			<!-- Featured Products Section (NEW) -->
+			<section class="section with-background reveal">
+				<header class="section-header stack gap-2 lg:gap-4">
+					<h2>Destacados de la Tienda</h2>
+					<p>
+						Herramientas y recursos premium para llevar tu
+						productividad al siguiente nivel.
+					</p>
+				</header>
+
+				<div class="gallery">
+					<Grid variant="small">
+						{
+							featuredProducts.map((product) => (
+								<li class="product-card-home tilt-card">
+									<a
+										href={`/shop/#product-${product.id}`}
+										class="product-link"
+									>
+										<div class="product-image">
+											<img
+												src={product.image}
+												alt={product.name}
+												loading="lazy"
+											/>
+											<span class="price-badge">
+												{product.price}
+											</span>
+										</div>
+										<div class="product-info">
+											<h3>{product.name}</h3>
+											<p>
+												{product.category.toUpperCase()}
+											</p>
+										</div>
+									</a>
+								</li>
+							))
+						}
+					</Grid>
+				</div>
+				<script src="../scripts/tilt.ts"></script>
+
+				<div class="cta">
+					<CallToAction href="/shop/">
+						Ver Tienda Completa
+						<Icon icon="shopping-cart" size="1.2em" />
+					</CallToAction>
+				</div>
+			</section>
+
 			<!-- Testimonials Section -->
 			<section class="testimonials-section reveal">
 				<header class="section-header stack gap-2 lg:gap-4">
@@ -245,24 +303,28 @@ const featuredProducts = products.slice(0, 4);
 				</header>
 
 				<div class="gallery">
-					<Grid variant="small">
-						{
-							["", "", "", "", ""].map((brand, index) => (
-								<li class="mention-card">
-									<img
-										src={`/assets/mentions/${index}.png`}
-										alt={`Publication ${index}`}
-										width="150"
-										height="75"
-										loading="lazy"
-										decoding="async"
-									/>
-
-									<p>{brand}</p>
-								</li>
-							))
-						}
-					</Grid>
+					<div class="marquee-container">
+						<div class="marquee-content">
+							{
+								/* Duplicate items for seamless loop */
+								[...Array(10)].map((_, index) => (
+									<div class="mention-card">
+										<img
+											src={`/assets/mentions/${index % 5}.png`}
+											alt={`Client ${index % 5}`}
+											width="150"
+											height="75"
+											loading="lazy"
+											onerror="this.style.display='none'; this.nextElementSibling.style.display='block'"
+										/>
+										<span style="display:none; font-weight:bold; color:var(--gray-300)">
+											CLIENTE {(index % 5) + 1}
+										</span>
+									</div>
+								))
+							}
+						</div>
+					</div>
 				</div>
 			</section>
 		</main>
@@ -281,6 +343,86 @@ const featuredProducts = products.slice(0, 4);
 		padding: 2rem;
 		border-radius: 2rem;
 		overflow: hidden;
+		overflow: hidden;
+		/* Ensure text is above canvas */
+		z-index: 1;
+	}
+
+	/* 3D Canvas Container override if needed */
+	.hero :global(canvas) {
+		z-index: -1;
+	}
+
+	.product-card-home {
+		border-radius: 1.5rem;
+		background: var(--gradient-subtle);
+		border: 1px solid var(--gray-800);
+		overflow: hidden;
+		transition:
+			transform 0.3s ease,
+			box-shadow 0.3s ease;
+		height: 100%;
+	}
+
+	.product-card-home:hover {
+		transform: translateY(-5px);
+		box-shadow: var(--shadow-md);
+		border-color: var(--accent-regular);
+	}
+
+	.product-link {
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.product-image {
+		height: 200px;
+		width: 100%;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.product-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.5s ease;
+	}
+
+	.product-card-home:hover .product-image img {
+		transform: scale(1.1);
+	}
+
+	.price-badge {
+		position: absolute;
+		top: 1rem;
+		right: 1rem;
+		background: var(--accent-regular);
+		color: white;
+		padding: 0.25rem 0.75rem;
+		border-radius: 99rem;
+		font-weight: bold;
+		font-size: 0.9rem;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+	}
+
+	.product-info {
+		padding: 1.5rem;
+		background: rgba(var(--gray-999-basis), 0.5);
+		backdrop-filter: blur(5px);
+	}
+
+	.product-info h3 {
+		font-size: 1.25rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.product-info p {
+		color: var(--gray-400);
+		font-size: 0.9rem;
 	}
 
 	.hero::before {
@@ -572,6 +714,52 @@ const featuredProducts = products.slice(0, 4);
 		color: var(--accent-text-over);
 		transform: translateY(-2px);
 		box-shadow: var(--shadow-md);
+	}
+
+	/* Marquee */
+	.marquee-container {
+		width: 100%;
+		overflow: hidden;
+		mask-image: linear-gradient(
+			to right,
+			transparent,
+			black 10%,
+			black 90%,
+			transparent
+		);
+		-webkit-mask-image: linear-gradient(
+			to right,
+			transparent,
+			black 10%,
+			black 90%,
+			transparent
+		);
+		padding: 2rem 0;
+	}
+
+	.marquee-content {
+		display: flex;
+		gap: 2rem;
+		width: max-content;
+		animation: marquee-scroll 30s linear infinite;
+	}
+
+	.marquee-content:hover {
+		animation-play-state: paused;
+	}
+
+	@keyframes marquee-scroll {
+		0% {
+			transform: translateX(0);
+		}
+		100% {
+			transform: translateX(-50%);
+		}
+	}
+
+	.mention-card {
+		flex-shrink: 0;
+		width: 200px; /* Fixed width for smooth scroll */
 	}
 
 	@media (min-width: 50em) {

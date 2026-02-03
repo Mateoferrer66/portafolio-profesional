@@ -1,0 +1,146 @@
+---
+import Icon from "./Icon.astro";
+---
+
+<div class="floating-cta-container">
+    <div class="cta-menu">
+        <a
+            href="https://wa.me/573005059987"
+            target="_blank"
+            class="cta-item whatsapp"
+            aria-label="Contact on WhatsApp"
+        >
+            <Icon icon="whatsapp-logo" size="1.2em" />
+            <span class="label">WhatsApp</span>
+        </a>
+        <a href="/shop/" class="cta-item shop" aria-label="Visit Shop">
+            <Icon icon="shopping-cart" size="1.2rem" />
+            <span class="label">Tienda</span>
+        </a>
+    </div>
+    <button class="main-btn" aria-label="Open Actions">
+        <span class="icon-open"
+            ><Icon icon="chat-centered-text" size="1.5rem" /></span
+        >
+        <span class="icon-close"><Icon icon="x" size="1.5rem" /></span>
+    </button>
+</div>
+
+<script>
+    const mainBtn = document.querySelector(".main-btn");
+    const container = document.querySelector(".floating-cta-container");
+
+    mainBtn?.addEventListener("click", () => {
+        container?.classList.toggle("active");
+    });
+</script>
+
+<style>
+    .floating-cta-container {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .main-btn {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        background: var(--accent-regular);
+        color: white;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .main-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .icon-close {
+        display: none;
+    }
+
+    .floating-cta-container.active .icon-open {
+        display: none;
+    }
+
+    .floating-cta-container.active .icon-close {
+        display: flex; /* or block/inline-flex depending on Icon */
+    }
+
+    .floating-cta-container.active .main-btn {
+        background: var(--gray-900);
+    }
+
+    .cta-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+    }
+
+    .floating-cta-container.active .cta-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .cta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        color: white;
+        text-decoration: none;
+        background: var(--gray-800);
+        padding: 0.6rem 1rem; /* Expanded for label */
+        border-radius: 2rem;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .cta-item .label {
+        display: none; /* Hidden by default on mobile if cleaner */
+        font-weight: 500;
+        font-size: 0.9rem;
+    }
+
+    .floating-cta-container.active .cta-item .label {
+        display: block;
+    }
+
+    .cta-item:hover {
+        transform: translateX(-5px);
+    }
+
+    .whatsapp {
+        background: #25d366;
+    }
+
+    .shop {
+        background: var(--accent-regular);
+    }
+
+    @media (min-width: 768px) {
+        .cta-item .label {
+            display: block;
+        }
+
+        .cta-item {
+            padding: 0.8rem 1.2rem;
+        }
+    }
+</style>
