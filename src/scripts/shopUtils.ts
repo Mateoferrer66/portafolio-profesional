@@ -19,9 +19,30 @@ let cart: CartItem[] = [];
 let wishlist: (string | number)[] = [];
 
 // --- STATE MANAGEMENT ---
+const SHOP_VERSION = "v1.1"; // Increment to reset carts if data structure changes
+
 function loadState() {
-    cart = JSON.parse(localStorage.getItem("mf_shop_cart") || "[]");
-    wishlist = JSON.parse(localStorage.getItem("mf_shop_wishlist") || "[]");
+    const storedVersion = localStorage.getItem("mf_shop_version");
+    
+    // Version check to prevent stale data issues
+    if (storedVersion !== SHOP_VERSION) {
+        console.log("Shop version mismatch or first load. Resetting cart.");
+        localStorage.removeItem("mf_shop_cart");
+        localStorage.removeItem("mf_shop_wishlist");
+        localStorage.setItem("mf_shop_version", SHOP_VERSION);
+        cart = [];
+        wishlist = [];
+    } else {
+        try {
+            cart = JSON.parse(localStorage.getItem("mf_shop_cart") || "[]");
+            wishlist = JSON.parse(localStorage.getItem("mf_shop_wishlist") || "[]");
+        } catch (e) {
+            console.error("Error parsing shop data", e);
+            cart = [];
+            wishlist = [];
+        }
+    }
+    
     updateCartUI();
     updateWishlistUI();
 }
@@ -121,17 +142,34 @@ function updateCartUI() {
     // Calculate Total
     let total = 0;
     cart.forEach((item) => {
-        const priceString = item.price.replace(/[^0-9]/g, "");
-        const priceVal = parseInt(priceString);
+        // Robust parsing: "50.000", "$50.000", "50000", "Cotizar"
+        // 1. Remove non-numeric characters EXCEPT for existing separate dots if needed, 
+        // but here we just want raw digits. 
+        // In Colombia '50.000' usually means 50000. 
+        // 'Cotizar' will become empty string -> parseInt('') is NaN.
+        
+        const rawPrice = String(item.price || "");
+        // If it contains "Cotizar" or is empty, we skip adding to total
+        if (rawPrice.toLowerCase().includes("cotizar")) return;
+
+        const onlyDigits = rawPrice.replace(/[^0-9]/g, "");
+        const priceVal = parseInt(onlyDigits, 10);
+
         if (!isNaN(priceVal)) {
             total += priceVal * item.quantity;
+        } else {
+             console.warn(`Could not parse price for item: ${item.name}`, item.price);
         }
     });
 
     const totalFormatted = "$" + total.toLocaleString("es-CO");
+    
     if (cartTotalEl) {
         cartTotalEl.textContent = totalFormatted;
     }
+    
+    // Debug for production issues
+    console.log("Cart Total Updated:", { total, totalFormatted, itemCount: cart.length });
 
     // Save
     localStorage.setItem("mf_shop_cart", JSON.stringify(cart));

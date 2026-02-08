@@ -116,7 +116,7 @@ const ChatWidget = ({ className }: ChatWidgetProps) => {
     };
 
     return (
-        <div className={className || "fixed right-5 z-[5000] flex flex-col items-end gap-4 bottom-24"}>
+        <div className={className || "fixed right-5 z-[11001] flex flex-col items-end gap-4 bottom-24 pointer-events-auto"}>
             {/* Chat Window */}
             <div
                 className={`

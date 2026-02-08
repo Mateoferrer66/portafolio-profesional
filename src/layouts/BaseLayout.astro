@@ -36,7 +36,7 @@ const isShop = pathname.startsWith("/shop");
 const shouldStack = isHome || isWork || isAbout || isShop;
 
 const chatWidgetClass = shouldStack
-	? "relative flex flex-col items-end gap-4" // Stacked: Relative to container
+	? "relative flex flex-col items-end gap-4 pointer-events-auto" // Stacked: Relative to container
 	: undefined; // Default: Fixed positioning (handled by default prop)
 ---
 
@@ -123,7 +123,7 @@ const chatWidgetClass = shouldStack
 
 		<div id="floating-buttons" class:list={[{ stacked: shouldStack }]}>
 			<WhatsAppButton />
-			<ChatWidget client:idle className={chatWidgetClass} />
+			<ChatWidget client:load className={chatWidgetClass} />
 		</div>
 
 		<ScrollReveal />
@@ -275,7 +275,7 @@ const chatWidgetClass = shouldStack
 				position: fixed;
 				bottom: 5px;
 				right: 20px;
-				z-index: 5000;
+				z-index: 11001;
 				display: flex;
 				flex-direction: column;
 				gap: 15px;
