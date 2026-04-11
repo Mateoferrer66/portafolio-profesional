@@ -11,11 +11,13 @@ const { title, icon, description } = Astro.props;
 ---
 
 <div class="service-card">
+  <div class="card-glow"></div>
   <div class="service-icon">
     <Icon icon={icon} size="2em" />
   </div>
   <h4 class="service-title">{title}</h4>
   <p class="service-description">{description}</p>
+  <div class="card-bottom-line"></div>
 </div>
 
 <style>
@@ -24,51 +26,121 @@ const { title, icon, description } = Astro.props;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    padding: 2rem;
-    border-radius: 1.5rem;
-    background: var(--gradient-subtle);
-    border: 1px solid var(--accent-regular);
-    border-opacity: 0.2;
+    padding: 2.5rem 2rem;
+    border-radius: 1.75rem;
+    /* Glassmorphism */
+    background: linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(124, 58, 237, 0.06) 50%,
+      rgba(6, 182, 212, 0.03) 100%
+    );
+    border: 1px solid rgba(124, 58, 237, 0.15);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     text-align: center;
-    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s ease,
+                border-color 0.4s ease;
+    cursor: default;
   }
 
   .service-card:hover {
-    transform: translateY(-5px);
-    background: var(--gradient-subtle);
-    border-color: var(--accent-regular);
+    transform: translateY(-10px) scale(1.015);
+    border-color: rgba(124, 58, 237, 0.45);
+    box-shadow:
+      0 30px 80px rgba(124, 58, 237, 0.18),
+      0 0 40px rgba(124, 58, 237, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+
+  /* Subtle glow that appears on hover */
+  .card-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(124, 58, 237, 0.08) 0%,
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+  }
+
+  .service-card:hover .card-glow {
+    opacity: 1;
+  }
+
+  /* Animated bottom accent line */
+  .card-bottom-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background: linear-gradient(90deg, #7c3aed, #06b6d4);
+    border-radius: 0 0 2px 2px;
+    transition: width 0.4s ease;
+  }
+
+  .service-card:hover .card-bottom-line {
+    width: 100%;
   }
 
   .service-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--accent-regular);
-    color: var(--accent-text-over);
+    width: 70px;
+    height: 70px;
+    border-radius: 1.25rem;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25) 0%, rgba(6, 182, 212, 0.15) 100%);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    color: #a78bfa;
+    position: relative;
+    z-index: 1;
+    transition: box-shadow 0.35s ease, transform 0.35s ease;
+  }
+
+  .service-card:hover .service-icon {
+    box-shadow: 0 0 25px rgba(124, 58, 237, 0.4);
+    transform: scale(1.08) rotate(-3deg);
   }
 
   .service-title {
     font-size: var(--text-lg);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--gray-0);
+    position: relative;
+    z-index: 1;
+    letter-spacing: 0.01em;
   }
 
   .service-description {
     font-size: var(--text-sm);
     color: var(--gray-300);
-    line-height: 1.6;
+    line-height: 1.7;
+    position: relative;
+    z-index: 1;
   }
 
   @media (min-width: 50em) {
     .service-card {
-      padding: 2.5rem;
+      padding: 3rem 2.5rem;
     }
 
     .service-title {
       font-size: var(--text-xl);
+    }
+
+    .service-description {
+      font-size: var(--text-md);
     }
   }
 </style>

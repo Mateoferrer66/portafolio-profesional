@@ -3,44 +3,154 @@ import CallToAction from "./CallToAction.astro";
 import Icon from "./Icon.astro";
 ---
 
-<aside>
-	<h2>Interested in working together?</h2>
-	<CallToAction href="https://wa.me/3005059987">
-		Send Me a Message
-		<Icon icon="paper-plane-tilt" size="1.2em" />
-	</CallToAction>
+<aside class="cta-section">
+  <div class="cta-glow cta-glow--left"></div>
+  <div class="cta-glow cta-glow--right"></div>
+  
+  <div class="cta-inner">
+    <div class="cta-badge">Available for new projects</div>
+    <h2 class="cta-heading">
+      Interested in<br />working together?
+    </h2>
+    <p class="cta-sub">
+      Let's build something extraordinary. Drop me a message and I'll get back to you within 24 hours.
+    </p>
+    <div class="cta-actions">
+      <CallToAction href="https://wa.me/3005059987">
+        Send Me a Message
+        <Icon icon="paper-plane-tilt" size="1.2em" />
+      </CallToAction>
+    </div>
+  </div>
 </aside>
 
 <style>
-	aside {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 3rem;
-		/* border-top: 1px solid var(--gray-800); */
-		/* border-bottom: 1px solid var(--gray-800); */
-		padding: 5rem 1.5rem;
-		/* background-color: var(--gray-999_40); */
-		/* box-shadow: var(--shadow-sm); */
-	}
+  .cta-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem;
+    border-radius: 2.5rem;
+    overflow: hidden;
+    background: linear-gradient(
+      135deg,
+      rgba(124, 58, 237, 0.1) 0%,
+      rgba(6, 182, 212, 0.07) 50%,
+      rgba(124, 58, 237, 0.08) 100%
+    );
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
 
-	h2 {
-		font-size: var(--text-xl);
-		text-align: center;
-		max-width: 15ch;
-	}
+  /* Ambient glow orbs */
+  .cta-glow {
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    pointer-events: none;
+    filter: blur(80px);
+    opacity: 0.35;
+  }
 
-	@media (min-width: 50em) {
-		aside {
-			padding: 7.5rem;
-			flex-direction: row;
-			flex-wrap: wrap;
-			justify-content: space-between;
-		}
+  .cta-glow--left {
+    top: -100px;
+    left: -100px;
+    background: radial-gradient(circle, #7c3aed 0%, transparent 70%);
+    animation: glow-pulse 6s ease-in-out infinite;
+  }
 
-		h2 {
-			font-size: var(--text-3xl);
-			text-align: left;
-		}
-	}
+  .cta-glow--right {
+    bottom: -100px;
+    right: -100px;
+    background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+    animation: glow-pulse 6s ease-in-out infinite reverse;
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.2); opacity: 0.5; }
+  }
+
+  .cta-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+  }
+
+  .cta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.1rem;
+    border-radius: 99rem;
+    background: rgba(124, 58, 237, 0.18);
+    border: 1px solid rgba(124, 58, 237, 0.35);
+    color: #a78bfa;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cta-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .cta-heading {
+    font-size: var(--text-2xl);
+    font-weight: 800;
+    color: var(--gray-0);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  .cta-sub {
+    color: var(--gray-300);
+    font-size: var(--text-md);
+    line-height: 1.7;
+    max-width: 42ch;
+  }
+
+  .cta-actions {
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 50em) {
+    .cta-section {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+      padding: 5rem 6rem;
+    }
+
+    .cta-inner {
+      align-items: flex-start;
+      max-width: none;
+      flex: 1;
+    }
+
+    .cta-heading {
+      font-size: var(--text-4xl, 2.5rem);
+    }
+  }
 </style>

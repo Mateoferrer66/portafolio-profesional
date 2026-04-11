@@ -29,8 +29,7 @@ const featuredProducts = products.filter((p) =>
 	[2, 40, 201].includes(Number(p.id)),
 );
 
-// Component Imports
-import ThreeBackground from "../components/ThreeBackground.jsx";
+
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
@@ -92,7 +91,7 @@ import ThreeBackground from "../components/ThreeBackground.jsx";
 					</div>
 				</Hero>
 
-				<ThreeBackground client:only="react" />
+
 
 				<img
 					alt="Portada Mateo Ferrer"
@@ -139,6 +138,39 @@ import ThreeBackground from "../components/ThreeBackground.jsx";
 				/>
 			</div>
 		</section>
+
+		<script>
+			// ── Animated Number Counter ────────────────────────────────────────
+			function animateCounter(el: HTMLElement, target: number, suffix: string, duration = 1600) {
+				let start: number | null = null;
+				const step = (timestamp: number) => {
+					if (!start) start = timestamp;
+					const progress = Math.min((timestamp - start) / duration, 1);
+					// Ease out cubic
+					const eased = 1 - Math.pow(1 - progress, 3);
+					el.textContent = Math.floor(eased * target) + suffix;
+					if (progress < 1) requestAnimationFrame(step);
+				};
+				requestAnimationFrame(step);
+			}
+
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (!entry.isIntersecting) return;
+					const numEl = entry.target.querySelector('.stat-number') as HTMLElement;
+					if (!numEl || numEl.dataset.animated) return;
+					numEl.dataset.animated = 'true';
+
+					const raw = (numEl.dataset.value || numEl.textContent || '').trim();
+					const suffix = raw.replace(/[\d,]+/, '');
+					const target = parseInt(raw.replace(/\D/g, ''), 10);
+					if (!isNaN(target)) animateCounter(numEl, target, suffix);
+					observer.unobserve(entry.target);
+				});
+			}, { threshold: 0.4 });
+
+			document.querySelectorAll('.stat').forEach(el => observer.observe(el));
+		</script>
 
 		<!-- Services Section -->
 		<section class="services-section wrapper reveal">

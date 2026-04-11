@@ -136,20 +136,24 @@ const chatWidgetClass = shouldStack
 				document.documentElement.classList.add("loaded"),
 			);
 
-			// Scroll Progress Bar Logic
+			// Scroll Progress Bar — rAF-debounced to prevent scroll thrashing
+			let rafPending = false;
 			window.addEventListener("scroll", () => {
-				const winScroll =
-					document.body.scrollTop ||
-					document.documentElement.scrollTop;
-				const height =
-					document.documentElement.scrollHeight -
-					document.documentElement.clientHeight;
-				const scrolled = (winScroll / height) * 100;
-				const progressBar = document.getElementById("scroll-progress");
-				if (progressBar) {
-					progressBar.style.width = scrolled + "%";
-				}
-			});
+				if (rafPending) return;
+				rafPending = true;
+				requestAnimationFrame(() => {
+					const winScroll =
+						document.body.scrollTop ||
+						document.documentElement.scrollTop;
+					const height =
+						document.documentElement.scrollHeight -
+						document.documentElement.clientHeight;
+					const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+					const progressBar = document.getElementById("scroll-progress");
+					if (progressBar) progressBar.style.width = scrolled + "%";
+					rafPending = false;
+				});
+			}, { passive: true });
 		</script>
 
 		<style>
