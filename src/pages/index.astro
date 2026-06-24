@@ -29,6 +29,19 @@ const featuredProducts = products.filter((p) =>
 	[2, 40, 201].includes(Number(p.id)),
 );
 
+const liveWebsites = [
+	{ name: "Coffee Lemon", url: "https://coffee-lemon-seven.vercel.app/" },
+	{ name: "Esmeralds", url: "https://esmeralds.vercel.app/" },
+	{ name: "Impcel", url: "https://impcel.vercel.app/" },
+	{ name: "Juice Khaki", url: "https://juice-khaki.vercel.app/" },
+	{ name: "PC Master", url: "https://pc-master-chi.vercel.app/" },
+	{ name: "Radical Customs", url: "https://radical-customs.vercel.app/" },
+	{ name: "Restaurants Coral", url: "https://restaurants-coral-two.vercel.app/" },
+	{ name: "Shoes Ten", url: "https://shoes-ten-orcin.vercel.app/" },
+	{ name: "Catalogo Web", url: "https://catalogo-web-two.vercel.app/" },
+	{ name: "MG Sports", url: "https://mg-sports.vercel.app/" }
+];
+
 
 
 // Full Astro Component Syntax:
@@ -97,7 +110,7 @@ const featuredProducts = products.filter((p) =>
 					alt="Portada Mateo Ferrer"
 					width="480"
 					height="620"
-					src="/assets/portrait.jpg"
+					src="/assets/portrait-new.jpg"
 					id="hero-portrait"
 					fetchpriority="high"
 					loading="eager"
@@ -242,6 +255,51 @@ const featuredProducts = products.filter((p) =>
 				</div>
 			</section>
 
+			<!-- Live Web Projects Section -->
+			<section class="section with-background bg-variant reveal">
+				<header class="section-header stack gap-2 lg:gap-4">
+					<h2>Live Web Experiences</h2>
+					<p>
+						Una colección de aplicaciones web y plataformas e-commerce diseñadas y desarrolladas para impacto en el mundo real.
+					</p>
+				</header>
+
+				<div class="gallery">
+					<Grid variant="small">
+						{
+							liveWebsites.map((site) => (
+								<li class="web-card tilt-card">
+									<a
+										href={site.url}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="web-link"
+									>
+										<div class="web-image">
+											<div class="browser-header">
+												<span class="dot red"></span>
+												<span class="dot yellow"></span>
+												<span class="dot green"></span>
+											</div>
+											<img
+												src={`https://image.thum.io/get/width/600/crop/800/${site.url}`}
+												alt={`Screenshot of ${site.name}`}
+												loading="lazy"
+											/>
+										</div>
+										<div class="web-info">
+											<h3>{site.name}</h3>
+											<p class="web-url">{site.url.replace('https://', '').replace(/\/$/, '')}</p>
+											<span class="visit-btn">Visitar Sitio <Icon icon="arrow-right" size="1.2em" /></span>
+										</div>
+									</a>
+								</li>
+							))
+						}
+					</Grid>
+				</div>
+			</section>
+
 			<!-- Featured Products Section (NEW) -->
 			<section class="section with-background reveal">
 				<header class="section-header stack gap-2 lg:gap-4">
@@ -383,6 +441,113 @@ const featuredProducts = products.filter((p) =>
 	/* 3D Canvas Container override if needed */
 	.hero :global(canvas) {
 		z-index: -1;
+	}
+
+	.web-card {
+		border-radius: 1.5rem;
+		background: rgba(var(--gray-999-basis), 0.7);
+		border: 1px solid var(--gray-800);
+		overflow: hidden;
+		transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+	}
+
+	.web-card:hover {
+		transform: translateY(-10px) scale(1.02);
+		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+		border-color: var(--accent-regular);
+	}
+
+	.web-link {
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+	}
+
+	.web-image {
+		position: relative;
+		width: 100%;
+		height: 220px;
+		background: #111;
+		border-bottom: 1px solid var(--gray-800);
+		overflow: hidden;
+	}
+
+	.browser-header {
+		display: flex;
+		gap: 6px;
+		padding: 10px 12px;
+		background: rgba(20, 20, 20, 0.8);
+		backdrop-filter: blur(10px);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 2;
+	}
+
+	.dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+	}
+	.dot.red { background: #ff5f56; }
+	.dot.yellow { background: #ffbd2e; }
+	.dot.green { background: #27c93f; }
+
+	.web-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: top;
+		padding-top: 30px;
+		transition: transform 0.6s ease;
+	}
+
+	.web-card:hover .web-image img {
+		transform: scale(1.05);
+	}
+
+	.web-info {
+		padding: 1.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		flex-grow: 1;
+		background: rgba(var(--gray-999-basis), 0.5);
+		backdrop-filter: blur(5px);
+	}
+
+	.web-info h3 {
+		font-size: 1.25rem;
+		margin: 0;
+		color: var(--gray-100);
+	}
+
+	.web-url {
+		font-size: 0.875rem;
+		color: var(--accent-regular);
+		margin: 0;
+		opacity: 0.8;
+	}
+
+	.visit-btn {
+		margin-top: auto;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		font-size: 0.875rem;
+		font-weight: 600;
+		color: var(--gray-300);
+		transition: color 0.2s ease;
+		padding-top: 1rem;
+	}
+
+	.web-card:hover .visit-btn {
+		color: var(--accent-text-over);
 	}
 
 	.product-card-home {
