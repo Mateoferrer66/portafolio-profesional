@@ -30,16 +30,16 @@ const featuredProducts = products.filter((p) =>
 );
 
 const liveWebsites = [
-	{ name: "Coffee Lemon", url: "https://coffee-lemon-seven.vercel.app/" },
-	{ name: "Esmeralds", url: "https://esmeralds.vercel.app/" },
-	{ name: "Impcel", url: "https://impcel.vercel.app/" },
-	{ name: "Juice Khaki", url: "https://juice-khaki.vercel.app/" },
-	{ name: "PC Master", url: "https://pc-master-chi.vercel.app/" },
-	{ name: "Radical Customs", url: "https://radical-customs.vercel.app/" },
-	{ name: "Restaurants Coral", url: "https://restaurants-coral-two.vercel.app/" },
-	{ name: "Shoes Ten", url: "https://shoes-ten-orcin.vercel.app/" },
-	{ name: "Catalogo Web", url: "https://catalogo-web-two.vercel.app/" },
-	{ name: "MG Sports", url: "https://mg-sports.vercel.app/" }
+	{ name: "Coffee Lemon", url: "https://coffee-lemon-seven.vercel.app/", image: "/assets/live/coffee-lemon.jpg" },
+	{ name: "Esmeralds", url: "https://esmeralds.vercel.app/", image: "/assets/live/esmeralds.jpg" },
+	{ name: "Impcel", url: "https://impcel.vercel.app/", image: "/assets/live/impcel.jpg" },
+	{ name: "Juice Khaki", url: "https://juice-khaki.vercel.app/", image: "/assets/live/juice-khaki.jpg" },
+	{ name: "PC Master", url: "https://pc-master-chi.vercel.app/", image: "/assets/live/pc-master.jpg" },
+	{ name: "Radical Customs", url: "https://radical-customs.vercel.app/", image: "/assets/live/radical-customs.jpg" },
+	{ name: "Restaurants Coral", url: "https://restaurants-coral-two.vercel.app/", image: "/assets/live/restaurants-coral.jpg" },
+	{ name: "Shoes Ten", url: "https://shoes-ten-orcin.vercel.app/", image: "/assets/live/shoes-ten.jpg" },
+	{ name: "Catalogo Web", url: "https://catalogo-web-two.vercel.app/", image: "/assets/live/catalogo-web.jpg" },
+	{ name: "MG Sports", url: "https://mg-sports.vercel.app/", image: "/assets/live/mg-sports.jpg" }
 ];
 
 
@@ -282,7 +282,7 @@ const liveWebsites = [
 												<span class="dot green"></span>
 											</div>
 											<img
-												src={`https://image.thum.io/get/width/600/crop/800/${site.url}`}
+												src={site.image}
 												alt={`Screenshot of ${site.name}`}
 												loading="lazy"
 											/>
@@ -448,14 +448,30 @@ const liveWebsites = [
 		background: rgba(var(--gray-999-basis), 0.7);
 		border: 1px solid var(--gray-800);
 		overflow: hidden;
-		transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+		transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+		position: relative;
+	}
+
+	.web-card::after {
+		content: '';
+		position: absolute;
+		top: -2px; left: -2px; right: -2px; bottom: -2px;
+		background: linear-gradient(45deg, var(--accent-regular), transparent, var(--accent-dark));
+		z-index: -1;
+		border-radius: 1.6rem;
+		opacity: 0;
+		transition: opacity 0.5s ease;
 	}
 
 	.web-card:hover {
-		transform: translateY(-10px) scale(1.02);
-		box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-		border-color: var(--accent-regular);
+		transform: translateY(-12px) scale(1.03);
+		box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+		border-color: transparent;
+	}
+
+	.web-card:hover::after {
+		opacity: 1;
 	}
 
 	.web-link {
@@ -469,10 +485,24 @@ const liveWebsites = [
 	.web-image {
 		position: relative;
 		width: 100%;
-		height: 220px;
-		background: #111;
+		height: 250px;
+		background: #000;
 		border-bottom: 1px solid var(--gray-800);
 		overflow: hidden;
+	}
+
+	.web-image::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 50%);
+		z-index: 1;
+		opacity: 0.6;
+		transition: opacity 0.5s ease;
+	}
+
+	.web-card:hover .web-image::before {
+		opacity: 0;
 	}
 
 	.browser-header {
@@ -504,11 +534,13 @@ const liveWebsites = [
 		object-fit: cover;
 		object-position: top;
 		padding-top: 30px;
-		transition: transform 0.6s ease;
+		transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
+		filter: brightness(0.85);
 	}
 
 	.web-card:hover .web-image img {
-		transform: scale(1.05);
+		transform: scale(1.08);
+		filter: brightness(1.1);
 	}
 
 	.web-info {
