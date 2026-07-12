@@ -6,7 +6,7 @@ import tailwind from "@astrojs/tailwind";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://portafolio-profesional.pages.dev/',
+  site: 'https://mateoferrer.pages.dev/',
   integrations: [
     react(),
     sitemap(),
