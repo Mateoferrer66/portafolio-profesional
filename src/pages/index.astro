@@ -18,6 +18,8 @@ import Skills from "../components/Skills.astro";
 import StatCard from "../components/StatCard.astro";
 import ServiceCard from "../components/ServiceCard.astro";
 import TestimonialCard from "../components/TestimonialCard.astro";
+import TechMarquee from "../components/TechMarquee.astro";
+import ExperienceTimeline from "../components/ExperienceTimeline.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -122,6 +124,8 @@ const liveWebsites = [
 			<Skills />
 		</div>
 
+		<TechMarquee />
+
 		<!-- Statistics Section -->
 		<section class="stats-section wrapper reveal">
 			<header class="section-header stack gap-2 lg:gap-4">
@@ -184,6 +188,8 @@ const liveWebsites = [
 
 			document.querySelectorAll('.stat').forEach(el => observer.observe(el));
 		</script>
+
+		<ExperienceTimeline />
 
 		<!-- Services Section -->
 		<section class="services-section wrapper reveal">

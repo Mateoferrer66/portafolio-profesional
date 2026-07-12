@@ -1,0 +1,140 @@
+---
+const technologies = [
+    { name: "React", icon: "react-original" },
+    { name: "Astro", icon: "astro-original" },
+    { name: "Node.js", icon: "nodejs-plain" },
+    { name: "TypeScript", icon: "typescript-plain" },
+    { name: "Python", icon: "python-plain" },
+    { name: "AWS", icon: "amazonwebservices-original" },
+    { name: "Docker", icon: "docker-plain" },
+    { name: "PostgreSQL", icon: "postgresql-plain" },
+    { name: "MongoDB", icon: "mongodb-plain" },
+    { name: "Git", icon: "git-plain" },
+    { name: "TailwindCSS", icon: "tailwindcss-original" },
+    { name: "Figma", icon: "figma-plain" }
+];
+---
+
+<section class="marquee-container reveal">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <header class="section-header">
+        <h3>My Tech Stack</h3>
+    </header>
+    <div class="marquee">
+        <div class="marquee-content">
+            {technologies.map((tech) => (
+                <div class="tech-item">
+                    <i class={`devicon-${tech.icon} colored`}></i>
+                    <span>{tech.name}</span>
+                </div>
+            ))}
+            {/* Duplicate for infinite scroll effect */}
+            {technologies.map((tech) => (
+                <div class="tech-item" aria-hidden="true">
+                    <i class={`devicon-${tech.icon} colored`}></i>
+                    <span>{tech.name}</span>
+                </div>
+            ))}
+        </div>
+    </div>
+</section>
+
+<style>
+    .marquee-container {
+        padding: 3rem 0;
+        overflow: hidden;
+        background: var(--gray-999);
+        border-top: 1px solid var(--gray-800);
+        border-bottom: 1px solid var(--gray-800);
+        margin: 4rem 0;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .section-header h3 {
+        font-size: var(--text-2xl);
+        color: var(--gray-0);
+    }
+
+    .marquee {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        position: relative;
+    }
+
+    /* Gradient masks for smooth fading on edges */
+    .marquee::before,
+    .marquee::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        width: 150px;
+        height: 100%;
+        z-index: 2;
+    }
+    
+    .marquee::before {
+        left: 0;
+        background: linear-gradient(to right, var(--gray-999) 0%, transparent 100%);
+    }
+
+    .marquee::after {
+        right: 0;
+        background: linear-gradient(to left, var(--gray-999) 0%, transparent 100%);
+    }
+
+    .marquee-content {
+        display: inline-flex;
+        gap: 3rem;
+        animation: scroll 30s linear infinite;
+        padding-left: 3rem;
+    }
+
+    .marquee-content:hover {
+        animation-play-state: paused;
+    }
+
+    .tech-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        font-size: var(--text-lg);
+        color: var(--gray-300);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        background: var(--gray-900);
+        border: 1px solid var(--gray-800);
+        transition: transform 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+        cursor: default;
+    }
+
+    .tech-item:hover {
+        transform: translateY(-5px);
+        color: var(--gray-0);
+        border-color: var(--accent-regular);
+        box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
+    }
+
+    .tech-item i {
+        font-size: 1.5rem;
+    }
+
+    @keyframes scroll {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(calc(-50% - 1.5rem)); /* Move exactly half to loop smoothly */
+        }
+    }
+
+    /* Light Theme Adjustments */
+    :global(.theme-dark) .marquee-container {
+        background: var(--gray-999);
+    }
+</style>
