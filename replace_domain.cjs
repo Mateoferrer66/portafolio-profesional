@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const targetUrl = "mateoferrer.pages.dev";
-const oldUrl = "portafolio-profesional.pages.dev";
+const targetUrl = "mateo-ferrer.pages.dev";
+const oldUrl = "mateoferrer.pages.dev";
 
 function replaceInDir(dir) {
     const files = fs.readdirSync(dir);
