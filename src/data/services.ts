@@ -14,7 +14,7 @@ export const services: Service[] = [
         name: "Software a la Medida",
         price: "Cotizar",
         category: "development",
-        image: "/assets/service-software.png",
+        image: "/assets/futuristic_software_1783817708105.png",
         tags: ["software", "development"],
         description: "Desarrollo de software personalizado adaptado a las necesidades específicas de tu empresa o negocio."
     },
@@ -23,7 +23,7 @@ export const services: Service[] = [
         name: "Páginas Web Robustas",
         price: "Cotizar",
         category: "development",
-        image: "/assets/service-web.png",
+        image: "/assets/futuristic_web_1783817718354.png",
         tags: ["web", "development"],
         description: "Creación de sitios web profesionales, rápidos, escalables y optimizados para buscadores (SEO)."
     },
@@ -32,7 +32,7 @@ export const services: Service[] = [
         name: "Sistemas de Facturación Electrónica",
         price: "Cotizar",
         category: "development",
-        image: "/assets/service-pos.png",
+        image: "/assets/futuristic_pos_1783817726328.png",
         tags: ["software", "business"],
         description: "Sistemas integrados completos para gestión de ventas, inventario y facturación electrónica."
     },
@@ -41,7 +41,7 @@ export const services: Service[] = [
         name: "E-Commerce",
         price: "Cotizar",
         category: "development",
-        image: "/assets/service-ecommerce.png",
+        image: "/assets/futuristic_ecommerce_1783817734159.png",
         tags: ["web", "ecommerce"],
         description: "Tiendas online completas con pasarelas de pago y gestión de productos."
     },
@@ -50,7 +50,7 @@ export const services: Service[] = [
         name: "Diseño Gráfico",
         price: "Cotizar",
         category: "design",
-        image: "/assets/service-design.png",
+        image: "/assets/futuristic_design_1783817741815.png",
         tags: ["design", "branding"],
         description: "Diseño de identidad visual, logotipos, banners y material publicitario."
     },
@@ -59,7 +59,7 @@ export const services: Service[] = [
         name: "Flyers y Publicidad",
         price: "Cotizar",
         category: "design",
-        image: "/assets/service-flyers.png",
+        image: "/assets/futuristic_flyers_1783817749526.png",
         tags: ["design", "marketing"],
         description: "Diseño de flyers, afiches y piezas gráficas impactantes para redes sociales y medios impresos."
     },
@@ -68,7 +68,7 @@ export const services: Service[] = [
         name: "Impresión 3D",
         price: "Cotizar",
         category: "tech",
-        image: "/assets/service-3d.png",
+        image: "/assets/futuristic_3dprint_1783817757012.png",
         tags: ["3d", "tech"],
         description: "Servicio de modelado e impresión 3D para prototipos, maquetas y piezas personalizadas."
     },
@@ -77,7 +77,7 @@ export const services: Service[] = [
         name: "Asesorías Tecnológicas",
         price: "Cotizar",
         category: "consulting",
-        image: "/assets/service-consulting.png",
+        image: "/assets/futuristic_consulting_1783817764211.png",
         tags: ["consulting", "tech"],
         description: "Consultoría especializada para optimizar los recursos tecnológicos de tu negocio o proyecto."
     },
@@ -86,7 +86,7 @@ export const services: Service[] = [
         name: "Tesis y Proyectos Universitarios",
         price: "Cotizar",
         category: "education",
-        image: "/assets/service-education.png",
+        image: "/assets/futuristic_education_1783817771916.png",
         tags: ["education", "academic"],
         description: "Asesoría y desarrollo de software para tesis, proyectos universitarios y trabajos de colegio."
     },
@@ -95,7 +95,7 @@ export const services: Service[] = [
         name: "Ropa",
         price: "Cotizar",
         category: "clothing",
-        image: "/assets/service-clothing.png",
+        image: "/assets/futuristic_clothing_1783817779223.png",
         tags: ["clothing", "custom"],
         description: "Ropa con estilos únicos o con el branding de tu empresa/marca."
     }
