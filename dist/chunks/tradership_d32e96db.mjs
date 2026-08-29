@@ -1,5 +1,5 @@
 async function getMod() {
-						return import('./cryptovault_3736eaec.mjs');
+						return import('./tradership_a9810e5f.mjs');
 					}
 					const collectedLinks = "@@ASTRO-LINKS@@";
 					const collectedStyles = "@@ASTRO-STYLES@@";

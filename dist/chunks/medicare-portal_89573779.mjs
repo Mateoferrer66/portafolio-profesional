@@ -1,5 +1,5 @@
 async function getMod() {
-						return import('./cryptovault_3736eaec.mjs');
+						return import('./medicare-portal_ecd9bc20.mjs');
 					}
 					const collectedLinks = "@@ASTRO-LINKS@@";
 					const collectedStyles = "@@ASTRO-STYLES@@";

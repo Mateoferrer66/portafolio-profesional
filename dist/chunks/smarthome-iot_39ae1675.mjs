@@ -1,5 +1,5 @@
 async function getMod() {
-						return import('./cryptovault_3736eaec.mjs');
+						return import('./smarthome-iot_57d128d4.mjs');
 					}
 					const collectedLinks = "@@ASTRO-LINKS@@";
 					const collectedStyles = "@@ASTRO-STYLES@@";
