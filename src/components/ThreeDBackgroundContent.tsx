@@ -33,7 +33,16 @@ const ThreeDBackgroundContent: React.FC = () => {
 
     // ── Scene ──
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x070715, 0.008);
+    
+    // Cargar el fondo futurista
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load('/assets/futuristic_bg.jpg', (texture) => {
+      texture.colorSpace = THREE.SRGBColorSpace;
+      // Para cubrir mejor podemos usar un render target o simplemente ponerlo de fondo
+      scene.background = texture;
+    });
+
+    scene.fog = new THREE.FogExp2(0x02020a, 0.005); // Niebla más sutil para ver el fondo
 
     const W = window.innerWidth;
     const H = window.innerHeight;
@@ -193,11 +202,11 @@ const ThreeDBackgroundContent: React.FC = () => {
     scene.add(stars);
 
     // ── Hexagonal Grid Plane (holographic floor) ───────────────────────────────
-    const gridHelper = new THREE.GridHelper(240, 30, 0x3b0764, 0x1e1b4b);
+    const gridHelper = new THREE.GridHelper(300, 40, 0x06b6d4, 0x1e1b4b);
     (gridHelper.material as THREE.Material).transparent = true;
-    (gridHelper.material as THREE.Material).opacity = 0.12;
-    gridHelper.position.y = -55;
-    gridHelper.rotation.x = 0.12;
+    (gridHelper.material as THREE.Material).opacity = 0.25;
+    gridHelper.position.y = -65;
+    gridHelper.rotation.x = 0.05;
     scene.add(gridHelper);
 
     // ── Scanning ring (sweeping horizontal plane) ─────────────────────────────
