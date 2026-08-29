@@ -1,0 +1,888 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Video Interactivo con Gestos - Mateo Ferrer"
+  description="Experiencia de video interactiva controlada por gestos de las manos usando inteligencia artificial."
+>
+  <div class="gesture-page">
+    <!-- Hero Header -->
+    <header class="gesture-hero">
+      <div class="hero-badge">
+        <span class="badge-icon">🤖</span>
+        <span>AI Hand Tracking</span>
+      </div>
+      <h1>Video <span class="gradient-text">Interactivo</span></h1>
+      <p class="hero-subtitle">
+        Controla el video con tus manos. Sin mouse. Sin teclado. Solo gestos.
+      </p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="gesture-container">
+      <!-- Video Section -->
+      <div class="video-wrapper" id="video-wrapper">
+        <video
+          id="gesture-video"
+          src="/assets/test.mp4"
+          playsinline
+          preload="metadata"
+        ></video>
+
+        <!-- Clickable Overlays (positioned over video) -->
+        <div class="video-overlays" id="video-overlays"></div>
+
+        <!-- Play Button Overlay -->
+        <div class="play-overlay" id="play-overlay">
+          <button class="play-btn" id="play-btn" type="button">
+            <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="38" stroke="rgba(212,175,55,0.6)" stroke-width="2" fill="rgba(0,0,0,0.4)"/>
+              <polygon points="32,24 60,40 32,56" fill="rgba(212,175,55,0.9)"/>
+            </svg>
+            <span>Reproducir Video</span>
+          </button>
+        </div>
+
+        <!-- Video Progress -->
+        <div class="video-progress-bar" id="video-progress-bar">
+          <div class="video-progress-fill" id="video-progress-fill"></div>
+          <!-- Marker at second 19 -->
+          <div class="video-marker" id="marker-19" title="Link interactivo"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</BaseLayout>
+
+<script is:inline>
+(function() {
+  'use strict';
+
+  // ═══════════════════════════════════════════════════════════════
+  //  CONFIG: Timed overlays that appear on the video
+  // ═══════════════════════════════════════════════════════════════
+  var VIDEO_OVERLAYS = [
+    {
+      id: 'overlay-portfolio',
+      startTime: 17,
+      endTime: 27,
+      label: '🌐 Visitar Portafolio Web',
+      url: 'https://portafolio-profesional.pages.dev/',
+      style: {
+        left: '50%',
+        bottom: '18%',
+        transform: 'translateX(-50%)'
+      }
+    }
+  ];
+
+  // ═══════════════════════════════════════════════════════════════
+  //  DOM ELEMENTS
+  // ═══════════════════════════════════════════════════════════════
+  var video = document.getElementById('gesture-video');
+  var videoWrapper = document.getElementById('video-wrapper');
+  var overlaysContainer = document.getElementById('video-overlays');
+  var playOverlay = document.getElementById('play-overlay');
+  var playBtn = document.getElementById('play-btn');
+  var progressFill = document.getElementById('video-progress-fill');
+  var marker19 = document.getElementById('marker-19');
+
+  // Guard: only run on gesture-video page
+  if (!video || !videoWrapper) return;
+
+  // ═══════════════════════════════════════════════════════════════
+  //  VIDEO PLAYER
+  // ═══════════════════════════════════════════════════════════════
+
+  playBtn.addEventListener('click', function() {
+    video.play();
+    playOverlay.classList.add('hidden');
+  });
+
+  video.addEventListener('click', function() {
+    if (video.paused) {
+      video.play();
+      playOverlay.classList.add('hidden');
+    } else {
+      video.pause();
+    }
+  });
+
+  video.addEventListener('ended', function() {
+    playOverlay.classList.remove('hidden');
+  });
+
+  video.addEventListener('loadedmetadata', function() {
+    if (video.duration > 0 && marker19) {
+      var pct = (19 / video.duration) * 100;
+      marker19.style.left = pct + '%';
+    }
+  });
+
+  video.addEventListener('timeupdate', function() {
+    if (video.duration > 0 && progressFill) {
+      var pct = (video.currentTime / video.duration) * 100;
+      progressFill.style.width = pct + '%';
+    }
+    updateOverlays();
+  });
+
+  // ═══════════════════════════════════════════════════════════════
+  //  VIDEO OVERLAYS (timed clickable elements)
+  // ═══════════════════════════════════════════════════════════════
+
+  VIDEO_OVERLAYS.forEach(function(ov) {
+    var btn = document.createElement('a');
+    btn.id = ov.id;
+    btn.href = ov.url;
+    btn.target = '_blank';
+    btn.rel = 'noopener noreferrer';
+    btn.className = 'video-overlay-btn';
+    btn.textContent = ov.label;
+    btn.dataset.gestureClickable = 'true';
+    btn.dataset.overlayUrl = ov.url;
+    btn.style.position = 'absolute';
+    if (ov.style) {
+      Object.keys(ov.style).forEach(function(k) {
+        btn.style[k] = ov.style[k];
+      });
+    }
+    btn.style.display = 'none';
+
+    // Prevent click from propagating to video (which would toggle play/pause)
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+    // Also stop mousedown/mouseup from reaching the video
+    btn.addEventListener('mousedown', function(e) { e.stopPropagation(); });
+    btn.addEventListener('mouseup', function(e) { e.stopPropagation(); });
+
+    overlaysContainer.appendChild(btn);
+  });
+
+  function updateOverlays() {
+    var t = video.currentTime;
+    VIDEO_OVERLAYS.forEach(function(ov) {
+      var el = document.getElementById(ov.id);
+      if (!el) return;
+      if (t >= ov.startTime && t <= ov.endTime) {
+        if (el.style.display === 'none') {
+          el.style.display = 'inline-flex';
+          el.classList.add('overlay-enter');
+          setTimeout(function() { el.classList.remove('overlay-enter'); }, 600);
+        }
+      } else {
+        el.style.display = 'none';
+      }
+    });
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  CAMERA ACTIVATION
+  // ═══════════════════════════════════════════════════════════════
+
+  camBtn.addEventListener('click', function() {
+    if (cameraActive) {
+      stopCamera();
+    } else {
+      startCamera();
+    }
+  });
+
+  function startCamera() {
+    if (typeof Hands === 'undefined') {
+      statusText.textContent = 'Error: MediaPipe no cargó. Recarga la página.';
+      statusDot.className = 'status-dot error';
+      return;
+    }
+
+    statusText.textContent = 'Iniciando cámara...';
+    statusDot.className = 'status-dot loading';
+
+    handsInstance = new Hands({
+      locateFile: function(file) {
+        return 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/' + file;
+      }
+    });
+
+    handsInstance.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.7,
+      minTrackingConfidence: 0.5
+    });
+
+    handsInstance.onResults(onHandResults);
+
+    navigator.mediaDevices.getUserMedia({
+      video: { width: 640, height: 480, facingMode: 'user' }
+    }).then(function(stream) {
+      webcamFeed.srcObject = stream;
+      webcamContainer.style.display = 'block';
+      webcamCanvas.width = 640;
+      webcamCanvas.height = 480;
+
+      cameraInstance = new Camera(webcamFeed, {
+        onFrame: async function() {
+          if (handsInstance) {
+            await handsInstance.send({ image: webcamFeed });
+          }
+        },
+        width: 640,
+        height: 480
+      });
+      cameraInstance.start();
+
+      cameraActive = true;
+      camBtnText.textContent = 'Desactivar Cámara';
+      camBtn.classList.add('active');
+      statusText.textContent = 'Buscando mano...';
+      statusDot.className = 'status-dot searching';
+      virtualCursor.style.display = 'block';
+
+    }).catch(function(err) {
+      console.error('Camera error:', err);
+      statusText.textContent = 'Error: No se pudo acceder a la cámara';
+      statusDot.className = 'status-dot error';
+    });
+      }
+      return;
+    }
+
+    // Check for any other links
+    var link = el.closest('a[href]');
+    if (link) {
+      console.log('[GestureClick] Clicking link:', link.href);
+      if (link.target === '_blank') {
+        var newWin = window.open(link.href, '_blank');
+        if (!newWin) window.location.href = link.href; // fallback
+      } else {
+        window.location.href = link.href;
+      }
+      return;
+    }
+
+    // Check for buttons
+    var button = el.closest('button');
+    if (button) {
+      button.click();
+      return;
+    }
+
+    // Generic click
+    el.click();
+  }
+
+  function createClickRipple(x, y) {
+    var ripple = document.createElement('div');
+    ripple.className = 'click-ripple';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    document.body.appendChild(ripple);
+    setTimeout(function() { ripple.remove(); }, 600);
+  }
+
+  function activateGestureCard(id) {
+    var card = document.getElementById(id);
+    if (card) {
+      card.classList.add('active');
+      gestureActiveCards[id] = true;
+    }
+  }
+
+  function clearActiveGestures() {
+    Object.keys(gestureActiveCards).forEach(function(id) {
+      var card = document.getElementById(id);
+      if (card) card.classList.remove('active');
+    });
+    gestureActiveCards = {};
+  }
+
+})();
+</script>
+
+<style>
+  /* ═══════════════════════════════════════════════════════════════
+     GESTURE VIDEO PAGE — Premium Styling
+     ═══════════════════════════════════════════════════════════════ */
+
+  .gesture-page {
+    min-height: 100vh;
+    padding: 2rem 1rem 6rem;
+    position: relative;
+  }
+
+  /* ── Hero Header ── */
+  .gesture-hero {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-size: 0.85rem;
+    color: #d4af37;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .badge-icon {
+    font-size: 1.1rem;
+  }
+
+  .gesture-hero h1 {
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    font-weight: 800;
+    color: var(--gray-0, #fff);
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #d4af37 0%, #f0d060 50%, #d4af37 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--gray-300, #999);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ── Main Container ── */
+  .gesture-container {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  /* ── Video Wrapper ── */
+  .video-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 1.25rem;
+    overflow: hidden;
+    background: #000;
+    box-shadow:
+      0 0 0 1px rgba(212, 175, 55, 0.15),
+      0 20px 60px rgba(0, 0, 0, 0.5),
+      0 0 80px rgba(212, 175, 55, 0.05);
+  }
+
+  .video-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 1.3rem;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), transparent 40%, transparent 60%, rgba(212, 175, 55, 0.2));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  #gesture-video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background: #000;
+    display: block;
+  }
+
+  /* ── Play Overlay ── */
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 3;
+    transition: opacity 0.4s ease;
+  }
+
+  .play-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .play-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: rgba(212, 175, 55, 0.9);
+    font-size: 1rem;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+    letter-spacing: 0.05em;
+  }
+
+  .play-btn:hover {
+    transform: scale(1.1);
+  }
+
+  .play-btn svg {
+    filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
+  }
+
+  /* ── Video Overlays (clickable links) ── */
+  .video-overlays {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+  }
+
+  .video-overlays :global(.video-overlay-btn) {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 2rem;
+    background: rgba(212, 175, 55, 0.15);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 999px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow:
+      0 4px 20px rgba(212, 175, 55, 0.2),
+      0 0 40px rgba(212, 175, 55, 0.1);
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .video-overlays :global(.video-overlay-btn:hover) {
+    background: rgba(212, 175, 55, 0.3);
+    border-color: rgba(212, 175, 55, 0.7);
+    transform: translateX(-50%) scale(1.05);
+    box-shadow:
+      0 8px 30px rgba(212, 175, 55, 0.3),
+      0 0 60px rgba(212, 175, 55, 0.15);
+  }
+
+  .video-overlays :global(.overlay-enter) {
+    animation: overlay-appear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes overlay-appear {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px) scale(0.8);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow:
+        0 4px 20px rgba(212, 175, 55, 0.2),
+        0 0 40px rgba(212, 175, 55, 0.1);
+    }
+    50% {
+      box-shadow:
+        0 4px 30px rgba(212, 175, 55, 0.35),
+        0 0 60px rgba(212, 175, 55, 0.2);
+    }
+  }
+
+  /* ── Video Progress Bar ── */
+  .video-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 5;
+    cursor: pointer;
+  }
+
+  .video-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #d4af37, #f0d060);
+    width: 0%;
+    transition: width 0.2s linear;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .video-marker {
+    position: absolute;
+    top: -3px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff6b6b;
+    border: 2px solid #fff;
+    transform: translateX(-50%);
+    z-index: 2;
+    box-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+  }
+
+  /* ── Virtual Cursor ── */
+  .virtual-cursor {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    display: none;
+    transition: left 0.08s ease-out, top 0.08s ease-out;
+  }
+
+  .cursor-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(212, 175, 55, 0.6);
+    transition: all 0.15s ease;
+    animation: cursor-breathe 2s ease-in-out infinite;
+  }
+
+  .cursor-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #d4af37;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+  }
+
+  @keyframes cursor-breathe {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+
+  .virtual-cursor.clicking .cursor-ring {
+    transform: scale(1.8);
+    border-color: #f0d060;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .virtual-cursor.clicking .cursor-dot {
+    background: #f0d060;
+    box-shadow: 0 0 25px rgba(240, 208, 96, 0.8);
+  }
+
+  /* ── Click Ripple ── */
+  :global(.click-ripple) {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid rgba(212, 175, 55, 0.6);
+    transform: translate(-50%, -50%) scale(0);
+    animation: ripple-expand 0.6s ease-out forwards;
+    pointer-events: none;
+    z-index: 10001;
+  }
+
+  @keyframes ripple-expand {
+    0% {
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(-50%, -50%) scale(2);
+      opacity: 0;
+    }
+  }
+
+  /* ── Controls Row ── */
+  .controls-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cam-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 2rem;
+    border-radius: 999px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    background: rgba(212, 175, 55, 0.08);
+    color: #d4af37;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .cam-btn:hover {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: rgba(212, 175, 55, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+  }
+
+  .cam-btn.active {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: rgba(212, 175, 55, 0.6);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+  }
+
+  .cam-icon {
+    font-size: 1.2rem;
+  }
+
+  /* ── Gesture Status ── */
+  .gesture-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    font-size: 0.85rem;
+    color: var(--gray-300, #aaa);
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #555;
+    transition: all 0.3s ease;
+  }
+
+  .status-dot.active {
+    background: #4ade80;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+    animation: dot-pulse 1.5s ease-in-out infinite;
+  }
+
+  .status-dot.searching {
+    background: #fbbf24;
+    animation: dot-pulse 1s ease-in-out infinite;
+  }
+
+  .status-dot.loading {
+    background: #60a5fa;
+    animation: dot-pulse 0.6s ease-in-out infinite;
+  }
+
+  .status-dot.error {
+    background: #f87171;
+  }
+
+  @keyframes dot-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  /* ── Gesture Guide ── */
+  .gesture-guide {
+    padding: 2rem;
+    border-radius: 1.25rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+  }
+
+  .gesture-guide h3 {
+    text-align: center;
+    margin: 0 0 1.5rem;
+    font-size: 1.2rem;
+    color: var(--gray-0, #fff);
+  }
+
+  .gestures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .gesture-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.3s ease;
+  }
+
+  .gesture-card.active {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: rgba(212, 175, 55, 0.4);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+  }
+
+  .gesture-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .gesture-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .gesture-info strong {
+    font-size: 0.85rem;
+    color: var(--gray-0, #fff);
+  }
+
+  .gesture-info span {
+    font-size: 0.75rem;
+    color: var(--gray-400, #888);
+  }
+
+  /* ── Webcam Feed (mini) ── */
+  .webcam-container {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 180px;
+    height: 135px;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    background: #000;
+  }
+
+  .webcam-container::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 1.05rem;
+    padding: 2px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  #webcam-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1);
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  #webcam-canvas {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: scaleX(-1);
+    z-index: 1;
+  }
+
+  .webcam-label {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.65rem;
+    color: rgba(212, 175, 55, 0.8);
+    background: rgba(0, 0, 0, 0.6);
+    padding: 2px 8px;
+    border-radius: 999px;
+    z-index: 3;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .gesture-page {
+      padding: 1rem 0.75rem 4rem;
+    }
+
+    .gesture-hero {
+      padding: 2rem 0.5rem 1.5rem;
+    }
+
+    .gesture-hero h1 {
+      font-size: 1.8rem;
+    }
+
+    .gestures-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .webcam-container {
+      width: 120px;
+      height: 90px;
+      bottom: 80px;
+      right: 10px;
+    }
+
+    .controls-row {
+      flex-direction: column;
+    }
+
+    .video-overlays :global(.video-overlay-btn) {
+      font-size: 0.85rem;
+      padding: 0.65rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .gestures-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,605 @@
+---
+// GlobalControls.astro
+// Este componente se carga en BaseLayout con transition:persist
+// Contiene la UI global de la IA (Cámara, Micrófono y Cursor Virtual) y toda la lógica.
+---
+
+<div id="global-ai-controls" class="global-ai-container" data-astro-transition-persist="global-ai">
+  <!-- Botón Global Flotante para encender/apagar IA -->
+  <button id="global-ai-btn" class="ai-toggle-btn" type="button" title="Activar IA (Gestos y Voz)">
+    <span class="ai-icon">🤖</span>
+    <span class="ai-text">IA Apagada</span>
+  </button>
+
+  <!-- Contenedor de la Webcam y Canvas de Gestos (Oculto por defecto) -->
+  <div id="global-webcam-container" class="webcam-box hidden">
+    <video id="global-webcam-feed" autoplay playsinline></video>
+    <canvas id="global-webcam-canvas"></canvas>
+    
+    <div class="voice-status" id="voice-status">
+      <span class="mic-icon">🎙️</span>
+      <span id="voice-text">Escuchando comandos...</span>
+    </div>
+  </div>
+
+  <!-- Virtual Cursor Global -->
+  <div class="virtual-cursor" id="global-virtual-cursor">
+    <div class="cursor-ring"></div>
+    <div class="cursor-dot"></div>
+  </div>
+  
+  <!-- Hidden link for bypass popup blocker navigation -->
+  <a id="global-gesture-nav-link" href="#" target="_blank" rel="noopener noreferrer" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1;"></a>
+
+  <!-- Toast Notificaciones IA (Voice / Gestures) -->
+  <div id="ai-toast" class="ai-toast hidden">
+    <span id="ai-toast-icon">ℹ️</span>
+    <span id="ai-toast-msg">Mensaje</span>
+  </div>
+</div>
+
+<style>
+  /* ── Contenedor Principal ── */
+  .global-ai-container {
+    position: fixed;
+    z-index: 12000; /* Siempre encima de todo */
+    pointer-events: none; /* Dejar pasar clicks por defecto */
+    inset: 0;
+  }
+
+  /* ── Botón Flotante Activar IA ── */
+  .ai-toggle-btn {
+    pointer-events: auto;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(15, 15, 20, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 10px 18px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 0.95rem;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  }
+  .ai-toggle-btn:hover {
+    background: rgba(25, 25, 30, 0.95);
+    border-color: var(--accent-regular, #D4AF37);
+    transform: translateY(-2px);
+  }
+  .ai-toggle-btn.active {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: #D4AF37;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+  }
+
+  /* ── Webcam Box ── */
+  .webcam-box {
+    position: absolute;
+    bottom: 70px;
+    left: 20px;
+    width: 240px;
+    height: 180px;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: all 0.3s ease;
+  }
+  .webcam-box.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px) scale(0.95);
+  }
+  .webcam-box video, .webcam-box canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* Espejo */
+  }
+  .webcam-box canvas {
+    z-index: 2;
+  }
+  
+  .voice-status {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    color: #fff;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  /* ── Virtual Cursor ── */
+  .virtual-cursor {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    pointer-events: none;
+    z-index: 20000;
+    transform: translate(-50%, -50%);
+    display: none; /* Oculto hasta que detecta mano */
+  }
+  .cursor-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    background: #D4AF37; /* Dorado */
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px #D4AF37;
+    transition: transform 0.1s;
+  }
+  .cursor-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(212, 175, 55, 0.5);
+    border-radius: 50%;
+    animation: cursorBreathing 2s infinite ease-in-out;
+  }
+  .virtual-cursor.clicking .cursor-ring {
+    background: rgba(212, 175, 55, 0.3);
+    transform: scale(0.6);
+    animation: none;
+  }
+  .virtual-cursor.clicking .cursor-dot {
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+
+  @keyframes cursorBreathing {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(0.8); opacity: 0.5; }
+  }
+
+  /* ── Toast de Feedback IA ── */
+  .ai-toast {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 15, 20, 0.9);
+    border: 1px solid #D4AF37;
+    padding: 12px 24px;
+    border-radius: 30px;
+    color: #fff;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 15000;
+  }
+  .ai-toast.hidden {
+    opacity: 0;
+    transform: translate(-50%, -20px);
+    pointer-events: none;
+  }
+
+  :global(.click-ripple) {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #D4AF37;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: rippleAnim 0.6s ease-out forwards;
+    pointer-events: none;
+    z-index: 19999;
+  }
+  @keyframes rippleAnim {
+    0% { width: 20px; height: 20px; opacity: 1; }
+    100% { width: 80px; height: 80px; opacity: 0; }
+  }
+</style>
+
+<!-- Script global de IA que maneja Gestos y Voz -->
+<!-- Nota: Usamos is:inline para evitar que Astro lo reinicie al hacer ViewTransitions. El componente persistirá. -->
+<script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+<script is:inline>
+(function() {
+  'use strict';
+  
+  // Prevenir inicialización múltiple si ViewTransitions hace algo raro
+  if (window.GlobalAIInitialized) return;
+  window.GlobalAIInitialized = true;
+
+  // ═══════════════════════════════════════════════════════════════
+  //  ELEMENTOS DEL DOM
+  // ═══════════════════════════════════════════════════════════════
+  var aiBtn = document.getElementById('global-ai-btn');
+  var aiBtnText = aiBtn.querySelector('.ai-text');
+  var webcamBox = document.getElementById('global-webcam-container');
+  var videoElement = document.getElementById('global-webcam-feed');
+  var canvasElement = document.getElementById('global-webcam-canvas');
+  var virtualCursor = document.getElementById('global-virtual-cursor');
+  var aiToast = document.getElementById('ai-toast');
+  var aiToastIcon = document.getElementById('ai-toast-icon');
+  var aiToastMsg = document.getElementById('ai-toast-msg');
+  var voiceStatusText = document.getElementById('voice-text');
+
+  var canvasCtx = canvasElement.getContext('2d');
+  var cameraActive = false;
+  
+  // Variables Gestos
+  var handsInstance = null;
+  var stream = null;
+  var cursorX = 0, cursorY = 0;
+  var pinchCooldown = false;
+  var scrollCooldown = false;
+
+  // Variables Voz
+  var recognition = null;
+  var isListening = false;
+
+  // ═══════════════════════════════════════════════════════════════
+  //  RUTAS DE COMANDOS DE VOZ
+  // ═══════════════════════════════════════════════════════════════
+  const voiceCommands = {
+    'inicio': '/',
+    'hogar': '/',
+    'home': '/',
+    'acerca': '/about',
+    'sobre mi': '/about',
+    'trabajo': '/work',
+    'proyectos': '/work',
+    'servicios': '/services',
+    'tienda': '/shop',
+    'comercio': '/shop'
+  };
+
+  // ═══════════════════════════════════════════════════════════════
+  //  INICIALIZACIÓN
+  // ═══════════════════════════════════════════════════════════════
+  
+  aiBtn.addEventListener('click', function() {
+    if (cameraActive) {
+      stopAI();
+    } else {
+      startAI();
+    }
+  });
+
+  function showToast(msg, icon = 'ℹ️', duration = 3000) {
+    aiToastMsg.textContent = msg;
+    aiToastIcon.textContent = icon;
+    aiToast.classList.remove('hidden');
+    
+    if (window.toastTimer) clearTimeout(window.toastTimer);
+    window.toastTimer = setTimeout(() => {
+      aiToast.classList.add('hidden');
+    }, duration);
+  }
+
+  async function startAI() {
+    aiBtnText.textContent = 'Iniciando IA...';
+    aiBtn.classList.add('active');
+    
+    try {
+      // 1. Iniciar Web Speech API
+      initVoiceControl();
+      
+      // 2. Iniciar Cámara para Gestos
+      stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
+      videoElement.srcObject = stream;
+      
+      videoElement.onloadedmetadata = () => {
+        canvasElement.width = videoElement.videoWidth;
+        canvasElement.height = videoElement.videoHeight;
+        
+        initMediaPipe();
+        webcamBox.classList.remove('hidden');
+        cameraActive = true;
+        aiBtnText.textContent = 'IA Encendida';
+        showToast('Gestos y Voz Activados', '🟢');
+        
+        // Loop de renderizado
+        function renderLoop() {
+          if (cameraActive) {
+            if (handsInstance) {
+              handsInstance.send({image: videoElement});
+            }
+            requestAnimationFrame(renderLoop);
+          }
+        }
+        renderLoop();
+      };
+
+    } catch (err) {
+      console.error(err);
+      aiBtnText.textContent = 'IA Apagada';
+      aiBtn.classList.remove('active');
+      showToast('Error de permisos. Permite cámara y micrófono.', '❌', 5000);
+    }
+  }
+
+  function stopAI() {
+    cameraActive = false;
+    
+    // Detener Cámara
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+    webcamBox.classList.add('hidden');
+    virtualCursor.style.display = 'none';
+    
+    // Detener Voz
+    if (recognition && isListening) {
+      recognition.stop();
+      isListening = false;
+    }
+    
+    aiBtnText.textContent = 'IA Apagada';
+    aiBtn.classList.remove('active');
+    showToast('IA Desactivada', '🔴');
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  CONTROL DE VOZ
+  // ═══════════════════════════════════════════════════════════════
+  function initVoiceControl() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.warn("Speech API no soportada en este navegador.");
+      voiceStatusText.textContent = "🎙️ Voz no soportada";
+      return;
+    }
+
+    recognition = new SpeechRecognition();
+    recognition.lang = 'es-ES'; // O es-CO
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    
+    recognition.onstart = function() {
+      isListening = true;
+      voiceStatusText.textContent = "Escuchando...";
+    };
+
+    recognition.onresult = function(event) {
+      const current = event.resultIndex;
+      const transcript = event.results[current][0].transcript.toLowerCase().trim();
+      
+      console.log("[Voz] Escuché:", transcript);
+      
+      // Buscar comandos
+      let foundCommand = false;
+      for (const [keyword, path] of Object.entries(voiceCommands)) {
+        if (transcript.includes(keyword) || transcript.includes(`ir a ${keyword}`) || transcript.includes(`entrar a ${keyword}`)) {
+          foundCommand = true;
+          showToast(`Navegando a ${keyword}...`, '🗣️');
+          setTimeout(() => {
+             window.location.href = path; // Usar Astro routing default
+          }, 800);
+          break;
+        }
+      }
+      
+      if (!foundCommand) {
+        showToast(`Escuché: "${transcript}"`, '👂', 2000);
+      }
+    };
+
+    recognition.onerror = function(event) {
+      console.error("[Voz] Error:", event.error);
+      if (event.error === 'not-allowed') {
+        showToast("Permiso de micrófono denegado", "🚫");
+      }
+    };
+
+    recognition.onend = function() {
+      if (cameraActive) {
+        // Reiniciar si se cortó pero la IA sigue activa
+        try { recognition.start(); } catch(e){}
+      } else {
+        isListening = false;
+      }
+    };
+
+    try {
+      recognition.start();
+    } catch(e) {}
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  GESTOS (MediaPipe)
+  // ═══════════════════════════════════════════════════════════════
+  function initMediaPipe() {
+    if (typeof Hands === 'undefined') {
+      setTimeout(initMediaPipe, 500); // Re-intentar si no ha cargado el CDN
+      return;
+    }
+
+    if (handsInstance) return; // ya existe
+
+    handsInstance = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+    handsInstance.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.65,
+      minTrackingConfidence: 0.65
+    });
+
+    handsInstance.onResults(onHandResults);
+  }
+
+  function onHandResults(results) {
+    canvasCtx.save();
+    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+      virtualCursor.style.display = 'block';
+      
+      var landmarks = results.multiHandLandmarks[0];
+      
+      // Dibujar landmarks básicos (opcional, para feedback visual en la camarita)
+      for (let i = 0; i < landmarks.length; i++) {
+        let x = landmarks[i].x * canvasElement.width;
+        let y = landmarks[i].y * canvasElement.height;
+        canvasCtx.beginPath();
+        canvasCtx.arc(x, y, 3, 0, 2 * Math.PI);
+        canvasCtx.fillStyle = '#D4AF37';
+        canvasCtx.fill();
+      }
+
+      var indexTip = landmarks[8];
+      
+      // Espejo del X para que coincida con el movimiento real del usuario
+      var normX = 1 - indexTip.x;
+      var normY = indexTip.y;
+
+      // Mapear a toda la ventana (Viewport)
+      cursorX = normX * window.innerWidth;
+      cursorY = normY * window.innerHeight;
+
+      // Limitar coordenadas
+      cursorX = Math.max(0, Math.min(window.innerWidth, cursorX));
+      cursorY = Math.max(0, Math.min(window.innerHeight, cursorY));
+
+      virtualCursor.style.left = cursorX + 'px';
+      virtualCursor.style.top = cursorY + 'px';
+
+      var gesture = detectGesture(landmarks);
+      executeGlobalGesture(gesture);
+    } else {
+      virtualCursor.style.display = 'none';
+    }
+    canvasCtx.restore();
+  }
+
+  function detectGesture(landmarks) {
+    var thumbTip = landmarks[4];
+    var indexTip = landmarks[8];
+    var middleTip = landmarks[12];
+    var ringTip = landmarks[16];
+    var pinkyTip = landmarks[20];
+    var thumbIp = landmarks[3];
+    var indexPip = landmarks[6];
+    var middlePip = landmarks[10];
+    var ringPip = landmarks[14];
+    var pinkyPip = landmarks[18];
+    var wrist = landmarks[0];
+
+    var pinchDist = dist3d(thumbTip, indexTip);
+    
+    var indexUp = indexTip.y < indexPip.y;
+    var middleUp = middleTip.y < middlePip.y;
+    var ringUp = ringTip.y < ringPip.y;
+    var pinkyUp = pinkyTip.y < pinkyPip.y;
+    var thumbUp = Math.abs(thumbTip.x - wrist.x) > Math.abs(thumbIp.x - wrist.x);
+
+    var fingersUp = (indexUp ? 1 : 0) + (middleUp ? 1 : 0) + (ringUp ? 1 : 0) + (pinkyUp ? 1 : 0) + (thumbUp ? 1 : 0);
+
+    if (pinchDist < 0.05) return 'pinch';
+    if (indexUp && middleUp && !ringUp && !pinkyUp) return 'peace';
+    if (fingersUp >= 4) return 'open';
+    if (fingersUp <= 1 && !indexUp) return 'fist';
+    if (indexUp && !middleUp && !ringUp && !pinkyUp) return 'point';
+    
+    return 'none';
+  }
+
+  function dist3d(a, b) {
+    var dx = a.x - b.x;
+    var dy = a.y - b.y;
+    var dz = (a.z || 0) - (b.z || 0);
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+  }
+
+  function executeGlobalGesture(gesture) {
+    switch (gesture) {
+      case 'pinch':
+        if (!pinchCooldown) {
+          pinchCooldown = true;
+          virtualCursor.classList.add('clicking');
+          setTimeout(() => virtualCursor.classList.remove('clicking'), 300);
+          performGlobalClick(cursorX, cursorY);
+          setTimeout(() => pinchCooldown = false, 800);
+        }
+        break;
+        
+      case 'open':
+        // Scroll Up rápido
+        if (!scrollCooldown) {
+          window.scrollBy({ top: -50, behavior: 'auto' });
+        }
+        break;
+        
+      case 'fist':
+        // Scroll Down rápido
+        if (!scrollCooldown) {
+          window.scrollBy({ top: 50, behavior: 'auto' });
+        }
+        break;
+    }
+  }
+
+  function performGlobalClick(x, y) {
+    // Esconder cursor temporalmente
+    var prev = virtualCursor.style.visibility;
+    virtualCursor.style.visibility = 'hidden';
+    var el = document.elementFromPoint(x, y);
+    virtualCursor.style.visibility = prev;
+
+    if (!el) return;
+
+    createClickRipple(x, y);
+
+    // Enviar evento click real si posible
+    var link = el.closest('a[href]');
+    if (link) {
+      if (link.target === '_blank') {
+        var newWin = window.open(link.href, '_blank');
+        if (!newWin) window.location.href = link.href;
+      } else {
+        window.location.href = link.href;
+      }
+      return;
+    }
+
+    var button = el.closest('button');
+    if (button) {
+      button.click();
+      return;
+    }
+    
+    // Si es otro interactivo
+    el.click();
+  }
+
+  function createClickRipple(x, y) {
+    var ripple = document.createElement('div');
+    ripple.className = 'click-ripple';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    document.body.appendChild(ripple);
+    setTimeout(() => ripple.remove(), 600);
+  }
+
+})();
+</script>
