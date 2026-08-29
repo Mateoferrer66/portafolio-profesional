@@ -4,35 +4,35 @@
 // Contiene la UI global de la IA (Cámara, Micrófono y Cursor Virtual) y toda la lógica.
 ---
 
-<div id="global-ai-controls" class="global-ai-container" data-astro-transition-persist="global-ai">
+<div id="global-ai-controls" data-astro-transition-persist="global-ai" style="position:fixed;z-index:12000;inset:0;pointer-events:none;">
   <!-- Botón Global Flotante para encender/apagar IA -->
-  <button id="global-ai-btn" class="ai-toggle-btn" type="button" title="Activar IA (Gestos y Voz)">
-    <span class="ai-icon">🤖</span>
-    <span class="ai-text">IA Apagada</span>
+  <button id="global-ai-btn" type="button" title="Activar IA (Gestos y Voz)" style="pointer-events:auto;position:fixed;bottom:20px;left:20px;background:rgba(15,15,20,0.85);border:2px solid rgba(124,58,237,0.6);border-radius:50px;padding:10px 18px;display:flex;align-items:center;gap:8px;cursor:pointer;z-index:12001;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all 0.3s ease;color:#e2e8f0;font-family:inherit;font-size:0.85rem;font-weight:600;box-shadow:0 4px 20px rgba(124,58,237,0.3);">
+    <span style="font-size:1.3rem;">🤖</span>
+    <span id="ai-btn-text" style="color:#e2e8f0;">IA Apagada</span>
   </button>
 
   <!-- Contenedor de la Webcam y Canvas de Gestos (Oculto por defecto) -->
-  <div id="global-webcam-container" class="webcam-box hidden">
-    <video id="global-webcam-feed" autoplay playsinline></video>
-    <canvas id="global-webcam-canvas"></canvas>
+  <div id="global-webcam-container" style="display:none;position:fixed;bottom:80px;left:20px;width:240px;height:180px;border-radius:16px;overflow:hidden;border:2px solid rgba(124,58,237,0.5);box-shadow:0 8px 32px rgba(0,0,0,0.6);z-index:12001;pointer-events:auto;background:#000;">
+    <video id="global-webcam-feed" autoplay playsinline style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"></video>
+    <canvas id="global-webcam-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);"></canvas>
     
-    <div class="voice-status" id="voice-status">
-      <span class="mic-icon">🎙️</span>
-      <span id="voice-text">Escuchando comandos...</span>
+    <div id="voice-status" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);padding:4px 12px;border-radius:20px;display:flex;align-items:center;gap:6px;white-space:nowrap;">
+      <span style="font-size:0.9rem;">🎙️</span>
+      <span id="voice-text" style="font-size:0.7rem;color:#4ade80;">Escuchando comandos...</span>
     </div>
   </div>
 
   <!-- Virtual Cursor Global -->
-  <div class="virtual-cursor" id="global-virtual-cursor">
-    <div class="cursor-ring"></div>
-    <div class="cursor-dot"></div>
+  <div id="global-virtual-cursor" style="position:fixed;pointer-events:none;z-index:20000;transform:translate(-50%,-50%);display:none;">
+    <div style="width:40px;height:40px;border:2px solid #D4AF37;border-radius:50%;animation:cursorPulse 1.5s ease-in-out infinite;"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#D4AF37;border-radius:50%;box-shadow:0 0 10px #D4AF37;"></div>
   </div>
   
   <!-- Hidden link for bypass popup blocker navigation -->
   <a id="global-gesture-nav-link" href="#" target="_blank" rel="noopener noreferrer" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1;"></a>
 
   <!-- Toast Notificaciones IA (Voice / Gestures) -->
-  <div id="ai-toast" class="ai-toast hidden">
+  <div id="ai-toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(15,15,20,0.9);border:1px solid rgba(124,58,237,0.5);border-radius:12px;padding:10px 20px;z-index:20001;pointer-events:none;backdrop-filter:blur(12px);color:#e2e8f0;font-size:0.85rem;display:flex;align-items:center;gap:8px;">
     <span id="ai-toast-icon">ℹ️</span>
     <span id="ai-toast-msg">Mensaje</span>
   </div>
@@ -234,7 +234,7 @@
   //  ELEMENTOS DEL DOM
   // ═══════════════════════════════════════════════════════════════
   var aiBtn = document.getElementById('global-ai-btn');
-  var aiBtnText = aiBtn.querySelector('.ai-text');
+  var aiBtnText = document.getElementById('ai-btn-text');
   var webcamBox = document.getElementById('global-webcam-container');
   var videoElement = document.getElementById('global-webcam-feed');
   var canvasElement = document.getElementById('global-webcam-canvas');
@@ -289,17 +289,17 @@
   function showToast(msg, icon = 'ℹ️', duration = 3000) {
     aiToastMsg.textContent = msg;
     aiToastIcon.textContent = icon;
-    aiToast.classList.remove('hidden');
+    aiToast.style.display = 'flex';
     
     if (window.toastTimer) clearTimeout(window.toastTimer);
     window.toastTimer = setTimeout(() => {
-      aiToast.classList.add('hidden');
+      aiToast.style.display = 'none';
     }, duration);
   }
 
   async function startAI() {
     aiBtnText.textContent = 'Iniciando IA...';
-    aiBtn.classList.add('active');
+    aiBtn.style.borderColor = '#4ade80'; aiBtn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.4)';
     
     try {
       // 1. Iniciar Web Speech API
@@ -314,7 +314,7 @@
         canvasElement.height = videoElement.videoHeight;
         
         initMediaPipe();
-        webcamBox.classList.remove('hidden');
+        webcamBox.style.display = 'block';
         cameraActive = true;
         aiBtnText.textContent = 'IA Encendida';
         showToast('Gestos y Voz Activados', '🟢');
@@ -334,7 +334,7 @@
     } catch (err) {
       console.error(err);
       aiBtnText.textContent = 'IA Apagada';
-      aiBtn.classList.remove('active');
+      aiBtn.style.borderColor = 'rgba(124,58,237,0.6)'; aiBtn.style.boxShadow = '0 4px 20px rgba(124,58,237,0.3)';
       showToast('Error de permisos. Permite cámara y micrófono.', '❌', 5000);
     }
   }
@@ -346,7 +346,7 @@
     if (stream) {
       stream.getTracks().forEach(track => track.stop());
     }
-    webcamBox.classList.add('hidden');
+    webcamBox.style.display = 'none';
     virtualCursor.style.display = 'none';
     
     // Detener Voz
@@ -356,7 +356,7 @@
     }
     
     aiBtnText.textContent = 'IA Apagada';
-    aiBtn.classList.remove('active');
+    aiBtn.style.borderColor = 'rgba(124,58,237,0.6)'; aiBtn.style.boxShadow = '0 4px 20px rgba(124,58,237,0.3)';
     showToast('IA Desactivada', '🔴');
   }
 
