@@ -25,9 +25,10 @@ interface Props {
 	robots?: string | undefined;
 	keywords?: string | undefined;
 	image?: string | undefined;
+	hideGlobalAI?: boolean;
 }
 
-const { title, description, robots, keywords, image } = Astro.props;
+const { title, description, robots, keywords, image, hideGlobalAI = false } = Astro.props;
 // Logic for Floating Buttons Stacking
 const { pathname } = Astro.url;
 const isHome = pathname === "/" || pathname === "";
@@ -131,7 +132,7 @@ const chatWidgetClass = shouldStack
 		<ScrollToTop />
 		<MagicCursor client:only="react" />
 		<!-- Global AI Controls (Voz y Gestos) -->
-		<GlobalControls />
+		{!hideGlobalAI && <GlobalControls />}
 		
 		<!-- Gesture Control Bridge: listens for postMessage commands from the gesture controller -->
 		<Fragment set:html={`<script src="/gesture-bridge.js"></script>`} />

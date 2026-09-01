@@ -34,13 +34,8 @@ const ThreeDBackgroundContent: React.FC = () => {
     // ── Scene ──
     const scene = new THREE.Scene();
     
-    // Cargar el fondo futurista
-    const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('/assets/futuristic_bg.jpg', (texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      // Para cubrir mejor podemos usar un render target o simplemente ponerlo de fondo
-      scene.background = texture;
-    });
+    // The background is now fully transparent, allowing the global site background (from BaseLayout) to show through.
+    // textureLoader and scene.background removed to fix background clashing ('dos colores').
 
     scene.fog = new THREE.FogExp2(0x02020a, 0.005); // Niebla más sutil para ver el fondo
 

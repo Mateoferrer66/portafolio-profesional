@@ -6,6 +6,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   title="Video Interactivo con Gestos - Mateo Ferrer"
   description="Experiencia de video interactiva controlada por gestos de las manos usando inteligencia artificial."
 >
+  <Fragment slot="head">
+  </Fragment>
   <div class="gesture-page">
     <!-- Hero Header -->
     <header class="gesture-hero">
@@ -25,7 +27,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
       <div class="video-wrapper" id="video-wrapper">
         <video
           id="gesture-video"
-          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          src="/assets/test.mp4"
           playsinline
           preload="metadata"
         ></video>
@@ -49,6 +51,27 @@ import BaseLayout from "../layouts/BaseLayout.astro";
           <div class="video-progress-fill" id="video-progress-fill"></div>
           <!-- Marker at second 19 -->
           <div class="video-marker" id="marker-19" title="Link interactivo"></div>
+        </div>
+      </div>
+
+      <!-- Gesture Guide -->
+      <div class="gesture-guide">
+        <h3>Guía de Gestos</h3>
+        <div class="gestures-grid">
+          <div class="gesture-card" id="gesture-pinch">
+            <span class="gesture-icon">🤏</span>
+            <div class="gesture-info">
+              <strong>Pellizco</strong>
+              <span>Hacer Click</span>
+            </div>
+          </div>
+          <div class="gesture-card" id="gesture-open">
+            <span class="gesture-icon">🖐️</span>
+            <div class="gesture-info">
+              <strong>Mano Abierta (Fist)</strong>
+              <span>Scroll (Global)</span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -179,127 +202,6 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     });
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  CAMERA ACTIVATION
-  // ═══════════════════════════════════════════════════════════════
-
-  camBtn.addEventListener('click', function() {
-    if (cameraActive) {
-      stopCamera();
-    } else {
-      startCamera();
-    }
-  });
-
-  function startCamera() {
-    if (typeof Hands === 'undefined') {
-      statusText.textContent = 'Error: MediaPipe no cargó. Recarga la página.';
-      statusDot.className = 'status-dot error';
-      return;
-    }
-
-    statusText.textContent = 'Iniciando cámara...';
-    statusDot.className = 'status-dot loading';
-
-    handsInstance = new Hands({
-      locateFile: function(file) {
-        return 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/' + file;
-      }
-    });
-
-    handsInstance.setOptions({
-      maxNumHands: 1,
-      modelComplexity: 1,
-      minDetectionConfidence: 0.7,
-      minTrackingConfidence: 0.5
-    });
-
-    handsInstance.onResults(onHandResults);
-
-    navigator.mediaDevices.getUserMedia({
-      video: { width: 640, height: 480, facingMode: 'user' }
-    }).then(function(stream) {
-      webcamFeed.srcObject = stream;
-      webcamContainer.style.display = 'block';
-      webcamCanvas.width = 640;
-      webcamCanvas.height = 480;
-
-      cameraInstance = new Camera(webcamFeed, {
-        onFrame: async function() {
-          if (handsInstance) {
-            await handsInstance.send({ image: webcamFeed });
-          }
-        },
-        width: 640,
-        height: 480
-      });
-      cameraInstance.start();
-
-      cameraActive = true;
-      camBtnText.textContent = 'Desactivar Cámara';
-      camBtn.classList.add('active');
-      statusText.textContent = 'Buscando mano...';
-      statusDot.className = 'status-dot searching';
-      virtualCursor.style.display = 'block';
-
-    }).catch(function(err) {
-      console.error('Camera error:', err);
-      statusText.textContent = 'Error: No se pudo acceder a la cámara';
-      statusDot.className = 'status-dot error';
-    });
-      }
-      return;
-    }
-
-    // Check for any other links
-    var link = el.closest('a[href]');
-    if (link) {
-      console.log('[GestureClick] Clicking link:', link.href);
-      if (link.target === '_blank') {
-        var newWin = window.open(link.href, '_blank');
-        if (!newWin) window.location.href = link.href; // fallback
-      } else {
-        window.location.href = link.href;
-      }
-      return;
-    }
-
-    // Check for buttons
-    var button = el.closest('button');
-    if (button) {
-      button.click();
-      return;
-    }
-
-    // Generic click
-    el.click();
-  }
-
-  function createClickRipple(x, y) {
-    var ripple = document.createElement('div');
-    ripple.className = 'click-ripple';
-    ripple.style.left = x + 'px';
-    ripple.style.top = y + 'px';
-    document.body.appendChild(ripple);
-    setTimeout(function() { ripple.remove(); }, 600);
-  }
-
-  function activateGestureCard(id) {
-    var card = document.getElementById(id);
-    if (card) {
-      card.classList.add('active');
-      gestureActiveCards[id] = true;
-    }
-  }
-
-  function clearActiveGestures() {
-    Object.keys(gestureActiveCards).forEach(function(id) {
-      var card = document.getElementById(id);
-      if (card) card.classList.remove('active');
-    });
-    gestureActiveCards = {};
-  }
-
 })();
 </script>
 
@@ -388,24 +290,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     border-radius: 1.25rem;
     overflow: hidden;
     background: #000;
+    border: 1px solid rgba(212, 175, 55, 0.3);
     box-shadow:
-      0 0 0 1px rgba(212, 175, 55, 0.15),
       0 20px 60px rgba(0, 0, 0, 0.5),
       0 0 80px rgba(212, 175, 55, 0.05);
-  }
-
-  .video-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: 1.3rem;
-    padding: 1px;
-    background: linear-gradient(135deg, rgba(212, 175, 55, 0.3), transparent 40%, transparent 60%, rgba(212, 175, 55, 0.2));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    z-index: 5;
   }
 
   #gesture-video {
@@ -423,8 +311,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.65);
     z-index: 3;
     transition: opacity 0.4s ease;
   }
