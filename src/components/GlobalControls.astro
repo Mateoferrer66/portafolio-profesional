@@ -464,7 +464,8 @@
       if (!SpeechRecognition) {
         console.warn("Speech API no soportada en este navegador.");
         var vt = document.getElementById('voice-text');
-        if (vt) vt.textContent = "🎙️ Voz no soportada";
+        if (vt) vt.textContent = "🎙️ Voz no soportada (Usa Chrome)";
+        showToast("Tu navegador no soporta comandos de voz. Usa Google Chrome.", "⚠️", 6000);
         return;
       }
 
@@ -480,6 +481,15 @@
         state.isListening = true;
         var vt = document.getElementById('voice-text');
         if (vt) vt.textContent = "Escuchando...";
+        
+        // Brave browser detection hack for speech API
+        if (navigator.brave && navigator.brave.isBrave) {
+          navigator.brave.isBrave().then(function(isBrave) {
+             if (isBrave) {
+                showToast("Brave bloquea la IA de Voz por defecto. Usa Chrome para la voz.", "⚠️", 6000);
+             }
+          });
+        }
       };
 
       state.recognition.onresult = function(event) {
@@ -541,9 +551,9 @@
         if (event.error === 'not-allowed') {
           showToast("Permiso de micrófono denegado", "🚫");
         }
-        // On 'network' error, don't spam the user — just log it
         if (event.error === 'network') {
           console.warn("[Voz] Network error — speech API may not be available.");
+          showToast("Voz bloqueada por el navegador (ej. Brave). Usa Chrome.", "⚠️", 5000);
         }
       };
 
@@ -657,9 +667,9 @@
 
       var fingersUp = (indexUp ? 1 : 0) + (middleUp ? 1 : 0) + (ringUp ? 1 : 0) + (pinkyUp ? 1 : 0) + (thumbUp ? 1 : 0);
 
-      if (pinchDist < 0.05) return 'pinch';
+      if (pinchDist < 0.1) return 'pinch';
       if (indexUp && middleUp && !ringUp && !pinkyUp) return 'peace';
-      if (fingersUp >= 4) return 'open';
+      if (fingersUp >= 3) return 'open';
       if (fingersUp <= 1 && !indexUp) return 'fist';
       if (indexUp && !middleUp && !ringUp && !pinkyUp) return 'point';
       
@@ -688,14 +698,14 @@
         case 'open':
           // Scroll Up
           if (!state.scrollCooldown) {
-            window.scrollBy({ top: -50, behavior: 'auto' });
+            window.scrollBy({ top: -80, behavior: 'auto' });
           }
           break;
           
         case 'fist':
           // Scroll Down
           if (!state.scrollCooldown) {
-            window.scrollBy({ top: 50, behavior: 'auto' });
+            window.scrollBy({ top: 80, behavior: 'auto' });
           }
           break;
       }
