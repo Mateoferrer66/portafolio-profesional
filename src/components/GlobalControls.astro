@@ -222,6 +222,8 @@
 <!-- Script global de IA que maneja Gestos y Voz -->
 <!-- Nota: Usamos is:inline para evitar que Astro lo reinicie al hacer ViewTransitions. El componente persistirá. -->
 <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js" crossorigin="anonymous"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.2.1628152410/control_utils.js" crossorigin="anonymous"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257/drawing_utils.js" crossorigin="anonymous"></script>
 <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
 
 <script is:inline>
@@ -377,40 +379,37 @@
         initVoiceControl();
         
         // 2. Start Camera for Gestures
-        state.stream = await navigator.mediaDevices.getUserMedia({ video: { width: 320, height: 240 } });
         var vid = document.getElementById('global-webcam-feed');
-        if (vid) {
-          vid.srcObject = state.stream;
-          vid.play().catch(function(e) { console.error("Error playing video:", e); });
+        var cvs = document.getElementById('global-webcam-canvas');
+        if (vid && cvs) {
+          initMediaPipe();
           
-          vid.onloadedmetadata = function() {
-            var cvs = document.getElementById('global-webcam-canvas');
-            if (cvs) {
-              cvs.width = vid.videoWidth;
-              cvs.height = vid.videoHeight;
-            }
+          if (!state.mpCamera) {
+            state.mpCamera = new Camera(vid, {
+              onFrame: async function() {
+                if (state.cameraActive && state.handsInstance) {
+                  await state.handsInstance.send({image: vid});
+                }
+              },
+              width: 320,
+              height: 240
+            });
+          }
+          
+          state.mpCamera.start().then(() => {
+            cvs.width = vid.videoWidth || 320;
+            cvs.height = vid.videoHeight || 240;
             
-            initMediaPipe();
             var wb = document.getElementById('global-webcam-container');
             if (wb) wb.style.display = 'block';
             state.cameraActive = true;
             aiBtnText.textContent = 'IA Encendida';
             showToast('Gestos y Voz Activados ✅', '🟢');
-            
-            // Render loop
-            function renderLoop() {
-              if (state.cameraActive) {
-                var v = document.getElementById('global-webcam-feed');
-                if (state.handsInstance && v && v.readyState >= 2) {
-                  state.handsInstance.send({image: v}).catch(function(err) {
-                    console.error("Error sending frame to MediaPipe:", err);
-                  });
-                }
-                requestAnimationFrame(renderLoop);
-              }
-            }
-            renderLoop();
-          };
+          }).catch(err => {
+            console.error(err);
+            aiBtnText.textContent = 'IA Apagada';
+            showToast('Error al iniciar la cámara.', '❌', 5000);
+          });
         }
       } catch (err) {
         console.error(err);
@@ -427,7 +426,12 @@
     function stopAI() {
       state.cameraActive = false;
       
-      // Stop Camera
+      if (state.mpCamera) {
+        state.mpCamera.stop();
+        state.mpCamera = null;
+      }
+      
+      // Stop Camera Stream
       if (state.stream) {
         state.stream.getTracks().forEach(function(track) { track.stop(); });
         state.stream = null;
@@ -481,6 +485,9 @@
       state.recognition.onresult = function(event) {
         var current = event.resultIndex;
         var transcript = event.results[current][0].transcript.toLowerCase().trim();
+        
+        var vt = document.getElementById('voice-text');
+        if (vt) vt.textContent = "🗣️ " + transcript;
         
         console.log("[Voz] Escuché:", transcript);
         
