@@ -221,7 +221,8 @@
 
 <!-- Script global de IA que maneja Gestos y Voz -->
 <!-- Nota: Usamos is:inline para evitar que Astro lo reinicie al hacer ViewTransitions. El componente persistirá. -->
-<script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js" crossorigin="anonymous"></script>
+<script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
 
 <script is:inline>
 (function() {
@@ -565,7 +566,7 @@
       if (state.handsInstance) return;
 
       state.handsInstance = new Hands({locateFile: function(file) {
-        return 'https://cdn.jsdelivr.net/npm/@mediapipe/hands/' + file;
+        return 'https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/' + file;
       }});
       state.handsInstance.setOptions({
         maxNumHands: 1,
