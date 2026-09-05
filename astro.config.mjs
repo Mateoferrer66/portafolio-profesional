@@ -5,8 +5,26 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 
 import fs from 'fs';
-if (fs.existsSync('public/assets/test.mp4')) fs.unlinkSync('public/assets/test.mp4');
-if (fs.existsSync('dist/assets/test.mp4')) fs.unlinkSync('dist/assets/test.mp4');
+
+function removeLargeVideoPlugin() {
+  return {
+    name: 'remove-large-video',
+    hooks: {
+      'astro:build:done': () => {
+        const paths = [
+          './dist/assets/test.mp4',
+          './public/assets/test.mp4'
+        ];
+        paths.forEach(p => {
+          if (fs.existsSync(p)) {
+            try { fs.unlinkSync(p); } catch (e) {}
+          }
+        });
+      }
+    }
+  };
+}
+
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,7 +32,8 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap(),
-    tailwind()
+    tailwind(),
+    removeLargeVideoPlugin()
   ],
   markdown: {
     // Allow HTML in markdown files (needed for video iframes)
