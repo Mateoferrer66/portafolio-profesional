@@ -97,25 +97,7 @@ const chatWidgetClass = shouldStack
 	<body>
 		<GoogleTagManagerNoScript />
 		<div id="scroll-progress"></div>
-		<div class="backgrounds-wrapper">
-			<!-- Dark Mode Background (Default) -->
-			<img
-				src="/assets/backgrounds/bg-main-dark-800w.jpg"
-				srcset="/assets/backgrounds/bg-main-dark-800w.jpg 800w, /assets/backgrounds/bg-main-dark-1440w.jpg 1440w"
-				sizes="100vw"
-				alt=""
-				class="bg-img bg-dark"
-				fetchpriority="high"
-			/>
-			<!-- Light Mode Background -->
-			<img
-				src="/assets/backgrounds/bg-main-light-800w.jpg"
-				srcset="/assets/backgrounds/bg-main-light-800w.jpg 800w, /assets/backgrounds/bg-main-light-1440w.jpg 1440w"
-				sizes="100vw"
-				alt=""
-				class="bg-img bg-light"
-			/>
-		</div>
+		<!-- 3D Metaverse Background (replaces static images) -->
 		<ThreeDBackground client:idle />
 		<div class="stack gap-20 backgrounds">
 			<Nav />
@@ -176,45 +158,6 @@ const chatWidgetClass = shouldStack
 				box-shadow: 0 0 10px var(--accent-regular);
 			}
 
-			/* Background Images Wrapper - Replaces CSS backgrounds for better LCP */
-			.backgrounds-wrapper {
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				z-index: -1;
-				overflow: hidden;
-				pointer-events: none;
-			}
-
-			.bg-img {
-				position: absolute;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				transition: opacity 0.5s ease-in-out;
-				opacity: 0;
-			}
-
-			/* Light Mode Images */
-			.bg-light {
-				opacity: 1;
-			}
-			:global(.theme-dark) .bg-light {
-				opacity: 0;
-			}
-
-			/* Dark Mode Images */
-			.bg-dark {
-				opacity: 0;
-			}
-			:global(.theme-dark) .bg-dark {
-				opacity: 1;
-			}
-
 			:root {
 				--_placeholder-bg: linear-gradient(transparent, transparent);
 				--bg-image-subtle-1: var(--_placeholder-bg);
@@ -235,33 +178,9 @@ const chatWidgetClass = shouldStack
 				--bg-blend-mode: lighten;
 			}
 
-			/* These backgrounds are displayed below the fold, so we lazy load them
-			   once the `.loaded` class has been set.  */
-			:root.loaded {
-				--bg-image-subtle-1: url("/assets/backgrounds/bg-subtle-1-light-800w.jpg");
-				--bg-image-subtle-2: url("/assets/backgrounds/bg-subtle-2-light-800w.jpg");
-				--bg-image-footer: url("/assets/backgrounds/bg-footer-light-800w.jpg");
-			}
-			:root.loaded.theme-dark {
-				--bg-image-subtle-1: url("/assets/backgrounds/bg-subtle-1-dark-800w.jpg");
-				--bg-image-subtle-2: url("/assets/backgrounds/bg-subtle-2-dark-800w.jpg");
-				--bg-image-footer: url("/assets/backgrounds/bg-footer-dark-800w.jpg");
-			}
-
 			@media (min-width: 50em) {
 				:root {
 					--bg-scale: 1;
-				}
-
-				:root.loaded {
-					--bg-image-subtle-1: url("/assets/backgrounds/bg-subtle-1-light-1440w.jpg");
-					--bg-image-subtle-2: url("/assets/backgrounds/bg-subtle-2-light-1440w.jpg");
-					--bg-image-footer: url("/assets/backgrounds/bg-footer-light-1440w.jpg");
-				}
-				:root.loaded.theme-dark {
-					--bg-image-subtle-1: url("/assets/backgrounds/bg-subtle-1-dark-1440w.jpg");
-					--bg-image-subtle-2: url("/assets/backgrounds/bg-subtle-2-dark-1440w.jpg");
-					--bg-image-footer: url("/assets/backgrounds/bg-footer-dark-1440w.jpg");
 				}
 			}
 
