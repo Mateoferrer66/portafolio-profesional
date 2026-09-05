@@ -4,6 +4,10 @@ import sitemap from "@astrojs/sitemap";
 
 import tailwind from "@astrojs/tailwind";
 
+import fs from 'fs';
+if (fs.existsSync('public/assets/test.mp4')) fs.unlinkSync('public/assets/test.mp4');
+if (fs.existsSync('dist/assets/test.mp4')) fs.unlinkSync('dist/assets/test.mp4');
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://mateo-ferrer.pages.dev/',
