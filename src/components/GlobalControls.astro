@@ -4,7 +4,7 @@
 // Uses MediaPipe Hands for gesture detection and Web Speech API for voice.
 ---
 
-<div id="global-ai-controls" data-astro-transition-persist="global-ai" style="position:fixed;z-index:12000;inset:0;pointer-events:none;">
+<div id="global-ai-controls" transition:persist="global-ai-controls" style="position:fixed;z-index:12000;inset:0;pointer-events:none;">
   <!-- Botón Global Flotante para encender/apagar IA -->
   <button id="global-ai-btn" type="button" title="Activar IA (Gestos y Voz)" style="pointer-events:auto;position:fixed;bottom:20px;left:20px;background:rgba(15,15,20,0.85);border:2px solid rgba(124,58,237,0.6);border-radius:50px;padding:10px 18px;display:flex;align-items:center;gap:8px;cursor:pointer;z-index:12001;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:all 0.3s ease;color:#e2e8f0;font-family:inherit;font-size:0.85rem;font-weight:600;box-shadow:0 4px 20px rgba(124,58,237,0.3);">
     <span style="font-size:1.3rem;">🤖</span>
@@ -50,8 +50,8 @@
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#4ade80;border-radius:50%;box-shadow:0 0 8px #4ade80;"></div>
   </div>
   
-  <!-- Hidden link for navigation -->
-  <a id="global-gesture-nav-link" href="#" target="_blank" rel="noopener noreferrer" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1;"></a>
+  <!-- Hidden link for seamless ViewTransitions navigation -->
+  <a id="global-gesture-nav-link" href="#" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1;"></a>
 
   <!-- Toast Notificaciones IA (Voice / Gestures) -->
   <div id="ai-toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(15,15,25,0.95);border:1px solid rgba(124,58,237,0.6);border-radius:12px;padding:10px 20px;z-index:20001;pointer-events:none;backdrop-filter:blur(12px);color:#e2e8f0;font-size:0.85rem;align-items:center;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,0.6);">
@@ -92,11 +92,12 @@
   'use strict';
 
   // ═══════════════════════════════════════════════════════════════
-  //  STATE (persists across ViewTransitions navigation)
+  //  STATE (persists across ViewTransitions and hard page reloads)
   // ═══════════════════════════════════════════════════════════════
   if (!window._globalAIState) {
     window._globalAIState = {
       active: false,
+      isStarting: false,
       stream: null,
       handsInstance: null,
       handsReady: false,
@@ -104,7 +105,8 @@
       animFrameId: null,
       recognition: null,
       isListening: false,
-      voiceRetries: 0,
+      voiceRestartTimer: null,
+      lastVoiceActionTime: 0,
       cursorX: window.innerWidth / 2,
       cursorY: window.innerHeight / 2,
       targetCursorX: window.innerWidth / 2,
@@ -118,7 +120,7 @@
   var S = window._globalAIState;
 
   // ═══════════════════════════════════════════════════════════════
-  //  TOAST
+  //  TOAST & FEEDBACK
   // ═══════════════════════════════════════════════════════════════
   function showToast(msg, icon, duration) {
     icon = icon || 'ℹ️';
@@ -131,7 +133,9 @@
     if (ti) ti.textContent = icon;
     t.style.display = 'flex';
     if (S.toastTimer) clearTimeout(S.toastTimer);
-    S.toastTimer = setTimeout(function() { t.style.display = 'none'; }, duration);
+    S.toastTimer = setTimeout(function() {
+      if (t) t.style.display = 'none';
+    }, duration);
   }
 
   function setVoiceText(txt) {
@@ -162,7 +166,7 @@
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  UPDATE UI — syncs DOM with current state
+  //  UPDATE UI — syncs DOM buttons and preview with state
   // ═══════════════════════════════════════════════════════════════
   function updateUI() {
     var btn = document.getElementById('global-ai-btn');
@@ -192,144 +196,222 @@
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  VOICE COMMANDS
+  //  SMOOTH NAVIGATION (preserves ViewTransitions without reloads)
   // ═══════════════════════════════════════════════════════════════
-  var voiceNav = {
-    'inicio': '/', 'hogar': '/', 'home': '/',
-    'acerca': '/about', 'sobre mi': '/about', 'sobre mí': '/about',
-    'trabajo': '/work', 'proyectos': '/work', 'portafolio': '/work',
-    'cursos': '/work/cursos-react', 'curso': '/work/cursos-react', 'react': '/work/cursos-react',
-    'servicios': '/services',
-    'tienda': '/shop', 'comercio': '/shop',
-    'gesto': '/gesture-video', 'gestos': '/gesture-video',
-    'contacto': '#contact',
-  };
-  var voiceScroll = {
-    'subir': -350, 'sube': -350, 'arriba': -350, 'scroll up': -350,
-    'bajar': 350, 'baja': 350, 'abajo': 350, 'scroll down': 350,
-  };
-  var voiceStop = ['detener', 'parar', 'stop', 'apagar'];
+  function navigateSmooth(url) {
+    if (!url) return;
+    if (url.startsWith('#')) {
+      var el = document.querySelector(url);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.location.hash = url;
+      }
+      return;
+    }
+
+    var currentPath = window.location.pathname.replace(/\/$/, '') || '/';
+    var targetPath = url.replace(/\/$/, '') || '/';
+    if (currentPath === targetPath) {
+      showToast('Ya estás en esta página', '📍', 1800);
+      return;
+    }
+
+    // Trigger Astro ViewTransitions router seamlessly through internal link click
+    var navLink = document.getElementById('global-gesture-nav-link');
+    if (!navLink) {
+      navLink = document.createElement('a');
+      navLink.id = 'global-gesture-nav-link';
+      navLink.style.display = 'none';
+      document.body.appendChild(navLink);
+    }
+    navLink.removeAttribute('target');
+    navLink.href = url;
+    navLink.click();
+  }
 
   // ═══════════════════════════════════════════════════════════════
-  //  START VOICE
+  //  VOICE RECOGNITION (Web Speech API)
   // ═══════════════════════════════════════════════════════════════
   function startVoice() {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
-      console.warn('[AI Voice] SpeechRecognition not supported in this browser.');
-      setVoiceText('Voz: usa Chrome');
+      console.warn('[AI Voice] Web Speech API not supported in this browser.');
+      setVoiceText('Voz: usa Chrome o Edge');
       return;
     }
 
-    if (S.recognition && S.isListening) return;
+    // Always clean up previous instance first to avoid InvalidStateError
+    if (S.recognition) {
+      try {
+        S.recognition.onstart = null;
+        S.recognition.onresult = null;
+        S.recognition.onerror = null;
+        S.recognition.onend = null;
+        S.recognition.abort();
+      } catch(e) {}
+      S.recognition = null;
+    }
 
-    S.voiceRetries = 0;
     try {
       var rec = new SR();
       rec.lang = 'es-ES';
       rec.continuous = true;
-      rec.interimResults = false;
+      rec.interimResults = true;
+      rec.maxAlternatives = 1;
       S.recognition = rec;
 
       rec.onstart = function() {
         S.isListening = true;
-        S.voiceRetries = 0;
-        setVoiceText('Escuchando...');
-        console.log('[AI Voice] Listening active.');
+        setVoiceText('Escuchando comandos...');
+        console.log('[AI Voice] Recognition active.');
       };
 
       rec.onresult = function(event) {
-        var idx = event.resultIndex;
-        var transcript = event.results[idx][0].transcript.toLowerCase().trim();
+        if (!event.results || event.results.length === 0) return;
+        
+        var latestResult = event.results[event.results.length - 1];
+        var transcript = latestResult[0].transcript.toLowerCase().trim();
+        var isFinal = latestResult.isFinal;
+        
         setVoiceText('🗣️ "' + transcript + '"');
-        console.log('[AI Voice] Heard:', transcript);
-
-        // Stop commands
-        for (var c = 0; c < voiceStop.length; c++) {
-          if (transcript.includes(voiceStop[c])) {
-            showToast('Desactivando IA...', '🛑');
-            setTimeout(stopAI, 500);
-            return;
-          }
-        }
-
-        // Scroll commands
-        for (var key in voiceScroll) {
-          if (transcript.includes(key)) {
-            window.scrollBy({ top: voiceScroll[key], behavior: 'smooth' });
-            showToast('Scroll: ' + key, '📜', 1500);
-            return;
-          }
-        }
-
-        // Navigation commands
-        var found = false;
-        for (var navKey in voiceNav) {
-          if (transcript.includes(navKey) || transcript.includes('ir a ' + navKey) || transcript.includes('ver ' + navKey)) {
-            found = true;
-            var path = voiceNav[navKey];
-            showToast('Navegando a ' + navKey + '...', '🗣️');
-            setTimeout(function() {
-              if (path.startsWith('#')) {
-                var el = document.querySelector(path);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              } else {
-                window.location.href = path;
-              }
-            }, 700);
-            break;
-          }
-        }
-
-        if (!found) {
-          showToast('Escuché: "' + transcript + '"', '👂', 2000);
-        }
+        processVoiceCommand(transcript, isFinal);
       };
 
       rec.onerror = function(event) {
-        console.warn('[AI Voice] Event error:', event.error);
-        if (event.error === 'not-allowed') {
-          setVoiceText('Micrófono denegado');
-          showToast('Permiso de micrófono no otorgado.', '🎙️', 4000);
-          S.isListening = false;
+        var err = event.error;
+        // Silence detection and abort are standard lifecycle events, not real errors
+        if (err === 'no-speech' || err === 'aborted') {
           return;
         }
-        if (event.error === 'network') {
-          setVoiceText('Voz: error red');
+        console.warn('[AI Voice] Recognition event error:', err);
+
+        if (err === 'not-allowed' || err === 'service-not-allowed') {
+          S.isListening = false;
+          setVoiceText('Micrófono bloqueado 🔒');
+          showToast('Permiso de micrófono no otorgado. Habilítalo en el candado 🔒 de tu navegador.', '🎙️', 5000);
+          return;
+        }
+        if (err === 'audio-capture') {
+          setVoiceText('Micrófono no detectado');
+          showToast('El micrófono está ocupado o desconectado.', '🎙️', 4000);
+          return;
+        }
+        if (err === 'network') {
+          setVoiceText('Reconectando voz...');
         }
       };
 
       rec.onend = function() {
         S.isListening = false;
-        if (S.active && S.voiceRetries < 10) {
-          S.voiceRetries++;
-          setTimeout(function() {
-            if (S.active) {
-              try { rec.start(); } catch(e) {}
-            }
-          }, 300);
-        } else if (S.active) {
-          setTimeout(function() {
-            S.voiceRetries = 0;
-            if (S.active) {
-              try { rec.start(); } catch(e) {}
-            }
-          }, 2000);
+        // If AI is still active, safely schedule restart with a fresh instance
+        if (S.active || localStorage.getItem('portfolio_ai_active') === '1') {
+          scheduleVoiceRestart(350);
         }
       };
 
       rec.start();
     } catch(e) {
       console.warn('[AI Voice] Start exception:', e);
-      setVoiceText('Voz no disponible');
+      if (S.active || localStorage.getItem('portfolio_ai_active') === '1') {
+        scheduleVoiceRestart(1000);
+      }
     }
   }
 
+  function scheduleVoiceRestart(delay) {
+    if (S.voiceRestartTimer) clearTimeout(S.voiceRestartTimer);
+    S.voiceRestartTimer = setTimeout(function() {
+      if ((S.active || localStorage.getItem('portfolio_ai_active') === '1') && !S.isListening) {
+        startVoice();
+      }
+    }, delay || 350);
+  }
+
   function stopVoice() {
+    if (S.voiceRestartTimer) {
+      clearTimeout(S.voiceRestartTimer);
+      S.voiceRestartTimer = null;
+    }
     if (S.recognition) {
-      try { S.recognition.abort(); } catch(e) {}
-      S.isListening = false;
+      try {
+        S.recognition.onstart = null;
+        S.recognition.onresult = null;
+        S.recognition.onerror = null;
+        S.recognition.onend = null;
+        S.recognition.abort();
+      } catch(e) {}
       S.recognition = null;
+    }
+    S.isListening = false;
+  }
+
+  function processVoiceCommand(text, isFinal) {
+    var now = Date.now();
+    // Debounce commands to avoid repeating during interim results
+    if (now - S.lastVoiceActionTime < 1300) return;
+
+    // 1. APAGAR / DETENER IA
+    var stopKeywords = ['apagar', 'detener', 'parar', 'desactivar', 'cerrar ia', 'apaga ia', 'stop'];
+    for (var s = 0; s < stopKeywords.length; s++) {
+      if (text.includes(stopKeywords[s])) {
+        S.lastVoiceActionTime = now;
+        showToast('Apagando IA...', '🛑', 2000);
+        setTimeout(stopAI, 500);
+        return;
+      }
+    }
+
+    // 2. SCROLL ARRIBA / ABAJO
+    if (text.includes('subir') || text.includes('sube') || text.includes('arriba') || text.includes('scroll arriba')) {
+      S.lastVoiceActionTime = now;
+      window.scrollBy({ top: -380, behavior: 'smooth' });
+      showToast('Subiendo página', '⬆️', 1500);
+      return;
+    }
+    if (text.includes('bajar') || text.includes('baja') || text.includes('abajo') || text.includes('scroll abajo')) {
+      S.lastVoiceActionTime = now;
+      window.scrollBy({ top: 380, behavior: 'smooth' });
+      showToast('Bajando página', '⬇️', 1500);
+      return;
+    }
+
+    // 3. CAMBIO DE TEMA (CLARO / OSCURO)
+    if (text.includes('modo oscuro') || text.includes('modo claro') || text.includes('tema oscuro') || text.includes('tema claro') || text.includes('cambiar tema')) {
+      S.lastVoiceActionTime = now;
+      var themeBtn = document.querySelector('theme-toggle button');
+      if (themeBtn) {
+        themeBtn.click();
+        showToast('Tema cambiado', '🌓', 1500);
+      }
+      return;
+    }
+
+    // 4. NAVEGACIÓN POR RUTAS
+    var navMap = [
+      { keys: ['inicio', 'home', 'portada', 'principal'], url: '/' },
+      { keys: ['cursos', 'curso', 'react', 'curso react', 'cursos react'], url: '/work/cursos-react' },
+      { keys: ['trabajo', 'trabajos', 'proyecto', 'proyectos', 'portafolio'], url: '/work' },
+      { keys: ['servicio', 'servicios'], url: '/services' },
+      { keys: ['tienda', 'productos', 'shop', 'comprar'], url: '/shop' },
+      { keys: ['sobre mi', 'sobre mí', 'acerca', 'perfil', 'biografia', 'biografía'], url: '/about' },
+      { keys: ['video', 'gesto', 'gestos', 'interactivo'], url: '/gesture-video' },
+      { keys: ['contacto', 'contactar', 'mensaje', 'escribir'], url: '#contact' },
+    ];
+
+    for (var n = 0; n < navMap.length; n++) {
+      var item = navMap[n];
+      for (var k = 0; k < item.keys.length; k++) {
+        var keyword = item.keys[k];
+        if (text.includes(keyword)) {
+          S.lastVoiceActionTime = now;
+          showToast('Navegando a ' + keyword + '...', '🚀', 2000);
+          setTimeout(function() {
+            navigateSmooth(item.url);
+          }, 350);
+          return;
+        }
+      }
     }
   }
 
@@ -368,7 +450,7 @@
 
       S.handsInstance.onResults(onHandResults);
 
-      // Warm up model with small frame
+      // Warm up model
       var testCanvas = document.createElement('canvas');
       testCanvas.width = 4;
       testCanvas.height = 4;
@@ -377,17 +459,16 @@
         console.log('[AI Gestures] Model ready!');
         S.handsReady = true;
         showLoading(false);
-        showToast('¡Gestos y Voz listos! 🖐️🎙️', '✨', 3000);
         startFrameLoop();
       }).catch(function(err) {
-        console.warn('[AI Gestures] Warmup failed, retrying on live feed:', err);
+        console.warn('[AI Gestures] Warmup skipped, starting live:', err);
         S.handsReady = true;
         showLoading(false);
         startFrameLoop();
       });
 
     } catch(err) {
-      console.error('[AI Gestures] Hands creation error:', err);
+      console.error('[AI Gestures] Hands init error:', err);
       showLoading(false);
     }
   }
@@ -413,7 +494,7 @@
         cursor.style.top = S.cursorY + 'px';
       }
 
-      // Throttle MediaPipe frames so they never queue up
+      // Send frame to MediaPipe only when previous frame finished
       if (S.handsInstance && S.handsReady && vid.readyState >= 2 && !S.isProcessingFrame) {
         S.isProcessingFrame = true;
         S.handsInstance.send({image: vid})
@@ -436,9 +517,6 @@
     }
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  HAND RESULTS CALLBACK
-  // ═══════════════════════════════════════════════════════════════
   function onHandResults(results) {
     var cvs = document.getElementById('global-webcam-canvas');
     var cursor = document.getElementById('global-virtual-cursor');
@@ -450,10 +528,9 @@
 
     if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
       cursor.style.display = 'block';
-
       var landmarks = results.multiHandLandmarks[0];
 
-      // Draw skeleton
+      // Draw hand skeleton
       var connections = [
         [0,1],[1,2],[2,3],[3,4],
         [0,5],[5,6],[6,7],[7,8],
@@ -482,7 +559,7 @@
         ctx.fill();
       }
 
-      // Map index fingertip to screen (mirrored)
+      // Map index fingertip to screen
       var indexTip = landmarks[8];
       var normX = 1 - indexTip.x;
       var normY = indexTip.y;
@@ -499,9 +576,6 @@
     ctx.restore();
   }
 
-  // ═══════════════════════════════════════════════════════════════
-  //  GESTURE DETECTION & EXECUTION
-  // ═══════════════════════════════════════════════════════════════
   function dist3d(a, b) {
     var dx = a.x - b.x, dy = a.y - b.y, dz = (a.z||0) - (b.z||0);
     return Math.sqrt(dx*dx + dy*dy + dz*dz);
@@ -576,16 +650,19 @@
     var link = el.closest('a[href]');
     if (link) {
       if (link.target === '_blank') {
-        var win = window.open(link.href, '_blank');
-        if (!win) window.location.href = link.href;
+        window.open(link.href, '_blank');
       } else {
-        window.location.href = link.href;
+        // Native click triggers ViewTransitions router
+        link.click();
       }
       return;
     }
 
     var button = el.closest('button');
-    if (button) { button.click(); return; }
+    if (button) {
+      button.click();
+      return;
+    }
 
     el.click();
   }
@@ -600,33 +677,36 @@
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  START AI — Main entry point
+  //  START AI — Main Entry Point
   // ═══════════════════════════════════════════════════════════════
   async function startAI() {
+    if (S.isStarting) return;
+    S.isStarting = true;
+
     var btnText = document.getElementById('ai-btn-text');
-    var btn = document.getElementById('global-ai-btn');
     if (btnText) btnText.textContent = 'Iniciando...';
 
+    // Persist intent to localStorage: MUST STAY ON UNTIL MANUALLY TURNED OFF!
+    localStorage.setItem('portfolio_ai_active', '1');
+    S.active = true;
+
+    // Start voice recognition immediately
+    startVoice();
+
     try {
-      // 1. Request camera + microphone in a single browser prompt
-      var stream = null;
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' },
-          audio: true
-        });
-      } catch(audioErr) {
-        console.warn('[AI] Camera+Audio failed, falling back to camera only:', audioErr);
+      // Request ONLY video in getUserMedia. SpeechRecognition captures mic independently!
+      var stream = S.stream;
+      if (!stream || !stream.active) {
         stream = await navigator.mediaDevices.getUserMedia({
           video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' },
           audio: false
         });
+        S.stream = stream;
       }
 
-      S.stream = stream;
-      S.active = true;
+      S.isStarting = false;
 
-      // 2. Attach stream to video element
+      // Attach stream to video element
       var vid = document.getElementById('global-webcam-feed');
       var cvs = document.getElementById('global-webcam-canvas');
       if (vid) {
@@ -638,44 +718,44 @@
             cvs.height = vid.videoHeight || 240;
           }
         };
+        vid.play().catch(function(){});
       }
 
-      // 3. Show webcam container
-      var wb = document.getElementById('global-webcam-container');
-      if (wb) wb.style.display = 'flex';
-
       updateUI();
-      showToast('Cámara activa. Cargando IA...', '📷', 2500);
+      showToast('¡IA Activa! Gestos y Voz listos 🖐️🎙️', '✨', 3500);
 
-      // 4. Start voice recognition
-      startVoice();
-
-      // 5. Initialize MediaPipe Hands
+      // Start gesture detection
       initHands();
 
     } catch(err) {
-      console.error('[AI] Failed to start:', err);
-      S.active = false;
-      if (btnText) btnText.textContent = 'IA Apagada';
-      
-      var msg = 'Error al iniciar IA.';
-      if (err.name === 'NotAllowedError') {
-        msg = 'Permiso de cámara o micrófono denegado. Permítelo en el navegador.';
-      } else if (err.name === 'NotFoundError') {
-        msg = 'No se encontró cámara o micrófono.';
-      } else if (err.name === 'NotReadableError') {
-        msg = 'Cámara en uso por otra app. Ciérrala e intenta de nuevo.';
+      console.warn('[AI] Camera initialization warning:', err);
+      S.isStarting = false;
+
+      // Keep active if user still wants it (Voice is already active!)
+      if (localStorage.getItem('portfolio_ai_active') === '1') {
+        S.active = true;
+        updateUI();
+        if (err.name === 'NotAllowedError') {
+          showToast('Permiso de cámara denegado. Voz activa. Permite cámara para gestos.', '📷', 5000);
+        } else if (err.name === 'NotFoundError') {
+          showToast('Cámara no detectada. Comandos de voz activos 🎙️', '🎙️', 4000);
+        } else {
+          showToast('Cámara ocupada. Comandos de voz activos 🎙️', '🎙️', 4000);
+        }
       }
-      showToast(msg, '❌', 6000);
-      updateUI();
     }
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  STOP AI
+  //  STOP AI — ONLY TRIGGERED MANUALLY BY USER
   // ═══════════════════════════════════════════════════════════════
   function stopAI() {
+    console.log('[AI] Explicit stop by user.');
     S.active = false;
+    S.isStarting = false;
+
+    // The ONLY place where active is set to 0 in localStorage
+    localStorage.setItem('portfolio_ai_active', '0');
 
     // Stop frame loop
     stopFrameLoop();
@@ -694,53 +774,59 @@
     stopVoice();
 
     updateUI();
-    showToast('IA Desactivada', '🔴');
-    console.log('[AI] Stopped.');
+    showToast('IA Desactivada por el usuario', '🔴', 3000);
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  DOM BINDING — Runs on every page load / navigation
+  //  DOM BINDING & PERSISTENCE (Runs on every page navigation)
   // ═══════════════════════════════════════════════════════════════
   function bindDOM() {
     var aiBtn = document.getElementById('global-ai-btn');
-    if (!aiBtn) return;
+    if (aiBtn && !aiBtn.dataset.bound) {
+      aiBtn.dataset.bound = 'true';
+      aiBtn.addEventListener('click', function() {
+        if (S.active) {
+          stopAI();
+        } else {
+          startAI();
+        }
+      });
+    }
 
-    // Clone button to remove old listeners
-    var newBtn = aiBtn.cloneNode(true);
-    aiBtn.parentNode.replaceChild(newBtn, aiBtn);
-
-    newBtn.addEventListener('click', function() {
-      if (S.active) {
-        stopAI();
-      } else {
-        startAI();
-      }
-    });
-
-    // Sync UI state
     updateUI();
 
-    // If AI was active, re-attach stream to new DOM elements
-    if (S.active && S.stream) {
-      var vid = document.getElementById('global-webcam-feed');
-      var cvs = document.getElementById('global-webcam-canvas');
-      if (vid) {
-        vid.srcObject = S.stream;
-        vid.play().catch(function(){});
-        if (cvs) {
-          cvs.width = vid.videoWidth || 320;
-          cvs.height = vid.videoHeight || 240;
+    // Check if AI should be active based on localStorage
+    var shouldBeActive = localStorage.getItem('portfolio_ai_active') === '1';
+
+    if (shouldBeActive) {
+      if (!S.active && !S.isStarting) {
+        // Auto-resume after hard refresh or first load if was active
+        console.log('[AI] Resuming active session from localStorage...');
+        startAI();
+      } else if (S.active) {
+        // Re-attach existing live stream to DOM video if DOM was swapped
+        var vid = document.getElementById('global-webcam-feed');
+        var cvs = document.getElementById('global-webcam-canvas');
+        if (vid && S.stream && vid.srcObject !== S.stream) {
+          vid.srcObject = S.stream;
+          vid.play().catch(function(){});
+          if (cvs) {
+            cvs.width = vid.videoWidth || 320;
+            cvs.height = vid.videoHeight || 240;
+          }
         }
-      }
-      stopFrameLoop();
-      if (S.handsReady) {
-        startFrameLoop();
+        if (S.handsReady && !S.animFrameId) {
+          startFrameLoop();
+        }
+        if (!S.isListening) {
+          startVoice();
+        }
       }
     }
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  INITIALIZATION
+  //  LIFECYCLE LISTENERS
   // ═══════════════════════════════════════════════════════════════
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bindDOM);
@@ -748,12 +834,9 @@
     bindDOM();
   }
 
-  document.addEventListener('astro:page-load', function() {
-    bindDOM();
-  });
-
+  document.addEventListener('astro:page-load', bindDOM);
   document.addEventListener('astro:after-swap', function() {
-    setTimeout(bindDOM, 50);
+    setTimeout(bindDOM, 40);
   });
 
 })();
