@@ -1,7 +1,7 @@
 ---
 title: E-Commerce 
 publishDate: 2023-15-09 00:00:00
-img: https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80
+img: https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=800&h=600&fit=crop&q=80
 img_alt: Imagen del e-commerce de proyectos personales.
 description: |
   We developed brand positioning and design assets for the launch

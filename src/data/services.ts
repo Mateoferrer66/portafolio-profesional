@@ -32,7 +32,7 @@ export const services: Service[] = [
         name: "Sistemas de Facturación Electrónica",
         price: "Cotizar",
         category: "development",
-        image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80",
+        image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&h=600&fit=crop&q=80",
         tags: ["software", "business"],
         description: "Sistemas integrados completos para gestión de ventas, inventario y facturación electrónica."
     },
@@ -95,7 +95,7 @@ export const services: Service[] = [
         name: "Ropa",
         price: "Cotizar",
         category: "clothing",
-        image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=600&fit=crop&q=80",
+        image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&h=600&fit=crop&q=80",
         tags: ["clothing", "custom"],
         description: "Ropa con estilos únicos o con el branding de tu empresa/marca."
     }

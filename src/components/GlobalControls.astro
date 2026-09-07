@@ -12,33 +12,49 @@
   </button>
 
   <!-- Contenedor de la Webcam y Canvas de Gestos (Oculto por defecto) -->
-  <div id="global-webcam-container" style="display:none;position:fixed;bottom:80px;left:20px;width:240px;height:180px;border-radius:16px;overflow:hidden;border:2px solid rgba(124,58,237,0.5);box-shadow:0 8px 32px rgba(0,0,0,0.6);z-index:12001;pointer-events:auto;background:#000;">
-    <video id="global-webcam-feed" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"></video>
-    <canvas id="global-webcam-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);"></canvas>
-    
-    <div id="voice-status" style="position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);padding:4px 12px;border-radius:20px;display:flex;align-items:center;gap:6px;white-space:nowrap;">
-      <span style="font-size:0.9rem;">🎙️</span>
-      <span id="voice-text" style="font-size:0.7rem;color:#4ade80;">Escuchando comandos...</span>
+  <div id="global-webcam-container" style="display:none;position:fixed;bottom:80px;left:20px;width:250px;height:220px;border-radius:16px;overflow:hidden;border:2px solid rgba(124,58,237,0.6);box-shadow:0 8px 32px rgba(0,0,0,0.8);z-index:12001;pointer-events:auto;background:#0d0a1a;flex-direction:column;">
+    <!-- Video and canvas frame -->
+    <div style="position:relative;width:100%;height:150px;overflow:hidden;background:#000;">
+      <video id="global-webcam-feed" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"></video>
+      <canvas id="global-webcam-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);"></canvas>
+      
+      <!-- Gesture detected badge -->
+      <div id="gesture-badge" style="display:none;position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.75);border:1px solid rgba(124,58,237,0.5);color:#c4b5fd;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;backdrop-filter:blur(4px);">
+        🖐️ Detectando...
+      </div>
+
+      <!-- Loading indicator for model -->
+      <div id="model-loading" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);padding:8px 14px;border-radius:12px;color:#e2e8f0;font-size:0.75rem;text-align:center;white-space:nowrap;">
+        <div style="margin-bottom:4px;">⏳</div>
+        <span id="model-loading-text">Cargando modelo...</span>
+      </div>
     </div>
 
-    <!-- Loading indicator for model -->
-    <div id="model-loading" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);padding:8px 16px;border-radius:12px;color:#e2e8f0;font-size:0.75rem;text-align:center;">
-      <div style="margin-bottom:4px;">⏳</div>
-      <span id="model-loading-text">Cargando modelo...</span>
+    <!-- Instructions / status bar -->
+    <div style="background:rgba(20,15,35,0.95);padding:6px 10px;display:flex;flex-direction:column;gap:3px;font-size:0.65rem;color:#cbd5e1;border-top:1px solid rgba(124,58,237,0.3);">
+      <div id="voice-status" style="display:flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+        <span>🎙️</span>
+        <span id="voice-text" style="color:#4ade80;font-weight:600;">Escuchando comandos...</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;color:#94a3b8;font-size:0.6rem;">
+        <span>✋ Abrir: Subir</span>
+        <span>✊ Puño: Bajar</span>
+        <span>🤏 Clic</span>
+      </div>
     </div>
   </div>
 
   <!-- Virtual Cursor Global -->
   <div id="global-virtual-cursor" style="position:fixed;pointer-events:none;z-index:20000;transform:translate(-50%,-50%);display:none;">
-    <div style="width:40px;height:40px;border:2px solid #D4AF37;border-radius:50%;animation:cursorPulse 1.5s ease-in-out infinite;"></div>
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#D4AF37;border-radius:50%;box-shadow:0 0 10px #D4AF37;"></div>
+    <div style="width:36px;height:36px;border:2px solid #a855f7;border-radius:50%;animation:cursorPulse 1.5s ease-in-out infinite;box-shadow:0 0 15px rgba(168,85,247,0.6);"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#4ade80;border-radius:50%;box-shadow:0 0 8px #4ade80;"></div>
   </div>
   
-  <!-- Hidden link for bypass popup blocker navigation -->
+  <!-- Hidden link for navigation -->
   <a id="global-gesture-nav-link" href="#" target="_blank" rel="noopener noreferrer" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1;"></a>
 
   <!-- Toast Notificaciones IA (Voice / Gestures) -->
-  <div id="ai-toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(15,15,20,0.9);border:1px solid rgba(124,58,237,0.5);border-radius:12px;padding:10px 20px;z-index:20001;pointer-events:none;backdrop-filter:blur(12px);color:#e2e8f0;font-size:0.85rem;align-items:center;gap:8px;">
+  <div id="ai-toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(15,15,25,0.95);border:1px solid rgba(124,58,237,0.6);border-radius:12px;padding:10px 20px;z-index:20001;pointer-events:none;backdrop-filter:blur(12px);color:#e2e8f0;font-size:0.85rem;align-items:center;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,0.6);">
     <span id="ai-toast-icon">ℹ️</span>
     <span id="ai-toast-msg">Mensaje</span>
   </div>
@@ -46,15 +62,15 @@
 
 <style is:global>
   @keyframes cursorPulse {
-    0%, 100% { transform: scale(0.8); opacity: 0.5; }
-    50% { transform: scale(1.1); opacity: 1; }
+    0%, 100% { transform: scale(0.85); opacity: 0.6; }
+    50% { transform: scale(1.15); opacity: 1; }
   }
 
   :global(.click-ripple) {
     position: fixed;
     width: 20px;
     height: 20px;
-    border: 2px solid #D4AF37;
+    border: 2px solid #a855f7;
     border-radius: 50%;
     transform: translate(-50%, -50%);
     animation: rippleAnim 0.6s ease-out forwards;
@@ -67,7 +83,7 @@
   }
 </style>
 
-<!-- MediaPipe scripts — loaded as inline to be globally available -->
+<!-- MediaPipe scripts — loaded inline to be globally available -->
 <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257/drawing_utils.js" crossorigin="anonymous"></script>
 <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
 
@@ -84,17 +100,19 @@
       stream: null,
       handsInstance: null,
       handsReady: false,
+      isProcessingFrame: false,
       animFrameId: null,
       recognition: null,
       isListening: false,
       voiceRetries: 0,
-      cursorX: 0,
-      cursorY: 0,
+      cursorX: window.innerWidth / 2,
+      cursorY: window.innerHeight / 2,
+      targetCursorX: window.innerWidth / 2,
+      targetCursorY: window.innerHeight / 2,
       pinchCooldown: false,
       scrollCooldown: false,
       toastTimer: null,
       lastGesture: 'none',
-      gestureFrameCount: 0,
     };
   }
   var S = window._globalAIState;
@@ -121,6 +139,18 @@
     if (vt) vt.textContent = txt;
   }
 
+  function setGestureBadge(txt) {
+    var gb = document.getElementById('gesture-badge');
+    if (gb) {
+      if (txt) {
+        gb.textContent = txt;
+        gb.style.display = 'block';
+      } else {
+        gb.style.display = 'none';
+      }
+    }
+  }
+
   function setLoadingText(txt) {
     var el = document.getElementById('model-loading-text');
     if (el) el.textContent = txt;
@@ -145,13 +175,19 @@
       btnText.textContent = 'IA Encendida';
       btn.style.borderColor = '#4ade80';
       btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.4)';
-      if (webcamBox) webcamBox.style.display = 'block';
+      if (webcamBox) {
+        webcamBox.style.display = 'flex';
+      }
     } else {
       btnText.textContent = 'IA Apagada';
       btn.style.borderColor = 'rgba(124,58,237,0.6)';
       btn.style.boxShadow = '0 4px 20px rgba(124,58,237,0.3)';
-      if (webcamBox) webcamBox.style.display = 'none';
-      if (cursor) cursor.style.display = 'none';
+      if (webcamBox) {
+        webcamBox.style.display = 'none';
+      }
+      if (cursor) {
+        cursor.style.display = 'none';
+      }
     }
   }
 
@@ -161,16 +197,16 @@
   var voiceNav = {
     'inicio': '/', 'hogar': '/', 'home': '/',
     'acerca': '/about', 'sobre mi': '/about', 'sobre mí': '/about',
-    'trabajo': '/work', 'proyectos': '/work',
+    'trabajo': '/work', 'proyectos': '/work', 'portafolio': '/work',
+    'cursos': '/work/cursos-react', 'curso': '/work/cursos-react', 'react': '/work/cursos-react',
     'servicios': '/services',
     'tienda': '/shop', 'comercio': '/shop',
-    'gesto': '/gesture-video', 'gestos': '/gesture-video', 'video': '/gesture-video',
+    'gesto': '/gesture-video', 'gestos': '/gesture-video',
     'contacto': '#contact',
   };
   var voiceScroll = {
-    'subir': -300, 'sube': -300, 'arriba': -300,
-    'bajar': 300, 'baja': 300, 'abajo': 300,
-    'scroll up': -300, 'scroll down': 300,
+    'subir': -350, 'sube': -350, 'arriba': -350, 'scroll up': -350,
+    'bajar': 350, 'baja': 350, 'abajo': 350, 'scroll down': 350,
   };
   var voiceStop = ['detener', 'parar', 'stop', 'apagar'];
 
@@ -180,124 +216,112 @@
   function startVoice() {
     var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) {
-      console.warn('[AI Voice] SpeechRecognition not supported.');
-      setVoiceText('Voz no soportada (usa Chrome)');
-      showToast('Tu navegador no soporta voz. Usa Google Chrome.', '⚠️', 6000);
+      console.warn('[AI Voice] SpeechRecognition not supported in this browser.');
+      setVoiceText('Voz: usa Chrome');
       return;
     }
 
-    // Reuse or create
     if (S.recognition && S.isListening) return;
 
     S.voiceRetries = 0;
-    var rec = new SR();
-    rec.lang = 'es-ES';
-    rec.continuous = true;
-    rec.interimResults = false;
-    S.recognition = rec;
-
-    rec.onstart = function() {
-      S.isListening = true;
-      S.voiceRetries = 0;
-      setVoiceText('Escuchando...');
-      console.log('[AI Voice] Listening started.');
-    };
-
-    rec.onresult = function(event) {
-      var idx = event.resultIndex;
-      var transcript = event.results[idx][0].transcript.toLowerCase().trim();
-      setVoiceText('🗣️ ' + transcript);
-      console.log('[AI Voice] Heard:', transcript);
-
-      // Stop commands
-      for (var c = 0; c < voiceStop.length; c++) {
-        if (transcript.includes(voiceStop[c])) {
-          showToast('Desactivando IA...', '🛑');
-          setTimeout(stopAI, 500);
-          return;
-        }
-      }
-
-      // Scroll commands
-      for (var key in voiceScroll) {
-        if (transcript.includes(key)) {
-          window.scrollBy({ top: voiceScroll[key], behavior: 'smooth' });
-          showToast('Scroll: ' + key, '📜', 1500);
-          return;
-        }
-      }
-
-      // Navigation commands
-      var found = false;
-      for (var navKey in voiceNav) {
-        if (transcript.includes(navKey) || transcript.includes('ir a ' + navKey) || transcript.includes('entrar a ' + navKey)) {
-          found = true;
-          var path = voiceNav[navKey];
-          showToast('Navegando a ' + navKey + '...', '🗣️');
-          setTimeout(function() {
-            if (path.startsWith('#')) {
-              var el = document.querySelector(path);
-              if (el) el.scrollIntoView({ behavior: 'smooth' });
-            } else {
-              window.location.href = path;
-            }
-          }, 800);
-          break;
-        }
-      }
-
-      if (!found) {
-        showToast('Escuché: "' + transcript + '"', '👂', 2000);
-      }
-    };
-
-    rec.onerror = function(event) {
-      console.error('[AI Voice] Error:', event.error);
-      if (event.error === 'not-allowed') {
-        showToast('Permiso de micrófono denegado', '🚫', 5000);
-        setVoiceText('Micrófono bloqueado');
-        S.isListening = false;
-        return;
-      }
-      if (event.error === 'network') {
-        setVoiceText('Voz: error de red');
-        showToast('Error de red en reconocimiento de voz.', '⚠️', 4000);
-      }
-      if (event.error === 'aborted') {
-        // Expected when stopping, don't show error
-        return;
-      }
-    };
-
-    rec.onend = function() {
-      S.isListening = false;
-      if (S.active && S.voiceRetries < 5) {
-        // Auto-restart with small delay
-        S.voiceRetries++;
-        console.log('[AI Voice] Restarting... attempt', S.voiceRetries);
-        setTimeout(function() {
-          if (S.active) {
-            try { rec.start(); } catch(e) { console.warn('[AI Voice] Restart failed:', e); }
-          }
-        }, 300);
-      } else if (S.active) {
-        setVoiceText('Voz pausada. Habla para reactivar.');
-        // Reset retries after a longer cooldown
-        setTimeout(function() {
-          S.voiceRetries = 0;
-          if (S.active) {
-            try { rec.start(); } catch(e) {}
-          }
-        }, 3000);
-      }
-    };
-
     try {
+      var rec = new SR();
+      rec.lang = 'es-ES';
+      rec.continuous = true;
+      rec.interimResults = false;
+      S.recognition = rec;
+
+      rec.onstart = function() {
+        S.isListening = true;
+        S.voiceRetries = 0;
+        setVoiceText('Escuchando...');
+        console.log('[AI Voice] Listening active.');
+      };
+
+      rec.onresult = function(event) {
+        var idx = event.resultIndex;
+        var transcript = event.results[idx][0].transcript.toLowerCase().trim();
+        setVoiceText('🗣️ "' + transcript + '"');
+        console.log('[AI Voice] Heard:', transcript);
+
+        // Stop commands
+        for (var c = 0; c < voiceStop.length; c++) {
+          if (transcript.includes(voiceStop[c])) {
+            showToast('Desactivando IA...', '🛑');
+            setTimeout(stopAI, 500);
+            return;
+          }
+        }
+
+        // Scroll commands
+        for (var key in voiceScroll) {
+          if (transcript.includes(key)) {
+            window.scrollBy({ top: voiceScroll[key], behavior: 'smooth' });
+            showToast('Scroll: ' + key, '📜', 1500);
+            return;
+          }
+        }
+
+        // Navigation commands
+        var found = false;
+        for (var navKey in voiceNav) {
+          if (transcript.includes(navKey) || transcript.includes('ir a ' + navKey) || transcript.includes('ver ' + navKey)) {
+            found = true;
+            var path = voiceNav[navKey];
+            showToast('Navegando a ' + navKey + '...', '🗣️');
+            setTimeout(function() {
+              if (path.startsWith('#')) {
+                var el = document.querySelector(path);
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              } else {
+                window.location.href = path;
+              }
+            }, 700);
+            break;
+          }
+        }
+
+        if (!found) {
+          showToast('Escuché: "' + transcript + '"', '👂', 2000);
+        }
+      };
+
+      rec.onerror = function(event) {
+        console.warn('[AI Voice] Event error:', event.error);
+        if (event.error === 'not-allowed') {
+          setVoiceText('Micrófono denegado');
+          showToast('Permiso de micrófono no otorgado.', '🎙️', 4000);
+          S.isListening = false;
+          return;
+        }
+        if (event.error === 'network') {
+          setVoiceText('Voz: error red');
+        }
+      };
+
+      rec.onend = function() {
+        S.isListening = false;
+        if (S.active && S.voiceRetries < 10) {
+          S.voiceRetries++;
+          setTimeout(function() {
+            if (S.active) {
+              try { rec.start(); } catch(e) {}
+            }
+          }, 300);
+        } else if (S.active) {
+          setTimeout(function() {
+            S.voiceRetries = 0;
+            if (S.active) {
+              try { rec.start(); } catch(e) {}
+            }
+          }, 2000);
+        }
+      };
+
       rec.start();
-      console.log('[AI Voice] Starting recognition...');
     } catch(e) {
-      console.error('[AI Voice] Failed to start:', e);
-      showToast('Error al iniciar reconocimiento de voz.', '❌', 4000);
+      console.warn('[AI Voice] Start exception:', e);
+      setVoiceText('Voz no disponible');
     }
   }
 
@@ -314,21 +338,19 @@
   // ═══════════════════════════════════════════════════════════════
   function initHands() {
     if (typeof Hands === 'undefined') {
-      console.warn('[AI Gestures] Hands class not loaded yet, retrying...');
+      console.warn('[AI Gestures] Hands library loading...');
       setLoadingText('Cargando librería...');
-      setTimeout(initHands, 500);
+      setTimeout(initHands, 400);
       return;
     }
 
     if (S.handsInstance && S.handsReady) {
-      // Already initialized, just start the frame loop
       startFrameLoop();
       return;
     }
 
     showLoading(true);
-    setLoadingText('Inicializando modelo...');
-    console.log('[AI Gestures] Creating Hands instance...');
+    setLoadingText('Iniciando IA...');
 
     try {
       S.handsInstance = new Hands({
@@ -340,49 +362,41 @@
       S.handsInstance.setOptions({
         maxNumHands: 1,
         modelComplexity: 1,
-        minDetectionConfidence: 0.6,
-        minTrackingConfidence: 0.6
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5
       });
 
       S.handsInstance.onResults(onHandResults);
 
-      // Initialize the model by sending a tiny test frame
-      // This forces WASM + model download
+      // Warm up model with small frame
       var testCanvas = document.createElement('canvas');
-      testCanvas.width = 2;
-      testCanvas.height = 2;
+      testCanvas.width = 4;
+      testCanvas.height = 4;
 
       S.handsInstance.send({image: testCanvas}).then(function() {
-        console.log('[AI Gestures] Model loaded successfully!');
+        console.log('[AI Gestures] Model ready!');
         S.handsReady = true;
         showLoading(false);
-        showToast('Modelo de manos cargado ✅', '🖐️', 2000);
+        showToast('¡Gestos y Voz listos! 🖐️🎙️', '✨', 3000);
         startFrameLoop();
       }).catch(function(err) {
-        console.error('[AI Gestures] Model init failed:', err);
+        console.warn('[AI Gestures] Warmup failed, retrying on live feed:', err);
+        S.handsReady = true;
         showLoading(false);
-        showToast('Error cargando modelo de gestos. Solo voz activada.', '⚠️', 5000);
+        startFrameLoop();
       });
 
-      // Timeout fallback — if model doesn't load in 20s, warn user
-      setTimeout(function() {
-        if (!S.handsReady && S.active) {
-          showLoading(false);
-          showToast('Modelo tardó mucho. Intenta recargar la página.', '⏰', 5000);
-        }
-      }, 20000);
-
     } catch(err) {
-      console.error('[AI Gestures] Hands creation failed:', err);
+      console.error('[AI Gestures] Hands creation error:', err);
       showLoading(false);
-      showToast('Error al crear detector de gestos.', '❌', 5000);
     }
   }
 
   function startFrameLoop() {
-    if (S.animFrameId) return; // already running
+    if (S.animFrameId) return;
 
     var vid = document.getElementById('global-webcam-feed');
+    var cursor = document.getElementById('global-virtual-cursor');
     if (!vid) return;
 
     function processFrame() {
@@ -391,17 +405,28 @@
         return;
       }
 
-      if (S.handsInstance && S.handsReady && vid.readyState >= 2) {
-        S.handsInstance.send({image: vid}).catch(function(err) {
-          // Silently ignore send errors during transitions
-        });
+      // Smooth cursor interpolation
+      if (cursor && cursor.style.display !== 'none') {
+        S.cursorX += (S.targetCursorX - S.cursorX) * 0.35;
+        S.cursorY += (S.targetCursorY - S.cursorY) * 0.35;
+        cursor.style.left = S.cursorX + 'px';
+        cursor.style.top = S.cursorY + 'px';
+      }
+
+      // Throttle MediaPipe frames so they never queue up
+      if (S.handsInstance && S.handsReady && vid.readyState >= 2 && !S.isProcessingFrame) {
+        S.isProcessingFrame = true;
+        S.handsInstance.send({image: vid})
+          .catch(function() {})
+          .finally(function() {
+            S.isProcessingFrame = false;
+          });
       }
 
       S.animFrameId = requestAnimationFrame(processFrame);
     }
 
     S.animFrameId = requestAnimationFrame(processFrame);
-    console.log('[AI Gestures] Frame loop started.');
   }
 
   function stopFrameLoop() {
@@ -428,17 +453,7 @@
 
       var landmarks = results.multiHandLandmarks[0];
 
-      // Draw landmarks for visual feedback
-      for (var i = 0; i < landmarks.length; i++) {
-        var lx = landmarks[i].x * cvs.width;
-        var ly = landmarks[i].y * cvs.height;
-        ctx.beginPath();
-        ctx.arc(lx, ly, 3, 0, 2 * Math.PI);
-        ctx.fillStyle = '#D4AF37';
-        ctx.fill();
-      }
-
-      // Draw connections
+      // Draw skeleton
       var connections = [
         [0,1],[1,2],[2,3],[3,4],
         [0,5],[5,6],[6,7],[7,8],
@@ -446,8 +461,8 @@
         [9,13],[13,14],[14,15],[15,16],
         [13,17],[17,18],[18,19],[19,20],[0,17]
       ];
-      ctx.strokeStyle = 'rgba(212,175,55,0.4)';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = 'rgba(168,85,247,0.6)';
+      ctx.lineWidth = 2;
       for (var c = 0; c < connections.length; c++) {
         var a = landmarks[connections[c][0]];
         var b = landmarks[connections[c][1]];
@@ -457,27 +472,35 @@
         ctx.stroke();
       }
 
-      // Map index finger tip to screen (mirrored)
+      // Draw fingertips
+      for (var i = 0; i < landmarks.length; i++) {
+        var lx = landmarks[i].x * cvs.width;
+        var ly = landmarks[i].y * cvs.height;
+        ctx.beginPath();
+        ctx.arc(lx, ly, i === 8 ? 4 : 2, 0, 2 * Math.PI);
+        ctx.fillStyle = i === 8 ? '#4ade80' : '#c4b5fd';
+        ctx.fill();
+      }
+
+      // Map index fingertip to screen (mirrored)
       var indexTip = landmarks[8];
       var normX = 1 - indexTip.x;
       var normY = indexTip.y;
 
-      S.cursorX = Math.max(0, Math.min(window.innerWidth, normX * window.innerWidth));
-      S.cursorY = Math.max(0, Math.min(window.innerHeight, normY * window.innerHeight));
-
-      cursor.style.left = S.cursorX + 'px';
-      cursor.style.top = S.cursorY + 'px';
+      S.targetCursorX = Math.max(0, Math.min(window.innerWidth, normX * window.innerWidth));
+      S.targetCursorY = Math.max(0, Math.min(window.innerHeight, normY * window.innerHeight));
 
       var gesture = detectGesture(landmarks);
       executeGesture(gesture, cursor);
     } else {
       cursor.style.display = 'none';
+      setGestureBadge(null);
     }
     ctx.restore();
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  GESTURE DETECTION
+  //  GESTURE DETECTION & EXECUTION
   // ═══════════════════════════════════════════════════════════════
   function dist3d(a, b) {
     var dx = a.x - b.x, dy = a.y - b.y, dz = (a.z||0) - (b.z||0);
@@ -497,40 +520,45 @@
     var thumbUp = Math.abs(thumbTip.x - wrist.x) > Math.abs(thumbIp.x - wrist.x);
     var fingersUp = (indexUp?1:0) + (middleUp?1:0) + (ringUp?1:0) + (pinkyUp?1:0) + (thumbUp?1:0);
 
-    if (pinchDist < 0.1) return 'pinch';
-    if (indexUp && middleUp && !ringUp && !pinkyUp) return 'peace';
+    if (pinchDist < 0.08) return 'pinch';
     if (fingersUp >= 3) return 'open';
     if (fingersUp <= 1 && !indexUp) return 'fist';
-    if (indexUp && !middleUp && !ringUp && !pinkyUp) return 'point';
     return 'none';
   }
 
   function executeGesture(gesture, cursor) {
     switch (gesture) {
       case 'pinch':
+        setGestureBadge('🤏 Clic');
         if (!S.pinchCooldown) {
           S.pinchCooldown = true;
-          cursor.classList.add('clicking');
-          setTimeout(function() { cursor.classList.remove('clicking'); }, 300);
+          cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
+          setTimeout(function() { cursor.style.transform = 'translate(-50%, -50%)'; }, 250);
           performClick(S.cursorX, S.cursorY);
-          setTimeout(function() { S.pinchCooldown = false; }, 800);
+          setTimeout(function() { S.pinchCooldown = false; }, 600);
         }
         break;
 
       case 'open':
+        setGestureBadge('✋ Subiendo...');
         if (!S.scrollCooldown) {
           S.scrollCooldown = true;
-          window.scrollBy({ top: -80, behavior: 'auto' });
-          setTimeout(function() { S.scrollCooldown = false; }, 100);
+          window.scrollBy({ top: -90, behavior: 'auto' });
+          setTimeout(function() { S.scrollCooldown = false; }, 80);
         }
         break;
 
       case 'fist':
+        setGestureBadge('✊ Bajando...');
         if (!S.scrollCooldown) {
           S.scrollCooldown = true;
-          window.scrollBy({ top: 80, behavior: 'auto' });
-          setTimeout(function() { S.scrollCooldown = false; }, 100);
+          window.scrollBy({ top: 90, behavior: 'auto' });
+          setTimeout(function() { S.scrollCooldown = false; }, 80);
         }
+        break;
+
+      default:
+        setGestureBadge('🖐️ Mano activa');
         break;
     }
   }
@@ -580,13 +608,21 @@
     if (btnText) btnText.textContent = 'Iniciando...';
 
     try {
-      // 1. Request camera access DIRECTLY (not via MediaPipe Camera)
-      var stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' },
-        audio: false
-      });
+      // 1. Request camera + microphone in a single browser prompt
+      var stream = null;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' },
+          audio: true
+        });
+      } catch(audioErr) {
+        console.warn('[AI] Camera+Audio failed, falling back to camera only:', audioErr);
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' },
+          audio: false
+        });
+      }
 
-      // Store stream for cleanup
       S.stream = stream;
       S.active = true;
 
@@ -606,15 +642,15 @@
 
       // 3. Show webcam container
       var wb = document.getElementById('global-webcam-container');
-      if (wb) wb.style.display = 'block';
+      if (wb) wb.style.display = 'flex';
 
       updateUI();
-      showToast('Cámara activa. Cargando gestos...', '📷', 3000);
+      showToast('Cámara activa. Cargando IA...', '📷', 2500);
 
       // 4. Start voice recognition
       startVoice();
 
-      // 5. Initialize MediaPipe Hands (downloads WASM + model)
+      // 5. Initialize MediaPipe Hands
       initHands();
 
     } catch(err) {
@@ -624,9 +660,9 @@
       
       var msg = 'Error al iniciar IA.';
       if (err.name === 'NotAllowedError') {
-        msg = 'Permiso de cámara denegado. Permítelo en la barra del navegador.';
+        msg = 'Permiso de cámara o micrófono denegado. Permítelo en el navegador.';
       } else if (err.name === 'NotFoundError') {
-        msg = 'No se encontró una cámara. Conecta una webcam.';
+        msg = 'No se encontró cámara o micrófono.';
       } else if (err.name === 'NotReadableError') {
         msg = 'Cámara en uso por otra app. Ciérrala e intenta de nuevo.';
       }
@@ -641,10 +677,10 @@
   function stopAI() {
     S.active = false;
 
-    // Stop frame processing
+    // Stop frame loop
     stopFrameLoop();
 
-    // Stop camera stream tracks
+    // Stop camera tracks
     if (S.stream) {
       S.stream.getTracks().forEach(function(track) { track.stop(); });
       S.stream = null;
@@ -656,10 +692,6 @@
 
     // Stop voice
     stopVoice();
-
-    // Reset hands ready flag (model stays cached in memory)
-    // Don't destroy handsInstance — it's expensive to recreate
-    // S.handsReady stays true if it loaded
 
     updateUI();
     showToast('IA Desactivada', '🔴');
@@ -700,7 +732,6 @@
           cvs.height = vid.videoHeight || 240;
         }
       }
-      // Restart frame loop with new DOM elements
       stopFrameLoop();
       if (S.handsReady) {
         startFrameLoop();

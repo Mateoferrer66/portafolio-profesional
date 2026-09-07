@@ -100,28 +100,51 @@ const liveWebsites = [
 			</div>
 
 			<!-- Cursos de React Section -->
-			{
-				courseProjects.length > 0 && (
-					<section class="category-section">
-						<header class="section-header">
-							<h2 class="section-title">
-								<span class="icon">📚</span> Cursos
-							</h2>
-							<p class="section-description">
-								Comprehensive training courses covering
-								fundamentals to advanced topics.
+			<section class="category-section courses-section" id="cursos-section">
+				<header class="section-header">
+					<h2 class="section-title">
+						<span class="icon">📚</span> Cursos
+					</h2>
+					<p class="section-description">
+						Formación integral práctica en desarrollo web y React. Accede a las clases completas y proyectos reales.
+					</p>
+				</header>
+				<div class="courses-featured-container">
+					<a href="/work/cursos-react" class="course-featured-card" data-tags="React,JavaScript,Education,Frontend">
+						<div class="course-image-wrap">
+							<img
+								src="https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&h=600&fit=crop&q=80"
+								alt="Cursos de React - 20 Videos"
+								loading="lazy"
+							/>
+							<div class="course-play-overlay">
+								<div class="play-button-glow">
+									<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+								</div>
+								<span class="video-count-badge">▶ 20 Videos Disponibles</span>
+							</div>
+						</div>
+						<div class="course-info-wrap">
+							<div class="course-tags">
+								<span class="course-tag">React</span>
+								<span class="course-tag">JavaScript</span>
+								<span class="course-tag">Frontend</span>
+								<span class="course-tag badge-youtube">YouTube</span>
+							</div>
+							<h3 class="course-card-title">Cursos de React — Desde Cero a Avanzado</h3>
+							<p class="course-card-desc">
+								Aprende componentes, props, hooks modernos (useState, useEffect, useReducer), Context API, React Router, TypeScript y construcción de proyectos reales paso a paso.
 							</p>
-						</header>
-						<Grid variant="offset">
-							{courseProjects.map((project) => (
-								<li class="project-item">
-									<PortfolioPreview project={project} />
-								</li>
-							))}
-						</Grid>
-					</section>
-				)
-			}
+							<div class="course-action-row">
+								<span class="view-course-btn">
+									Ver las 20 Clases del Curso
+									<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+								</span>
+							</div>
+						</div>
+					</a>
+				</div>
+			</section>
 
 			<!-- Personal Projects Section -->
 			{
@@ -256,10 +279,23 @@ const liveWebsites = [
 			}
 		});
 
+		// Show/Hide course featured card
+		const courseCards = document.querySelectorAll(".course-featured-card");
+		courseCards.forEach((card) => {
+			const title = card.querySelector(".course-card-title")?.textContent?.toLowerCase() || "";
+			const projectTags = card.getAttribute("data-tags")?.split(",") || [];
+			const matchTag = activeTag === "all" || projectTags.includes(activeTag || "");
+			const matchSearch = title.includes(searchTerm);
+			const container = card.closest(".courses-featured-container") as HTMLElement;
+			if (container) {
+				container.style.display = (matchTag && matchSearch) ? "block" : "none";
+			}
+		});
+
 		// Hide empty sections
 		sections.forEach((section) => {
 			const visibleItems = section.querySelectorAll(
-				'.project-item[style="display: block;"], .project-item:not([style*="display: none"])',
+				'.project-item:not([style*="display: none"]), .courses-featured-container:not([style*="display: none"])',
 			);
 			if (visibleItems.length === 0) {
 				(section as HTMLElement).style.display = "none";
@@ -280,6 +316,171 @@ const liveWebsites = [
 </script>
 
 <style>
+	.project-item {
+		width: 100%;
+		display: block;
+	}
+
+	/* Featured Course Section */
+	.courses-featured-container {
+		width: 100%;
+		max-width: 900px;
+		margin: 0 auto;
+	}
+
+	.course-featured-card {
+		display: grid;
+		grid-template-columns: 1fr;
+		background: rgba(15, 10, 30, 0.8);
+		border: 1px solid rgba(124, 58, 237, 0.35);
+		border-radius: 1.5rem;
+		overflow: hidden;
+		text-decoration: none;
+		color: inherit;
+		transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(124, 58, 237, 0.15);
+	}
+
+	@media (min-width: 50em) {
+		.course-featured-card {
+			grid-template-columns: 1.1fr 1fr;
+		}
+	}
+
+	.course-featured-card:hover {
+		transform: translateY(-6px);
+		border-color: rgba(124, 58, 237, 0.7);
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(124, 58, 237, 0.35);
+	}
+
+	.course-image-wrap {
+		position: relative;
+		min-height: 240px;
+		overflow: hidden;
+	}
+
+	.course-image-wrap img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.6s ease;
+	}
+
+	.course-featured-card:hover .course-image-wrap img {
+		transform: scale(1.05);
+	}
+
+	.course-play-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(to top, rgba(10, 5, 25, 0.9) 0%, rgba(10, 5, 25, 0.3) 100%);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+	}
+
+	.play-button-glow {
+		width: 64px;
+		height: 64px;
+		border-radius: 50%;
+		background: #ff0000;
+		color: #ffffff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+		transition: transform 0.3s ease, box-shadow 0.3s ease;
+	}
+
+	.course-featured-card:hover .play-button-glow {
+		transform: scale(1.12);
+		box-shadow: 0 0 35px rgba(255, 0, 0, 0.9);
+	}
+
+	.play-button-glow svg {
+		margin-left: 4px;
+	}
+
+	.video-count-badge {
+		font-size: 0.8rem;
+		font-weight: 700;
+		letter-spacing: 0.05em;
+		background: rgba(0, 0, 0, 0.75);
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		padding: 4px 12px;
+		border-radius: 20px;
+		color: #ffffff;
+		backdrop-filter: blur(8px);
+	}
+
+	.course-info-wrap {
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 1rem;
+	}
+
+	.course-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+
+	.course-tag {
+		font-size: 0.75rem;
+		font-weight: 600;
+		padding: 3px 10px;
+		border-radius: 99px;
+		background: rgba(124, 58, 237, 0.25);
+		color: #c4b5fd;
+		border: 1px solid rgba(124, 58, 237, 0.4);
+	}
+
+	.course-tag.badge-youtube {
+		background: rgba(255, 0, 0, 0.2);
+		color: #ff8080;
+		border-color: rgba(255, 0, 0, 0.4);
+	}
+
+	.course-card-title {
+		font-size: var(--text-2xl);
+		color: var(--gray-0);
+		font-weight: 700;
+		line-height: 1.25;
+	}
+
+	.course-card-desc {
+		font-size: var(--text-sm);
+		color: var(--gray-300);
+		line-height: 1.6;
+	}
+
+	.course-action-row {
+		margin-top: 0.5rem;
+	}
+
+	.view-course-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		font-weight: 600;
+		font-size: var(--text-sm);
+		color: #ffffff;
+		background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+		padding: 10px 20px;
+		border-radius: 50px;
+		transition: all 0.3s ease;
+		box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+	}
+
+	.course-featured-card:hover .view-course-btn {
+		transform: translateX(4px);
+		box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
+	}
+
 	.category-section {
 		margin-bottom: 4rem;
 		padding: 2rem 0;
