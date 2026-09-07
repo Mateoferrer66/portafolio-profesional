@@ -41,6 +41,11 @@
         <span>✊ Puño: Bajar</span>
         <span>🤏 Clic</span>
       </div>
+      <!-- Banner de ayuda para Brave / Error de red -->
+      <div id="brave-tip" style="display:none;background:rgba(234,88,12,0.2);border:1px solid rgba(234,88,12,0.5);color:#fed7aa;padding:4px 6px;border-radius:6px;font-size:0.58rem;margin-top:2px;align-items:center;justify-content:space-between;gap:4px;">
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">🦁 En Brave: activa voz en <b>brave://settings/extensions</b> o usa Chrome</span>
+        <button id="brave-copy-btn" type="button" title="Copiar ruta de ajustes" style="background:rgba(234,88,12,0.4);border:1px solid rgba(234,88,12,0.6);color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;font-size:0.55rem;font-weight:700;white-space:nowrap;">Copiar</button>
+      </div>
     </div>
   </div>
 
@@ -210,24 +215,54 @@
       return;
     }
 
+    var cleanUrl = url;
+    if (!cleanUrl.endsWith('/') && !cleanUrl.includes('#') && !cleanUrl.includes('.')) {
+      cleanUrl = cleanUrl + '/';
+    }
+
     var currentPath = window.location.pathname.replace(/\/$/, '') || '/';
-    var targetPath = url.replace(/\/$/, '') || '/';
+    var targetPath = cleanUrl.replace(/\/$/, '') || '/';
     if (currentPath === targetPath) {
       showToast('Ya estás en esta página', '📍', 1800);
       return;
     }
 
-    // Trigger Astro ViewTransitions router seamlessly through internal link click
-    var navLink = document.getElementById('global-gesture-nav-link');
-    if (!navLink) {
-      navLink = document.createElement('a');
-      navLink.id = 'global-gesture-nav-link';
-      navLink.style.display = 'none';
-      document.body.appendChild(navLink);
+    console.log('[AI Nav] Moving from', currentPath, 'to', cleanUrl);
+
+    // 1. Search for real rendered navigation link in the DOM to trigger Astro ViewTransitions smoothly
+    var allLinks = document.querySelectorAll('nav a[href], header a[href], a[href]');
+    for (var i = 0; i < allLinks.length; i++) {
+      var a = allLinks[i];
+      var href = a.getAttribute('href');
+      if (href) {
+        var normH = href.replace(/\/$/, '') || '/';
+        if (normH === targetPath && a.target !== '_blank') {
+          console.log('[AI Nav] Clicking real DOM link:', href);
+          a.click();
+          // Watchdog: If URL didn't change after 400ms, force direct navigation!
+          setTimeout(function() {
+            var nowP = window.location.pathname.replace(/\/$/, '') || '/';
+            if (nowP !== targetPath) {
+              console.log('[AI Nav] Watchdog redirecting to:', cleanUrl);
+              window.location.href = cleanUrl;
+            }
+          }, 400);
+          return;
+        }
+      }
     }
-    navLink.removeAttribute('target');
-    navLink.href = url;
-    navLink.click();
+
+    // 2. Direct browser navigation fallback
+    console.log('[AI Nav] Direct redirect to:', cleanUrl);
+    window.location.href = cleanUrl;
+  }
+
+  // Brave browser detection
+  var isBraveBrowser = false;
+  if (navigator.brave && typeof navigator.brave.isBrave === 'function') {
+    navigator.brave.isBrave().then(function(res) {
+      isBraveBrowser = !!res;
+    }).catch(function() {});
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -241,7 +276,7 @@
       return;
     }
 
-    // Always clean up previous instance first to avoid InvalidStateError
+    // Clean up previous instance first to avoid InvalidStateError
     if (S.recognition) {
       try {
         S.recognition.onstart = null;
@@ -255,8 +290,11 @@
 
     try {
       var rec = new SR();
-      rec.lang = 'es-ES';
-      rec.continuous = true;
+      // Use regional language with fallback
+      rec.lang = navigator.language || 'es-419';
+      // continuous: false is CRITICAL to prevent Google Cloud speech WebSocket timeouts
+      // Each utterance is captured crisply and onend immediately loops to the next utterance
+      rec.continuous = false;
       rec.interimResults = true;
       rec.maxAlternatives = 1;
       S.recognition = rec;
@@ -298,15 +336,30 @@
           return;
         }
         if (err === 'network') {
-          setVoiceText('Reconectando voz...');
+          S.networkErrors = (S.networkErrors || 0) + 1;
+          var braveTip = document.getElementById('brave-tip');
+          if (isBraveBrowser) {
+            setVoiceText('Brave: activa voz en ajustes ⚙️');
+            if (braveTip) braveTip.style.display = 'flex';
+            if (S.networkErrors === 1) {
+              showToast('En Brave: activa "Usar los servicios de Google para reconocimiento de voz" en brave://settings/extensions o usa Google Chrome.', '🦁', 8000);
+            }
+          } else if (S.networkErrors >= 3) {
+            setVoiceText('Voz: usa Google Chrome');
+            if (braveTip) braveTip.style.display = 'flex';
+            showToast('El navegador bloqueó la conexión de voz. Abre el sitio en Google Chrome o Edge.', '🎙️', 6000);
+          } else {
+            setVoiceText('Reconectando voz...');
+          }
         }
       };
 
       rec.onend = function() {
         S.isListening = false;
-        // If AI is still active, safely schedule restart with a fresh instance
+        // In continuous utterance loop: instantly start next clean utterance
         if (S.active || localStorage.getItem('portfolio_ai_active') === '1') {
-          scheduleVoiceRestart(350);
+          var restartDelay = (S.networkErrors && S.networkErrors >= 2) ? 2000 : 100;
+          scheduleVoiceRestart(restartDelay);
         }
       };
 
@@ -389,13 +442,13 @@
 
     // 4. NAVEGACIÓN POR RUTAS
     var navMap = [
-      { keys: ['inicio', 'home', 'portada', 'principal'], url: '/' },
-      { keys: ['cursos', 'curso', 'react', 'curso react', 'cursos react'], url: '/work/cursos-react' },
-      { keys: ['trabajo', 'trabajos', 'proyecto', 'proyectos', 'portafolio'], url: '/work' },
-      { keys: ['servicio', 'servicios'], url: '/services' },
-      { keys: ['tienda', 'productos', 'shop', 'comprar'], url: '/shop' },
-      { keys: ['sobre mi', 'sobre mí', 'acerca', 'perfil', 'biografia', 'biografía'], url: '/about' },
-      { keys: ['video', 'gesto', 'gestos', 'interactivo'], url: '/gesture-video' },
+      { keys: ['inicio', 'home', 'hogar', 'portada', 'principal'], url: '/' },
+      { keys: ['servicio', 'servicios'], url: '/services/' },
+      { keys: ['trabajo', 'trabajos', 'trabajar', 'proyecto', 'proyectos', 'portafolio'], url: '/work/' },
+      { keys: ['curso', 'cursos', 'react', 'curso react', 'cursos react'], url: '/work/cursos-react/' },
+      { keys: ['tienda', 'productos', 'shop', 'comercio', 'comprar'], url: '/shop/' },
+      { keys: ['sobre mi', 'sobre mí', 'acerca', 'acerca de', 'perfil', 'biografia', 'biografía'], url: '/about/' },
+      { keys: ['video', 'gesto', 'gestos', 'interactivo'], url: '/gesture-video/' },
       { keys: ['contacto', 'contactar', 'mensaje', 'escribir'], url: '#contact' },
     ];
 
@@ -406,9 +459,10 @@
         if (text.includes(keyword)) {
           S.lastVoiceActionTime = now;
           showToast('Navegando a ' + keyword + '...', '🚀', 2000);
+          var targetDest = item.url;
           setTimeout(function() {
-            navigateSmooth(item.url);
-          }, 350);
+            navigateSmooth(targetDest);
+          }, 120);
           return;
         }
       }
@@ -789,6 +843,26 @@
           stopAI();
         } else {
           startAI();
+        }
+      });
+    }
+
+    var copyBtn = document.getElementById('brave-copy-btn');
+    if (copyBtn && !copyBtn.dataset.bound) {
+      copyBtn.dataset.bound = 'true';
+      copyBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var url = 'brave://settings/extensions';
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function() {
+            copyBtn.textContent = '¡Copiado!';
+            setTimeout(function() { copyBtn.textContent = 'Copiar'; }, 2000);
+            showToast('Ruta copiada al portapapeles. Pégala en una nueva pestaña en Brave.', '📋', 4500);
+          }).catch(function() {
+            window.prompt('Copia esta ruta y ábrela en una pestaña de Brave:', url);
+          });
+        } else {
+          window.prompt('Copia esta ruta y ábrela en una pestaña de Brave:', url);
         }
       });
     }

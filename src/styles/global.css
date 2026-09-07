@@ -65,21 +65,21 @@
 }
 
 :root.theme-light {
-	/* Colors - Light Mode (Opt-in) */
-	--gray-0: #090b11;
-	--gray-50: #141925;
-	--gray-100: #1a1f2e;
-	--gray-200: #252b3d;
-	--gray-300: #3d4663;
-	--gray-400: #505d84;
-	--gray-500: #6474a2;
-	--gray-600: #8490b5;
-	--gray-700: #a3acc8;
-	--gray-800: #c3cadb;
-	--gray-900: #e3e6ee;
-	--gray-999-basis: 0, 0%, 100%;
-	--gray-999_40: hsla(var(--gray-999-basis), 0.4);
-	--gray-999: #ffffff;
+	/* High-Contrast Violet Mode — maintains cosmic dark aesthetic */
+	--gray-0: #ffffff;
+	--gray-50: #f8fafc;
+	--gray-100: #f1f5f9;
+	--gray-200: #e2e8f0;
+	--gray-300: #cbd5e1;
+	--gray-400: #94a3b8;
+	--gray-500: #64748b;
+	--gray-600: #8b5cf6;
+	--gray-700: #7c3aed;
+	--gray-800: #1f1138;
+	--gray-900: #120724;
+	--gray-999-basis: 260, 50%, 5%;
+	--gray-999_40: hsla(260, 50%, 5%, 0.4);
+	--gray-999: #080314;
 
 	--accent-light: #c561f6;
 	--accent-regular: #7611a6;
@@ -116,13 +116,15 @@
 
 html,
 body {
-	height: 100%;
+	min-height: 100%;
 	overflow-x: hidden;
 	scroll-behavior: smooth;
+	background-color: #05010a !important;
+	background: radial-gradient(ellipse 80% 80% at 50% -20%, rgba(124, 58, 237, 0.28) 0%, rgba(46, 10, 79, 0.2) 40%, rgba(5, 1, 10, 1) 85%), #05010a !important;
+	background-attachment: fixed !important;
 }
 
 body {
-	background-color: transparent;
 	color: var(--gray-200);
 	font-family: var(--font-body);
 	-webkit-font-smoothing: antialiased;

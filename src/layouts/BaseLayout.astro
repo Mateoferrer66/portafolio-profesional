@@ -97,8 +97,10 @@ const chatWidgetClass = shouldStack
 	<body>
 		<GoogleTagManagerNoScript />
 		<div id="scroll-progress"></div>
-		<!-- 3D Metaverse Background (replaces static images) -->
-		<ThreeDBackground client:idle />
+		<!-- 3D Metaverse Background (replaces static images, persists across all page transitions) -->
+		<div id="three-d-bg-wrap" transition:persist="three-d-background" style="position:fixed;inset:0;z-index:0;pointer-events:none;">
+			<ThreeDBackground client:load />
+		</div>
 		<div class="stack gap-20 backgrounds">
 			<Nav />
 			<slot />
@@ -156,6 +158,14 @@ const chatWidgetClass = shouldStack
 				z-index: 10000;
 				transition: width 0.1s ease-out;
 				box-shadow: 0 0 10px var(--accent-regular);
+			}
+
+			:global(html),
+			:global(body) {
+				background-color: #05010a !important;
+				background: radial-gradient(ellipse 80% 80% at 50% -20%, rgba(124, 58, 237, 0.28) 0%, rgba(46, 10, 79, 0.2) 40%, rgba(5, 1, 10, 1) 85%), #05010a !important;
+				background-attachment: fixed !important;
+				min-height: 100vh;
 			}
 
 			:root {
