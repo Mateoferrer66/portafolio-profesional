@@ -1,7 +1,7 @@
 ---
 title: EcoMarket App
 publishDate: 2024-06-15 00:00:00
-img: /assets/work-ecomarket.png
+img: https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop&q=80
 img_alt: App de mercado sostenible
 description: |
  Marketplace móvil para productos orgánicos y sostenibles con huella de carbono rastreable.

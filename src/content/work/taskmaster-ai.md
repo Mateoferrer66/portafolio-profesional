@@ -1,7 +1,7 @@
 ---
 title: TaskMaster
 publishDate: 2024-11-15 00:00:00
-img: /assets/project-saas.png
+img: https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop&q=80
 img_alt: Interface of TaskMaster AI dashboard
 description: |
   An intelligent productivity platform that uses AI to organize tasks, predict deadlines, and optimize workflow efficiency.

@@ -1,7 +1,7 @@
 ---
 title: Vitality Fitness App
 publishDate: 2024-04-10 00:00:00
-img: /assets/work-vitality.png
+img: https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800&h=600&fit=crop&q=80
 img_alt: Interfaz de aplicación móvil de fitness
 description: |
  Aplicación móvil para seguimiento de actividad física, salud y bienestar con métricas en tiempo real.

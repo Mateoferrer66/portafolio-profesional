@@ -1,7 +1,7 @@
 ---
 title: FitTrack Pro
 publishDate: 2024-10-02 00:00:00
-img: /assets/shop-medical.png
+img: https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=600&fit=crop&q=80
 img_alt: FitTrack Pro mobile application interface
 description: |
   A comprehensive fitness tracking application focused on holistic health, combining workout logging with nutrition planning and sleep analysis.

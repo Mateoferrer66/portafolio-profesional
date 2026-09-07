@@ -1,7 +1,7 @@
 ---
 title: StudyFlow LMS
 publishDate: 2024-05-02 00:00:00
-img: /assets/work-studyflow.png
+img: https://images.unsplash.com/photo-1501504905252-473c47e087f8?w=800&h=600&fit=crop&q=80
 img_alt: Plataforma educativa moderna
 description: |
  Sistema de gestión de aprendizaje (LMS) intuitivo para instituciones educativas.

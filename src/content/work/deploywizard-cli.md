@@ -1,7 +1,7 @@
 ---
 title: DeployWizard CLI
 publishDate: 2024-05-05 00:00:00
-img: /assets/shop-tech-maintenance.png
+img: https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=800&h=600&fit=crop&q=80
 img_alt: Terminal screen showing code
 description: |
   An open-source command-line interface tool designed to simplify and standardize deployment workflows for microservices.

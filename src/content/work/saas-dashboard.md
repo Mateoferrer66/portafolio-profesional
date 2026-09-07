@@ -1,7 +1,7 @@
 ---
 title: Enterprise SaaS Analytics
 publishDate: 2024-03-10 00:00:00
-img: /assets/project-saas.png
+img: https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80
 img_alt: A modern dashboard interface showing real-time data analytics.
 description: |
   Architected and built a high-performance analytics dashboard for a B2B SaaS platform, handling millions of data points with sub-second latency.

@@ -1,7 +1,7 @@
 ---
 title: Urban Real Estate
 publishDate: 2024-04-12 00:00:00
-img: /assets/shop-3d-arch.png
+img: https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop&q=80
 img_alt: Architectural 3D model
 description: |
   A high-end property listing platform featuring virtual tours, mortgage calculators, and direct agent scheduling.

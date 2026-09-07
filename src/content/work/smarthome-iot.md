@@ -1,7 +1,7 @@
 ---
 title: SmartHome IoT Hub
 publishDate: 2024-06-10 00:00:00
-img: /assets/shop-3d-home.png
+img: https://images.unsplash.com/photo-1558002038-1055907df827?w=800&h=600&fit=crop&q=80
 img_alt: 3D printed home model with smart sensors
 description: |
   A personal project to centralize control of various smart home devices into a single, privacy-focused dashboard.

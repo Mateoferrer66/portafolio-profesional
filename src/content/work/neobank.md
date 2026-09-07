@@ -1,7 +1,7 @@
 ---
 title: NeoBank Dashboard
 publishDate: 2024-03-20 00:00:00
-img: /assets/work-neobank.png
+img: https://images.unsplash.com/photo-1563986768609-322da13575f2?w=800&h=600&fit=crop&q=80
 img_alt: Dashboard de banca digital minimalista
 description: |
  Dashboard financiero moderno para la gestión de cuentas, transacciones y análisis de gastos.

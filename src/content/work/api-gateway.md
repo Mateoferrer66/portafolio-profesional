@@ -1,7 +1,7 @@
 ---
 title: Microservices API Gateway
 publishDate: 2024-01-15 00:00:00
-img: /assets/project-api.png
+img: https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=600&fit=crop&q=80
 img_alt: Abstract visualization of network traffic and server architecture.
 description: |
   Designed and implemented a scalable API Gateway handling 10k+ requests per second, improving system reliability and developer velocity.

@@ -1,8 +1,7 @@
 ---
 // GlobalControls.astro
-// Este componente se carga en BaseLayout con transition:persist
-// Contiene la UI global de la IA (Cámara, Micrófono y Cursor Virtual) y toda la lógica.
-// Funciona en TODAS las páginas gracias a astro:page-load re-binding.
+// Voice + Gesture AI controls that persist across page navigations.
+// Uses MediaPipe Hands for gesture detection and Web Speech API for voice.
 ---
 
 <div id="global-ai-controls" data-astro-transition-persist="global-ai" style="position:fixed;z-index:12000;inset:0;pointer-events:none;">
@@ -21,6 +20,12 @@
       <span style="font-size:0.9rem;">🎙️</span>
       <span id="voice-text" style="font-size:0.7rem;color:#4ade80;">Escuchando comandos...</span>
     </div>
+
+    <!-- Loading indicator for model -->
+    <div id="model-loading" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.8);padding:8px 16px;border-radius:12px;color:#e2e8f0;font-size:0.75rem;text-align:center;">
+      <div style="margin-bottom:4px;">⏳</div>
+      <span id="model-loading-text">Cargando modelo...</span>
+    </div>
   </div>
 
   <!-- Virtual Cursor Global -->
@@ -33,173 +38,16 @@
   <a id="global-gesture-nav-link" href="#" target="_blank" rel="noopener noreferrer" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1;"></a>
 
   <!-- Toast Notificaciones IA (Voice / Gestures) -->
-  <div id="ai-toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(15,15,20,0.9);border:1px solid rgba(124,58,237,0.5);border-radius:12px;padding:10px 20px;z-index:20001;pointer-events:none;backdrop-filter:blur(12px);color:#e2e8f0;font-size:0.85rem;display:flex;align-items:center;gap:8px;">
+  <div id="ai-toast" style="display:none;position:fixed;top:20px;left:50%;transform:translateX(-50%);background:rgba(15,15,20,0.9);border:1px solid rgba(124,58,237,0.5);border-radius:12px;padding:10px 20px;z-index:20001;pointer-events:none;backdrop-filter:blur(12px);color:#e2e8f0;font-size:0.85rem;align-items:center;gap:8px;">
     <span id="ai-toast-icon">ℹ️</span>
     <span id="ai-toast-msg">Mensaje</span>
   </div>
 </div>
 
 <style is:global>
-  /* ── Contenedor Principal ── */
-  .global-ai-container {
-    position: fixed;
-    z-index: 12000; /* Siempre encima de todo */
-    pointer-events: none; /* Dejar pasar clicks por defecto */
-    inset: 0;
-  }
-
-  /* ── Botón Flotante Activar IA ── */
-  .ai-toggle-btn {
-    pointer-events: auto;
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    background: rgba(15, 15, 20, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 10px 18px;
-    border-radius: 30px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    font-weight: 500;
-    font-size: 0.95rem;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-  }
-  .ai-toggle-btn:hover {
-    background: rgba(25, 25, 30, 0.95);
-    border-color: var(--accent-regular, #D4AF37);
-    transform: translateY(-2px);
-  }
-  .ai-toggle-btn.active {
-    background: rgba(212, 175, 55, 0.15);
-    border-color: #D4AF37;
-    box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
-  }
-
-  /* ── Webcam Box ── */
-  .webcam-box {
-    position: absolute;
-    bottom: 70px;
-    left: 20px;
-    width: 240px;
-    height: 180px;
-    background: #000;
-    border-radius: 12px;
-    overflow: hidden;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    transition: all 0.3s ease;
-  }
-  .webcam-box.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(20px) scale(0.95);
-  }
-  .webcam-box video, .webcam-box canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: scaleX(-1); /* Espejo */
-  }
-  .webcam-box canvas {
-    z-index: 2;
-  }
-  
-  .voice-status {
-    position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.7);
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    color: #fff;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-  }
-
-  /* ── Virtual Cursor ── */
-  .virtual-cursor {
-    position: fixed;
-    width: 40px;
-    height: 40px;
-    pointer-events: none;
-    z-index: 20000;
-    transform: translate(-50%, -50%);
-    display: none; /* Oculto hasta que detecta mano */
-  }
-  .cursor-dot {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 8px;
-    height: 8px;
-    background: #D4AF37; /* Dorado */
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    box-shadow: 0 0 10px #D4AF37;
-    transition: transform 0.1s;
-  }
-  .cursor-ring {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: 2px solid rgba(212, 175, 55, 0.5);
-    border-radius: 50%;
-    animation: cursorBreathing 2s infinite ease-in-out;
-  }
-  .virtual-cursor.clicking .cursor-ring {
-    background: rgba(212, 175, 55, 0.3);
-    transform: scale(0.6);
-    animation: none;
-  }
-  .virtual-cursor.clicking .cursor-dot {
-    transform: translate(-50%, -50%) scale(1.5);
-  }
-
-  @keyframes cursorBreathing {
-    0% { transform: scale(0.8); opacity: 0.5; }
+  @keyframes cursorPulse {
+    0%, 100% { transform: scale(0.8); opacity: 0.5; }
     50% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(0.8); opacity: 0.5; }
-  }
-
-  /* ── Toast de Feedback IA ── */
-  .ai-toast {
-    position: absolute;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(15, 15, 20, 0.9);
-    border: 1px solid #D4AF37;
-    padding: 12px 24px;
-    border-radius: 30px;
-    color: #fff;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 15000;
-  }
-  .ai-toast.hidden {
-    opacity: 0;
-    transform: translate(-50%, -20px);
-    pointer-events: none;
   }
 
   :global(.click-ripple) {
@@ -219,563 +67,661 @@
   }
 </style>
 
-<!-- Script global de IA que maneja Gestos y Voz -->
-<!-- Nota: Usamos is:inline para evitar que Astro lo reinicie al hacer ViewTransitions. El componente persistirá. -->
-<script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3.1640029074/camera_utils.js" crossorigin="anonymous"></script>
-<script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils@0.2.1628152410/control_utils.js" crossorigin="anonymous"></script>
+<!-- MediaPipe scripts — loaded as inline to be globally available -->
 <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3.1620248257/drawing_utils.js" crossorigin="anonymous"></script>
 <script is:inline src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/hands.js" crossorigin="anonymous"></script>
 
 <script is:inline>
 (function() {
   'use strict';
-  
+
   // ═══════════════════════════════════════════════════════════════
   //  STATE (persists across ViewTransitions navigation)
   // ═══════════════════════════════════════════════════════════════
   if (!window._globalAIState) {
     window._globalAIState = {
-      cameraActive: false,
-      handsInstance: null,
+      active: false,
       stream: null,
+      handsInstance: null,
+      handsReady: false,
+      animFrameId: null,
+      recognition: null,
+      isListening: false,
+      voiceRetries: 0,
       cursorX: 0,
       cursorY: 0,
       pinchCooldown: false,
       scrollCooldown: false,
-      recognition: null,
-      isListening: false,
       toastTimer: null,
+      lastGesture: 'none',
+      gestureFrameCount: 0,
     };
   }
-  var state = window._globalAIState;
+  var S = window._globalAIState;
+
+  // ═══════════════════════════════════════════════════════════════
+  //  TOAST
+  // ═══════════════════════════════════════════════════════════════
+  function showToast(msg, icon, duration) {
+    icon = icon || 'ℹ️';
+    duration = duration || 3000;
+    var t = document.getElementById('ai-toast');
+    var ti = document.getElementById('ai-toast-icon');
+    var tm = document.getElementById('ai-toast-msg');
+    if (!t || !tm) return;
+    tm.textContent = msg;
+    if (ti) ti.textContent = icon;
+    t.style.display = 'flex';
+    if (S.toastTimer) clearTimeout(S.toastTimer);
+    S.toastTimer = setTimeout(function() { t.style.display = 'none'; }, duration);
+  }
+
+  function setVoiceText(txt) {
+    var vt = document.getElementById('voice-text');
+    if (vt) vt.textContent = txt;
+  }
+
+  function setLoadingText(txt) {
+    var el = document.getElementById('model-loading-text');
+    if (el) el.textContent = txt;
+  }
+
+  function showLoading(show) {
+    var el = document.getElementById('model-loading');
+    if (el) el.style.display = show ? 'block' : 'none';
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  UPDATE UI — syncs DOM with current state
+  // ═══════════════════════════════════════════════════════════════
+  function updateUI() {
+    var btn = document.getElementById('global-ai-btn');
+    var btnText = document.getElementById('ai-btn-text');
+    var webcamBox = document.getElementById('global-webcam-container');
+    var cursor = document.getElementById('global-virtual-cursor');
+    if (!btn || !btnText) return;
+
+    if (S.active) {
+      btnText.textContent = 'IA Encendida';
+      btn.style.borderColor = '#4ade80';
+      btn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.4)';
+      if (webcamBox) webcamBox.style.display = 'block';
+    } else {
+      btnText.textContent = 'IA Apagada';
+      btn.style.borderColor = 'rgba(124,58,237,0.6)';
+      btn.style.boxShadow = '0 4px 20px rgba(124,58,237,0.3)';
+      if (webcamBox) webcamBox.style.display = 'none';
+      if (cursor) cursor.style.display = 'none';
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  VOICE COMMANDS
+  // ═══════════════════════════════════════════════════════════════
+  var voiceNav = {
+    'inicio': '/', 'hogar': '/', 'home': '/',
+    'acerca': '/about', 'sobre mi': '/about', 'sobre mí': '/about',
+    'trabajo': '/work', 'proyectos': '/work',
+    'servicios': '/services',
+    'tienda': '/shop', 'comercio': '/shop',
+    'gesto': '/gesture-video', 'gestos': '/gesture-video', 'video': '/gesture-video',
+    'contacto': '#contact',
+  };
+  var voiceScroll = {
+    'subir': -300, 'sube': -300, 'arriba': -300,
+    'bajar': 300, 'baja': 300, 'abajo': 300,
+    'scroll up': -300, 'scroll down': 300,
+  };
+  var voiceStop = ['detener', 'parar', 'stop', 'apagar'];
+
+  // ═══════════════════════════════════════════════════════════════
+  //  START VOICE
+  // ═══════════════════════════════════════════════════════════════
+  function startVoice() {
+    var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+      console.warn('[AI Voice] SpeechRecognition not supported.');
+      setVoiceText('Voz no soportada (usa Chrome)');
+      showToast('Tu navegador no soporta voz. Usa Google Chrome.', '⚠️', 6000);
+      return;
+    }
+
+    // Reuse or create
+    if (S.recognition && S.isListening) return;
+
+    S.voiceRetries = 0;
+    var rec = new SR();
+    rec.lang = 'es-ES';
+    rec.continuous = true;
+    rec.interimResults = false;
+    S.recognition = rec;
+
+    rec.onstart = function() {
+      S.isListening = true;
+      S.voiceRetries = 0;
+      setVoiceText('Escuchando...');
+      console.log('[AI Voice] Listening started.');
+    };
+
+    rec.onresult = function(event) {
+      var idx = event.resultIndex;
+      var transcript = event.results[idx][0].transcript.toLowerCase().trim();
+      setVoiceText('🗣️ ' + transcript);
+      console.log('[AI Voice] Heard:', transcript);
+
+      // Stop commands
+      for (var c = 0; c < voiceStop.length; c++) {
+        if (transcript.includes(voiceStop[c])) {
+          showToast('Desactivando IA...', '🛑');
+          setTimeout(stopAI, 500);
+          return;
+        }
+      }
+
+      // Scroll commands
+      for (var key in voiceScroll) {
+        if (transcript.includes(key)) {
+          window.scrollBy({ top: voiceScroll[key], behavior: 'smooth' });
+          showToast('Scroll: ' + key, '📜', 1500);
+          return;
+        }
+      }
+
+      // Navigation commands
+      var found = false;
+      for (var navKey in voiceNav) {
+        if (transcript.includes(navKey) || transcript.includes('ir a ' + navKey) || transcript.includes('entrar a ' + navKey)) {
+          found = true;
+          var path = voiceNav[navKey];
+          showToast('Navegando a ' + navKey + '...', '🗣️');
+          setTimeout(function() {
+            if (path.startsWith('#')) {
+              var el = document.querySelector(path);
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            } else {
+              window.location.href = path;
+            }
+          }, 800);
+          break;
+        }
+      }
+
+      if (!found) {
+        showToast('Escuché: "' + transcript + '"', '👂', 2000);
+      }
+    };
+
+    rec.onerror = function(event) {
+      console.error('[AI Voice] Error:', event.error);
+      if (event.error === 'not-allowed') {
+        showToast('Permiso de micrófono denegado', '🚫', 5000);
+        setVoiceText('Micrófono bloqueado');
+        S.isListening = false;
+        return;
+      }
+      if (event.error === 'network') {
+        setVoiceText('Voz: error de red');
+        showToast('Error de red en reconocimiento de voz.', '⚠️', 4000);
+      }
+      if (event.error === 'aborted') {
+        // Expected when stopping, don't show error
+        return;
+      }
+    };
+
+    rec.onend = function() {
+      S.isListening = false;
+      if (S.active && S.voiceRetries < 5) {
+        // Auto-restart with small delay
+        S.voiceRetries++;
+        console.log('[AI Voice] Restarting... attempt', S.voiceRetries);
+        setTimeout(function() {
+          if (S.active) {
+            try { rec.start(); } catch(e) { console.warn('[AI Voice] Restart failed:', e); }
+          }
+        }, 300);
+      } else if (S.active) {
+        setVoiceText('Voz pausada. Habla para reactivar.');
+        // Reset retries after a longer cooldown
+        setTimeout(function() {
+          S.voiceRetries = 0;
+          if (S.active) {
+            try { rec.start(); } catch(e) {}
+          }
+        }, 3000);
+      }
+    };
+
+    try {
+      rec.start();
+      console.log('[AI Voice] Starting recognition...');
+    } catch(e) {
+      console.error('[AI Voice] Failed to start:', e);
+      showToast('Error al iniciar reconocimiento de voz.', '❌', 4000);
+    }
+  }
+
+  function stopVoice() {
+    if (S.recognition) {
+      try { S.recognition.abort(); } catch(e) {}
+      S.isListening = false;
+      S.recognition = null;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  GESTURES — MediaPipe Hands
+  // ═══════════════════════════════════════════════════════════════
+  function initHands() {
+    if (typeof Hands === 'undefined') {
+      console.warn('[AI Gestures] Hands class not loaded yet, retrying...');
+      setLoadingText('Cargando librería...');
+      setTimeout(initHands, 500);
+      return;
+    }
+
+    if (S.handsInstance && S.handsReady) {
+      // Already initialized, just start the frame loop
+      startFrameLoop();
+      return;
+    }
+
+    showLoading(true);
+    setLoadingText('Inicializando modelo...');
+    console.log('[AI Gestures] Creating Hands instance...');
+
+    try {
+      S.handsInstance = new Hands({
+        locateFile: function(file) {
+          return 'https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/' + file;
+        }
+      });
+
+      S.handsInstance.setOptions({
+        maxNumHands: 1,
+        modelComplexity: 1,
+        minDetectionConfidence: 0.6,
+        minTrackingConfidence: 0.6
+      });
+
+      S.handsInstance.onResults(onHandResults);
+
+      // Initialize the model by sending a tiny test frame
+      // This forces WASM + model download
+      var testCanvas = document.createElement('canvas');
+      testCanvas.width = 2;
+      testCanvas.height = 2;
+
+      S.handsInstance.send({image: testCanvas}).then(function() {
+        console.log('[AI Gestures] Model loaded successfully!');
+        S.handsReady = true;
+        showLoading(false);
+        showToast('Modelo de manos cargado ✅', '🖐️', 2000);
+        startFrameLoop();
+      }).catch(function(err) {
+        console.error('[AI Gestures] Model init failed:', err);
+        showLoading(false);
+        showToast('Error cargando modelo de gestos. Solo voz activada.', '⚠️', 5000);
+      });
+
+      // Timeout fallback — if model doesn't load in 20s, warn user
+      setTimeout(function() {
+        if (!S.handsReady && S.active) {
+          showLoading(false);
+          showToast('Modelo tardó mucho. Intenta recargar la página.', '⏰', 5000);
+        }
+      }, 20000);
+
+    } catch(err) {
+      console.error('[AI Gestures] Hands creation failed:', err);
+      showLoading(false);
+      showToast('Error al crear detector de gestos.', '❌', 5000);
+    }
+  }
+
+  function startFrameLoop() {
+    if (S.animFrameId) return; // already running
+
+    var vid = document.getElementById('global-webcam-feed');
+    if (!vid) return;
+
+    function processFrame() {
+      if (!S.active) {
+        S.animFrameId = null;
+        return;
+      }
+
+      if (S.handsInstance && S.handsReady && vid.readyState >= 2) {
+        S.handsInstance.send({image: vid}).catch(function(err) {
+          // Silently ignore send errors during transitions
+        });
+      }
+
+      S.animFrameId = requestAnimationFrame(processFrame);
+    }
+
+    S.animFrameId = requestAnimationFrame(processFrame);
+    console.log('[AI Gestures] Frame loop started.');
+  }
+
+  function stopFrameLoop() {
+    if (S.animFrameId) {
+      cancelAnimationFrame(S.animFrameId);
+      S.animFrameId = null;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  HAND RESULTS CALLBACK
+  // ═══════════════════════════════════════════════════════════════
+  function onHandResults(results) {
+    var cvs = document.getElementById('global-webcam-canvas');
+    var cursor = document.getElementById('global-virtual-cursor');
+    if (!cvs || !cursor) return;
+
+    var ctx = cvs.getContext('2d');
+    ctx.save();
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+    if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+      cursor.style.display = 'block';
+
+      var landmarks = results.multiHandLandmarks[0];
+
+      // Draw landmarks for visual feedback
+      for (var i = 0; i < landmarks.length; i++) {
+        var lx = landmarks[i].x * cvs.width;
+        var ly = landmarks[i].y * cvs.height;
+        ctx.beginPath();
+        ctx.arc(lx, ly, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = '#D4AF37';
+        ctx.fill();
+      }
+
+      // Draw connections
+      var connections = [
+        [0,1],[1,2],[2,3],[3,4],
+        [0,5],[5,6],[6,7],[7,8],
+        [5,9],[9,10],[10,11],[11,12],
+        [9,13],[13,14],[14,15],[15,16],
+        [13,17],[17,18],[18,19],[19,20],[0,17]
+      ];
+      ctx.strokeStyle = 'rgba(212,175,55,0.4)';
+      ctx.lineWidth = 1;
+      for (var c = 0; c < connections.length; c++) {
+        var a = landmarks[connections[c][0]];
+        var b = landmarks[connections[c][1]];
+        ctx.beginPath();
+        ctx.moveTo(a.x * cvs.width, a.y * cvs.height);
+        ctx.lineTo(b.x * cvs.width, b.y * cvs.height);
+        ctx.stroke();
+      }
+
+      // Map index finger tip to screen (mirrored)
+      var indexTip = landmarks[8];
+      var normX = 1 - indexTip.x;
+      var normY = indexTip.y;
+
+      S.cursorX = Math.max(0, Math.min(window.innerWidth, normX * window.innerWidth));
+      S.cursorY = Math.max(0, Math.min(window.innerHeight, normY * window.innerHeight));
+
+      cursor.style.left = S.cursorX + 'px';
+      cursor.style.top = S.cursorY + 'px';
+
+      var gesture = detectGesture(landmarks);
+      executeGesture(gesture, cursor);
+    } else {
+      cursor.style.display = 'none';
+    }
+    ctx.restore();
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  GESTURE DETECTION
+  // ═══════════════════════════════════════════════════════════════
+  function dist3d(a, b) {
+    var dx = a.x - b.x, dy = a.y - b.y, dz = (a.z||0) - (b.z||0);
+    return Math.sqrt(dx*dx + dy*dy + dz*dz);
+  }
+
+  function detectGesture(lm) {
+    var thumbTip = lm[4], indexTip = lm[8], middleTip = lm[12], ringTip = lm[16], pinkyTip = lm[20];
+    var thumbIp = lm[3], indexPip = lm[6], middlePip = lm[10], ringPip = lm[14], pinkyPip = lm[18];
+    var wrist = lm[0];
+
+    var pinchDist = dist3d(thumbTip, indexTip);
+    var indexUp = indexTip.y < indexPip.y;
+    var middleUp = middleTip.y < middlePip.y;
+    var ringUp = ringTip.y < ringPip.y;
+    var pinkyUp = pinkyTip.y < pinkyPip.y;
+    var thumbUp = Math.abs(thumbTip.x - wrist.x) > Math.abs(thumbIp.x - wrist.x);
+    var fingersUp = (indexUp?1:0) + (middleUp?1:0) + (ringUp?1:0) + (pinkyUp?1:0) + (thumbUp?1:0);
+
+    if (pinchDist < 0.1) return 'pinch';
+    if (indexUp && middleUp && !ringUp && !pinkyUp) return 'peace';
+    if (fingersUp >= 3) return 'open';
+    if (fingersUp <= 1 && !indexUp) return 'fist';
+    if (indexUp && !middleUp && !ringUp && !pinkyUp) return 'point';
+    return 'none';
+  }
+
+  function executeGesture(gesture, cursor) {
+    switch (gesture) {
+      case 'pinch':
+        if (!S.pinchCooldown) {
+          S.pinchCooldown = true;
+          cursor.classList.add('clicking');
+          setTimeout(function() { cursor.classList.remove('clicking'); }, 300);
+          performClick(S.cursorX, S.cursorY);
+          setTimeout(function() { S.pinchCooldown = false; }, 800);
+        }
+        break;
+
+      case 'open':
+        if (!S.scrollCooldown) {
+          S.scrollCooldown = true;
+          window.scrollBy({ top: -80, behavior: 'auto' });
+          setTimeout(function() { S.scrollCooldown = false; }, 100);
+        }
+        break;
+
+      case 'fist':
+        if (!S.scrollCooldown) {
+          S.scrollCooldown = true;
+          window.scrollBy({ top: 80, behavior: 'auto' });
+          setTimeout(function() { S.scrollCooldown = false; }, 100);
+        }
+        break;
+    }
+  }
+
+  function performClick(x, y) {
+    var cursor = document.getElementById('global-virtual-cursor');
+    var prev = '';
+    if (cursor) { prev = cursor.style.visibility; cursor.style.visibility = 'hidden'; }
+    var el = document.elementFromPoint(x, y);
+    if (cursor) cursor.style.visibility = prev;
+    if (!el) return;
+
+    createRipple(x, y);
+
+    var link = el.closest('a[href]');
+    if (link) {
+      if (link.target === '_blank') {
+        var win = window.open(link.href, '_blank');
+        if (!win) window.location.href = link.href;
+      } else {
+        window.location.href = link.href;
+      }
+      return;
+    }
+
+    var button = el.closest('button');
+    if (button) { button.click(); return; }
+
+    el.click();
+  }
+
+  function createRipple(x, y) {
+    var r = document.createElement('div');
+    r.className = 'click-ripple';
+    r.style.left = x + 'px';
+    r.style.top = y + 'px';
+    document.body.appendChild(r);
+    setTimeout(function() { r.remove(); }, 600);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  START AI — Main entry point
+  // ═══════════════════════════════════════════════════════════════
+  async function startAI() {
+    var btnText = document.getElementById('ai-btn-text');
+    var btn = document.getElementById('global-ai-btn');
+    if (btnText) btnText.textContent = 'Iniciando...';
+
+    try {
+      // 1. Request camera access DIRECTLY (not via MediaPipe Camera)
+      var stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' },
+        audio: false
+      });
+
+      // Store stream for cleanup
+      S.stream = stream;
+      S.active = true;
+
+      // 2. Attach stream to video element
+      var vid = document.getElementById('global-webcam-feed');
+      var cvs = document.getElementById('global-webcam-canvas');
+      if (vid) {
+        vid.srcObject = stream;
+        vid.onloadedmetadata = function() {
+          vid.play().catch(function(){});
+          if (cvs) {
+            cvs.width = vid.videoWidth || 320;
+            cvs.height = vid.videoHeight || 240;
+          }
+        };
+      }
+
+      // 3. Show webcam container
+      var wb = document.getElementById('global-webcam-container');
+      if (wb) wb.style.display = 'block';
+
+      updateUI();
+      showToast('Cámara activa. Cargando gestos...', '📷', 3000);
+
+      // 4. Start voice recognition
+      startVoice();
+
+      // 5. Initialize MediaPipe Hands (downloads WASM + model)
+      initHands();
+
+    } catch(err) {
+      console.error('[AI] Failed to start:', err);
+      S.active = false;
+      if (btnText) btnText.textContent = 'IA Apagada';
+      
+      var msg = 'Error al iniciar IA.';
+      if (err.name === 'NotAllowedError') {
+        msg = 'Permiso de cámara denegado. Permítelo en la barra del navegador.';
+      } else if (err.name === 'NotFoundError') {
+        msg = 'No se encontró una cámara. Conecta una webcam.';
+      } else if (err.name === 'NotReadableError') {
+        msg = 'Cámara en uso por otra app. Ciérrala e intenta de nuevo.';
+      }
+      showToast(msg, '❌', 6000);
+      updateUI();
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  //  STOP AI
+  // ═══════════════════════════════════════════════════════════════
+  function stopAI() {
+    S.active = false;
+
+    // Stop frame processing
+    stopFrameLoop();
+
+    // Stop camera stream tracks
+    if (S.stream) {
+      S.stream.getTracks().forEach(function(track) { track.stop(); });
+      S.stream = null;
+    }
+
+    // Clear video element
+    var vid = document.getElementById('global-webcam-feed');
+    if (vid) vid.srcObject = null;
+
+    // Stop voice
+    stopVoice();
+
+    // Reset hands ready flag (model stays cached in memory)
+    // Don't destroy handsInstance — it's expensive to recreate
+    // S.handsReady stays true if it loaded
+
+    updateUI();
+    showToast('IA Desactivada', '🔴');
+    console.log('[AI] Stopped.');
+  }
 
   // ═══════════════════════════════════════════════════════════════
   //  DOM BINDING — Runs on every page load / navigation
   // ═══════════════════════════════════════════════════════════════
   function bindDOM() {
     var aiBtn = document.getElementById('global-ai-btn');
-    var aiBtnText = document.getElementById('ai-btn-text');
-    var webcamBox = document.getElementById('global-webcam-container');
-    var videoElement = document.getElementById('global-webcam-feed');
-    var canvasElement = document.getElementById('global-webcam-canvas');
-    var virtualCursor = document.getElementById('global-virtual-cursor');
-    var aiToast = document.getElementById('ai-toast');
-    var aiToastIcon = document.getElementById('ai-toast-icon');
-    var aiToastMsg = document.getElementById('ai-toast-msg');
-    var voiceStatusText = document.getElementById('voice-text');
+    if (!aiBtn) return;
 
-    if (!aiBtn || !canvasElement) return; // safety
-
-    var canvasCtx = canvasElement.getContext('2d');
-
-    // Update UI to reflect current state
-    if (state.cameraActive) {
-      aiBtnText.textContent = 'IA Encendida';
-      aiBtn.style.borderColor = '#4ade80';
-      aiBtn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.4)';
-      webcamBox.style.display = 'block';
-    } else {
-      aiBtnText.textContent = 'IA Apagada';
-      aiBtn.style.borderColor = 'rgba(124,58,237,0.6)';
-      aiBtn.style.boxShadow = '0 4px 20px rgba(124,58,237,0.3)';
-      webcamBox.style.display = 'none';
-      if (virtualCursor) virtualCursor.style.display = 'none';
-    }
-
-    // Re-attach video stream if camera is active
-    if (state.cameraActive && state.stream && videoElement) {
-      videoElement.srcObject = state.stream;
-      videoElement.play().catch(function(){});
-      canvasElement.width = videoElement.videoWidth || 320;
-      canvasElement.height = videoElement.videoHeight || 240;
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  VOICE COMMANDS — Navigation + Scroll + Control
-    // ═══════════════════════════════════════════════════════════════
-    var voiceCommands = {
-      // Navigation
-      'inicio': '/',
-      'hogar': '/',
-      'home': '/',
-      'acerca': '/about',
-      'sobre mi': '/about',
-      'sobre mí': '/about',
-      'trabajo': '/work',
-      'proyectos': '/work',
-      'servicios': '/services',
-      'tienda': '/shop',
-      'comercio': '/shop',
-      'gesto': '/gesture-video',
-      'gestos': '/gesture-video',
-      'video': '/gesture-video',
-      'contacto': '#contact',
-    };
-
-    // Scroll commands (not navigation)
-    var scrollCommands = {
-      'subir': -300,
-      'sube': -300,
-      'arriba': -300,
-      'bajar': 300,
-      'baja': 300,
-      'abajo': 300,
-      'scroll up': -300,
-      'scroll down': 300,
-    };
-
-    // Control commands
-    var controlCommands = ['detener', 'parar', 'stop', 'apagar'];
-
-    // ═══════════════════════════════════════════════════════════════
-    //  BUTTON HANDLER
-    // ═══════════════════════════════════════════════════════════════
-    
-    // Remove previous listener to avoid duplicates
+    // Clone button to remove old listeners
     var newBtn = aiBtn.cloneNode(true);
     aiBtn.parentNode.replaceChild(newBtn, aiBtn);
-    aiBtn = newBtn;
-    aiBtnText = aiBtn.querySelector('#ai-btn-text') || aiBtn.querySelector('span:last-child');
 
-    aiBtn.addEventListener('click', function() {
-      if (state.cameraActive) {
+    newBtn.addEventListener('click', function() {
+      if (S.active) {
         stopAI();
       } else {
         startAI();
       }
     });
 
-    // ═══════════════════════════════════════════════════════════════
-    //  TOAST
-    // ═══════════════════════════════════════════════════════════════
-    function showToast(msg, icon, duration) {
-      icon = icon || 'ℹ️';
-      duration = duration || 3000;
-      var toastEl = document.getElementById('ai-toast');
-      var toastIconEl = document.getElementById('ai-toast-icon');
-      var toastMsgEl = document.getElementById('ai-toast-msg');
-      if (!toastEl || !toastMsgEl) return;
-      
-      toastMsgEl.textContent = msg;
-      if (toastIconEl) toastIconEl.textContent = icon;
-      toastEl.style.display = 'flex';
-      
-      if (state.toastTimer) clearTimeout(state.toastTimer);
-      state.toastTimer = setTimeout(function() {
-        toastEl.style.display = 'none';
-      }, duration);
-    }
+    // Sync UI state
+    updateUI();
 
-    // ═══════════════════════════════════════════════════════════════
-    //  START AI
-    // ═══════════════════════════════════════════════════════════════
-    async function startAI() {
-      aiBtnText.textContent = 'Iniciando IA...';
-      aiBtn.style.borderColor = '#4ade80';
-      aiBtn.style.boxShadow = '0 4px 20px rgba(74,222,128,0.4)';
-      
-      try {
-        // 1. Start Voice Control
-        initVoiceControl();
-        
-        // 2. Start Camera for Gestures
-        var vid = document.getElementById('global-webcam-feed');
-        var cvs = document.getElementById('global-webcam-canvas');
-        if (vid && cvs) {
-          initMediaPipe();
-          
-          if (!state.mpCamera) {
-            state.mpCamera = new Camera(vid, {
-              onFrame: async function() {
-                if (state.cameraActive && state.handsInstance) {
-                  await state.handsInstance.send({image: vid});
-                }
-              },
-              width: 320,
-              height: 240
-            });
-          }
-          
-          state.mpCamera.start().then(() => {
-            cvs.width = vid.videoWidth || 320;
-            cvs.height = vid.videoHeight || 240;
-            
-            var wb = document.getElementById('global-webcam-container');
-            if (wb) wb.style.display = 'block';
-            state.cameraActive = true;
-            aiBtnText.textContent = 'IA Encendida';
-            showToast('Gestos y Voz Activados ✅', '🟢');
-          }).catch(err => {
-            console.error(err);
-            aiBtnText.textContent = 'IA Apagada';
-            showToast('Error al iniciar la cámara.', '❌', 5000);
-          });
-        }
-      } catch (err) {
-        console.error(err);
-        aiBtnText.textContent = 'IA Apagada';
-        aiBtn.style.borderColor = 'rgba(124,58,237,0.6)';
-        aiBtn.style.boxShadow = '0 4px 20px rgba(124,58,237,0.3)';
-        showToast('Error de permisos. Permite cámara y micrófono.', '❌', 5000);
-      }
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  STOP AI
-    // ═══════════════════════════════════════════════════════════════
-    function stopAI() {
-      state.cameraActive = false;
-      
-      if (state.mpCamera) {
-        state.mpCamera.stop();
-        state.mpCamera = null;
-      }
-      
-      // Stop Camera Stream
-      if (state.stream) {
-        state.stream.getTracks().forEach(function(track) { track.stop(); });
-        state.stream = null;
-      }
-      var wb = document.getElementById('global-webcam-container');
-      if (wb) wb.style.display = 'none';
-      var vc = document.getElementById('global-virtual-cursor');
-      if (vc) vc.style.display = 'none';
-      
-      // Stop Voice
-      if (state.recognition && state.isListening) {
-        try { state.recognition.stop(); } catch(e){}
-        state.isListening = false;
-      }
-      
-      // Reset hands instance so it re-creates on next start
-      state.handsInstance = null;
-      
-      aiBtnText.textContent = 'IA Apagada';
-      aiBtn.style.borderColor = 'rgba(124,58,237,0.6)';
-      aiBtn.style.boxShadow = '0 4px 20px rgba(124,58,237,0.3)';
-      showToast('IA Desactivada', '🔴');
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  VOICE CONTROL
-    // ═══════════════════════════════════════════════════════════════
-    function initVoiceControl() {
-      var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        console.warn("Speech API no soportada en este navegador.");
-        var vt = document.getElementById('voice-text');
-        if (vt) vt.textContent = "🎙️ Voz no soportada (Usa Chrome)";
-        showToast("Tu navegador no soporta comandos de voz. Usa Google Chrome.", "⚠️", 6000);
-        return;
-      }
-
-      // Re-use existing recognition if still valid
-      if (state.recognition && state.isListening) return;
-
-      state.recognition = new SpeechRecognition();
-      state.recognition.lang = 'es-ES';
-      state.recognition.continuous = true;
-      state.recognition.interimResults = false;
-      
-      state.recognition.onstart = function() {
-        state.isListening = true;
-        var vt = document.getElementById('voice-text');
-        if (vt) vt.textContent = "Escuchando...";
-        
-        // Brave browser detection hack for speech API
-        if (navigator.brave && navigator.brave.isBrave) {
-          navigator.brave.isBrave().then(function(isBrave) {
-             if (isBrave) {
-                showToast("Brave bloquea la IA de Voz por defecto. Usa Chrome para la voz.", "⚠️", 6000);
-             }
-          });
-        }
-      };
-
-      state.recognition.onresult = function(event) {
-        var current = event.resultIndex;
-        var transcript = event.results[current][0].transcript.toLowerCase().trim();
-        
-        var vt = document.getElementById('voice-text');
-        if (vt) vt.textContent = "🗣️ " + transcript;
-        
-        console.log("[Voz] Escuché:", transcript);
-        
-        // Check control commands first
-        for (var c = 0; c < controlCommands.length; c++) {
-          if (transcript.includes(controlCommands[c])) {
-            showToast('Desactivando IA...', '🛑');
-            setTimeout(function() { stopAI(); }, 500);
-            return;
-          }
-        }
-
-        // Check scroll commands
-        var scrolled = false;
-        for (var keyword in scrollCommands) {
-          if (transcript.includes(keyword)) {
-            scrolled = true;
-            window.scrollBy({ top: scrollCommands[keyword], behavior: 'smooth' });
-            showToast('Scroll: ' + keyword, '📜', 1500);
-            break;
-          }
-        }
-        if (scrolled) return;
-
-        // Check navigation commands
-        var foundCommand = false;
-        for (var navKey in voiceCommands) {
-          if (transcript.includes(navKey) || transcript.includes('ir a ' + navKey) || transcript.includes('entrar a ' + navKey)) {
-            foundCommand = true;
-            var path = voiceCommands[navKey];
-            showToast('Navegando a ' + navKey + '...', '🗣️');
-            setTimeout(function() {
-              if (path.startsWith('#')) {
-                var el = document.querySelector(path);
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              } else {
-                window.location.href = path;
-              }
-            }, 800);
-            break;
-          }
-        }
-        
-        if (!foundCommand) {
-          showToast('Escuché: "' + transcript + '"', '👂', 2000);
-        }
-      };
-
-      state.recognition.onerror = function(event) {
-        console.error("[Voz] Error:", event.error);
-        if (event.error === 'not-allowed') {
-          showToast("Permiso de micrófono denegado", "🚫");
-        }
-        if (event.error === 'network') {
-          console.warn("[Voz] Network error — speech API may not be available.");
-          showToast("Voz bloqueada por el navegador (ej. Brave). Usa Chrome.", "⚠️", 5000);
-        }
-      };
-
-      state.recognition.onend = function() {
-        if (state.cameraActive) {
-          // Restart if it stopped but AI is still active
-          try { state.recognition.start(); } catch(e){}
-        } else {
-          state.isListening = false;
-        }
-      };
-
-      try {
-        state.recognition.start();
-      } catch(e) {}
-    }
-
-    // ═══════════════════════════════════════════════════════════════
-    //  GESTURES (MediaPipe)
-    // ═══════════════════════════════════════════════════════════════
-    function initMediaPipe() {
-      if (typeof Hands === 'undefined') {
-        setTimeout(initMediaPipe, 500);
-        return;
-      }
-
-      if (state.handsInstance) return;
-
-      state.handsInstance = new Hands({locateFile: function(file) {
-        return 'https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4.1646424915/' + file;
-      }});
-      state.handsInstance.setOptions({
-        maxNumHands: 1,
-        modelComplexity: 1,
-        minDetectionConfidence: 0.65,
-        minTrackingConfidence: 0.65
-      });
-
-      state.handsInstance.onResults(onHandResults);
-    }
-
-    function onHandResults(results) {
+    // If AI was active, re-attach stream to new DOM elements
+    if (S.active && S.stream) {
+      var vid = document.getElementById('global-webcam-feed');
       var cvs = document.getElementById('global-webcam-canvas');
-      var cursor = document.getElementById('global-virtual-cursor');
-      if (!cvs || !cursor) return;
-      
-      var ctx = cvs.getContext('2d');
-      ctx.save();
-      ctx.clearRect(0, 0, cvs.width, cvs.height);
-
-      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-        cursor.style.display = 'block';
-        
-        var landmarks = results.multiHandLandmarks[0];
-        
-        // Draw landmarks on canvas for visual feedback
-        for (var i = 0; i < landmarks.length; i++) {
-          var lx = landmarks[i].x * cvs.width;
-          var ly = landmarks[i].y * cvs.height;
-          ctx.beginPath();
-          ctx.arc(lx, ly, 3, 0, 2 * Math.PI);
-          ctx.fillStyle = '#D4AF37';
-          ctx.fill();
+      if (vid) {
+        vid.srcObject = S.stream;
+        vid.play().catch(function(){});
+        if (cvs) {
+          cvs.width = vid.videoWidth || 320;
+          cvs.height = vid.videoHeight || 240;
         }
-
-        var indexTip = landmarks[8];
-        
-        // Mirror X to match user's real movement
-        var normX = 1 - indexTip.x;
-        var normY = indexTip.y;
-
-        // Map to viewport
-        state.cursorX = normX * window.innerWidth;
-        state.cursorY = normY * window.innerHeight;
-
-        // Clamp coordinates
-        state.cursorX = Math.max(0, Math.min(window.innerWidth, state.cursorX));
-        state.cursorY = Math.max(0, Math.min(window.innerHeight, state.cursorY));
-
-        cursor.style.left = state.cursorX + 'px';
-        cursor.style.top = state.cursorY + 'px';
-
-        var gesture = detectGesture(landmarks);
-        executeGlobalGesture(gesture, cursor);
-      } else {
-        cursor.style.display = 'none';
       }
-      ctx.restore();
-    }
-
-    function detectGesture(landmarks) {
-      var thumbTip = landmarks[4];
-      var indexTip = landmarks[8];
-      var middleTip = landmarks[12];
-      var ringTip = landmarks[16];
-      var pinkyTip = landmarks[20];
-      var thumbIp = landmarks[3];
-      var indexPip = landmarks[6];
-      var middlePip = landmarks[10];
-      var ringPip = landmarks[14];
-      var pinkyPip = landmarks[18];
-      var wrist = landmarks[0];
-
-      var pinchDist = dist3d(thumbTip, indexTip);
-      
-      var indexUp = indexTip.y < indexPip.y;
-      var middleUp = middleTip.y < middlePip.y;
-      var ringUp = ringTip.y < ringPip.y;
-      var pinkyUp = pinkyTip.y < pinkyPip.y;
-      var thumbUp = Math.abs(thumbTip.x - wrist.x) > Math.abs(thumbIp.x - wrist.x);
-
-      var fingersUp = (indexUp ? 1 : 0) + (middleUp ? 1 : 0) + (ringUp ? 1 : 0) + (pinkyUp ? 1 : 0) + (thumbUp ? 1 : 0);
-
-      if (pinchDist < 0.1) return 'pinch';
-      if (indexUp && middleUp && !ringUp && !pinkyUp) return 'peace';
-      if (fingersUp >= 3) return 'open';
-      if (fingersUp <= 1 && !indexUp) return 'fist';
-      if (indexUp && !middleUp && !ringUp && !pinkyUp) return 'point';
-      
-      return 'none';
-    }
-
-    function dist3d(a, b) {
-      var dx = a.x - b.x;
-      var dy = a.y - b.y;
-      var dz = (a.z || 0) - (b.z || 0);
-      return Math.sqrt(dx * dx + dy * dy + dz * dz);
-    }
-
-    function executeGlobalGesture(gesture, cursor) {
-      switch (gesture) {
-        case 'pinch':
-          if (!state.pinchCooldown) {
-            state.pinchCooldown = true;
-            if (cursor) cursor.classList.add('clicking');
-            setTimeout(function() { if (cursor) cursor.classList.remove('clicking'); }, 300);
-            performGlobalClick(state.cursorX, state.cursorY);
-            setTimeout(function() { state.pinchCooldown = false; }, 800);
-          }
-          break;
-          
-        case 'open':
-          // Scroll Up
-          if (!state.scrollCooldown) {
-            window.scrollBy({ top: -80, behavior: 'auto' });
-          }
-          break;
-          
-        case 'fist':
-          // Scroll Down
-          if (!state.scrollCooldown) {
-            window.scrollBy({ top: 80, behavior: 'auto' });
-          }
-          break;
+      // Restart frame loop with new DOM elements
+      stopFrameLoop();
+      if (S.handsReady) {
+        startFrameLoop();
       }
-    }
-
-    function performGlobalClick(x, y) {
-      var cursor = document.getElementById('global-virtual-cursor');
-      // Hide cursor temporarily to find element beneath
-      var prev = '';
-      if (cursor) { prev = cursor.style.visibility; cursor.style.visibility = 'hidden'; }
-      var el = document.elementFromPoint(x, y);
-      if (cursor) cursor.style.visibility = prev;
-
-      if (!el) return;
-
-      createClickRipple(x, y);
-
-      // Click on links
-      var link = el.closest('a[href]');
-      if (link) {
-        if (link.target === '_blank') {
-          var newWin = window.open(link.href, '_blank');
-          if (!newWin) window.location.href = link.href;
-        } else {
-          window.location.href = link.href;
-        }
-        return;
-      }
-
-      // Click on buttons
-      var button = el.closest('button');
-      if (button) {
-        button.click();
-        return;
-      }
-      
-      // Any other interactive element
-      el.click();
-    }
-
-    function createClickRipple(x, y) {
-      var ripple = document.createElement('div');
-      ripple.className = 'click-ripple';
-      ripple.style.left = x + 'px';
-      ripple.style.top = y + 'px';
-      document.body.appendChild(ripple);
-      setTimeout(function() { ripple.remove(); }, 600);
     }
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  INITIALIZATION: Run on first load AND on every page navigation
+  //  INITIALIZATION
   // ═══════════════════════════════════════════════════════════════
-
-  // Initial binding
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', bindDOM);
   } else {
     bindDOM();
   }
 
-  // Re-bind on Astro ViewTransitions page swap
-  // This fires AFTER the new page's DOM is in place
   document.addEventListener('astro:page-load', function() {
     bindDOM();
   });
 
-  // Also handle astro:after-swap for earlier binding
   document.addEventListener('astro:after-swap', function() {
-    // Small delay to ensure DOM is fully updated
     setTimeout(bindDOM, 50);
   });
 

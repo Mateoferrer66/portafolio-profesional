@@ -1,7 +1,7 @@
 ---
 title: Nexus Law Firm
 publishDate: 2023-09-10 00:00:00
-img: /assets/shop-digital-contracts.jpg
+img: https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&h=600&fit=crop&q=80
 img_alt: Law firm branding
 description: |
   A prestigious corporate website for a top-tier law firm, featuring a secure client portal and automated consultation scheduling.

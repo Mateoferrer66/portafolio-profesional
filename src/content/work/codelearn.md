@@ -1,7 +1,7 @@
 ---
 title: CodeLearn
 publishDate: 2024-09-10 00:00:00
-img: /assets/shop-tech-code.png
+img: https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop&q=80
 img_alt: CodeLearn learning platform interface
 description: |
   An interactive coding platform designed to make learning programming accessible and engaging through gamified challenges and real-time feedback.

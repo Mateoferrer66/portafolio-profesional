@@ -1,7 +1,7 @@
 ---
 title: Cursos de React
 publishDate: 2024-01-15 00:00:00
-img: /assets/futuristic_education_1783817771916.png
+img: https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop&q=80
 img_alt: Cursos de React - Aprende React desde cero hasta avanzado
 description: |
   Comprehensive React training courses covering fundamentals to advanced topics including hooks, context, and modern React patterns.

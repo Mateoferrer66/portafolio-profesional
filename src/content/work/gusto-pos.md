@@ -1,7 +1,7 @@
 ---
 title: Gusto POS System
 publishDate: 2023-10-30 00:00:00
-img: /assets/shop-tech-pc.png
+img: https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&h=600&fit=crop&q=80
 img_alt: Point of Sale system
 description: |
   A complete Point of Sale solution for high-volume restaurants, featuring table management, kitchen display system, and inventory tracking.

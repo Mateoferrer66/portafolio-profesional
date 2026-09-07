@@ -1,7 +1,7 @@
 ---
 title: CryptoVault Web3
 publishDate: 2024-07-01 00:00:00
-img: /assets/work-cryptovault.png
+img: https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=600&fit=crop&q=80
 img_alt: Billetera Web3 futurista
 description: |
  Interfaz de billetera digital de alta seguridad para gestión de activos criptográficos y NFTs.
