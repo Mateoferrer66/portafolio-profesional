@@ -33,9 +33,14 @@
 
     <!-- Instructions / status bar -->
     <div style="background:rgba(20,15,35,0.95);padding:6px 10px;display:flex;flex-direction:column;gap:3px;font-size:0.65rem;color:#cbd5e1;border-top:1px solid rgba(124,58,237,0.3);">
-      <div id="voice-status" style="display:flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-        <span>🎙️</span>
-        <span id="voice-text" style="color:#4ade80;font-weight:600;">Escuchando comandos...</span>
+      <div id="voice-status" style="display:flex;align-items:center;justify-content:space-between;gap:6px;white-space:nowrap;overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:4px;overflow:hidden;text-overflow:ellipsis;min-width:0;">
+          <span>🎙️</span>
+          <span id="voice-text" style="color:#4ade80;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Escuchando comandos...</span>
+        </div>
+        <button id="voice-lang-btn" type="button" title="Cambiar idioma (Español / English)" style="background:rgba(124,58,237,0.35);border:1px solid rgba(124,58,237,0.7);color:#e2e8f0;border-radius:6px;padding:2px 7px;cursor:pointer;font-size:0.6rem;font-weight:700;display:flex;align-items:center;gap:3px;flex-shrink:0;transition:all 0.2s;">
+          <span id="voice-lang-label">🇪🇸 ES</span>
+        </button>
       </div>
       <div style="display:flex;justify-content:space-between;color:#94a3b8;font-size:0.6rem;">
         <span>✋ Abrir: Subir</span>
@@ -71,32 +76,49 @@
 
   <!-- Help Panel Modal -->
   <div id="ai-help-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(520px,90vw);max-height:80vh;overflow-y:auto;background:rgba(10,8,20,0.96);border:1px solid rgba(124,58,237,0.5);border-radius:20px;padding:28px;z-index:20002;pointer-events:auto;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#e2e8f0;box-shadow:0 25px 60px rgba(0,0,0,0.7),0 0 40px rgba(124,58,237,0.15);">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:8px;flex-wrap:wrap;">
       <h3 style="margin:0;font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,#a855f7,#4ade80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🤖 Comandos IA</h3>
-      <button id="help-close-btn" type="button" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#e2e8f0;padding:4px 12px;cursor:pointer;font-size:0.8rem;transition:background 0.2s;">✕ Cerrar</button>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div id="help-lang-switch" style="display:flex;align-items:center;background:rgba(255,255,255,0.06);border:1px solid rgba(124,58,237,0.4);border-radius:20px;padding:2px;gap:2px;">
+          <button id="lang-btn-es" type="button" style="background:#7c3aed;color:#fff;border:none;border-radius:14px;padding:3px 9px;font-size:0.68rem;font-weight:700;cursor:pointer;transition:all 0.2s;">🇪🇸 ES</button>
+          <button id="lang-btn-en" type="button" style="background:transparent;color:#94a3b8;border:none;border-radius:14px;padding:3px 9px;font-size:0.68rem;font-weight:700;cursor:pointer;transition:all 0.2s;">🇺🇸 EN</button>
+        </div>
+        <button id="help-close-btn" type="button" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#e2e8f0;padding:4px 12px;cursor:pointer;font-size:0.8rem;transition:background 0.2s;">✕ Cerrar</button>
+      </div>
     </div>
     <div style="display:grid;gap:16px;">
       <div>
-        <h4 style="color:#a855f7;font-size:0.8rem;font-weight:700;margin:0 0 8px;text-transform:uppercase;letter-spacing:0.05em;">🎙️ Comandos de Voz</h4>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <h4 style="color:#a855f7;font-size:0.8rem;font-weight:700;margin:0;text-transform:uppercase;letter-spacing:0.05em;">🎙️ Comandos de Voz (Español & English)</h4>
+          <span style="font-size:0.62rem;color:#818cf8;">Entiende ambos idiomas</span>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:0.72rem;">
-          <span style="color:#94a3b8;">«subir» / «bajar»</span><span style="color:#cbd5e1;">Scroll arriba/abajo</span>
-          <span style="color:#94a3b8;">«ir arriba» / «ir abajo»</span><span style="color:#cbd5e1;">Ir al inicio/final</span>
-          <span style="color:#94a3b8;">«inicio» / «servicios»...</span><span style="color:#cbd5e1;">Navegar entre páginas</span>
-          <span style="color:#94a3b8;">«modo oscuro» / «claro»</span><span style="color:#cbd5e1;">Cambiar tema</span>
-          <span style="color:#94a3b8;">«leer página»</span><span style="color:#cbd5e1;">Leer contenido en voz alta</span>
-          <span style="color:#94a3b8;">«silencio» / «para de leer»</span><span style="color:#cbd5e1;">Detener lectura</span>
-          <span style="color:#94a3b8;">«zoom» / «ampliar»</span><span style="color:#cbd5e1;">Aumentar tamaño de texto</span>
-          <span style="color:#94a3b8;">«normal» / «restablecer»</span><span style="color:#cbd5e1;">Restaurar tamaño</span>
-          <span style="color:#94a3b8;">«buscar [texto]»</span><span style="color:#cbd5e1;">Resaltar texto en página</span>
-          <span style="color:#94a3b8;">«siguiente video»</span><span style="color:#cbd5e1;">Ir al siguiente video</span>
-          <span style="color:#94a3b8;">«video anterior»</span><span style="color:#cbd5e1;">Ir al video anterior</span>
-          <span style="color:#94a3b8;">«reproducir» / «play»</span><span style="color:#cbd5e1;">Reproducir video visible</span>
-          <span style="color:#94a3b8;">«pantalla completa»</span><span style="color:#cbd5e1;">Fullscreen video actual</span>
-          <span style="color:#94a3b8;">«compartir» / «copiar enlace»</span><span style="color:#cbd5e1;">Copiar URL</span>
-          <span style="color:#94a3b8;">«imprimir»</span><span style="color:#cbd5e1;">Imprimir página</span>
-          <span style="color:#94a3b8;">«abrir menú» / «cerrar menú»</span><span style="color:#cbd5e1;">Toggle navegación</span>
-          <span style="color:#94a3b8;">«ayuda» / «comandos»</span><span style="color:#cbd5e1;">Mostrar este panel</span>
-          <span style="color:#94a3b8;">«apagar» / «detener»</span><span style="color:#cbd5e1;">Desactivar IA</span>
+          <span style="color:#94a3b8;">«subir» / «scroll up»</span><span style="color:#cbd5e1;">Scroll arriba</span>
+          <span style="color:#94a3b8;">«bajar» / «scroll down»</span><span style="color:#cbd5e1;">Scroll abajo</span>
+          <span style="color:#94a3b8;">«ir arriba» / «go to top»</span><span style="color:#cbd5e1;">Ir al inicio</span>
+          <span style="color:#94a3b8;">«ir abajo» / «scroll to bottom»</span><span style="color:#cbd5e1;">Ir al final</span>
+          <span style="color:#94a3b8;">«inicio» / «home»</span><span style="color:#cbd5e1;">Página de Inicio</span>
+          <span style="color:#94a3b8;">«proyectos» / «projects»</span><span style="color:#cbd5e1;">Portafolio</span>
+          <span style="color:#94a3b8;">«curso react» / «react course»</span><span style="color:#cbd5e1;">Cursos de React</span>
+          <span style="color:#94a3b8;">«servicios» / «services»</span><span style="color:#cbd5e1;">Servicios</span>
+          <span style="color:#94a3b8;">«sobre mí» / «about me»</span><span style="color:#cbd5e1;">Sobre mí</span>
+          <span style="color:#94a3b8;">«contacto» / «contact»</span><span style="color:#cbd5e1;">Contacto</span>
+          <span style="color:#94a3b8;">«modo oscuro/claro» / «dark mode»</span><span style="color:#cbd5e1;">Cambiar tema</span>
+          <span style="color:#94a3b8;">«leer página» / «read page»</span><span style="color:#cbd5e1;">Leer en voz alta</span>
+          <span style="color:#94a3b8;">«silencio» / «stop reading»</span><span style="color:#cbd5e1;">Detener lectura</span>
+          <span style="color:#94a3b8;">«zoom» / «ampliar» / «zoom in»</span><span style="color:#cbd5e1;">Aumentar tamaño</span>
+          <span style="color:#94a3b8;">«normal» / «reset zoom»</span><span style="color:#cbd5e1;">Restaurar tamaño</span>
+          <span style="color:#94a3b8;">«buscar [texto]» / «search [text]»</span><span style="color:#cbd5e1;">Resaltar en página</span>
+          <span style="color:#94a3b8;">«siguiente video» / «next video»</span><span style="color:#cbd5e1;">Video siguiente</span>
+          <span style="color:#94a3b8;">«video anterior» / «prev video»</span><span style="color:#cbd5e1;">Video anterior</span>
+          <span style="color:#94a3b8;">«reproducir» / «play»</span><span style="color:#cbd5e1;">Play video visible</span>
+          <span style="color:#94a3b8;">«pantalla completa» / «fullscreen»</span><span style="color:#cbd5e1;">Fullscreen video</span>
+          <span style="color:#94a3b8;">«compartir» / «copy link»</span><span style="color:#cbd5e1;">Copiar URL</span>
+          <span style="color:#94a3b8;">«imprimir» / «print»</span><span style="color:#cbd5e1;">Imprimir página</span>
+          <span style="color:#94a3b8;">«abrir menú» / «open menu»</span><span style="color:#cbd5e1;">Toggle menú</span>
+          <span style="color:#94a3b8;">«idioma inglés» / «switch to spanish»</span><span style="color:#cbd5e1;">Cambiar idioma voz</span>
+          <span style="color:#94a3b8;">«ayuda» / «help»</span><span style="color:#cbd5e1;">Mostrar este panel</span>
+          <span style="color:#94a3b8;">«apagar» / «stop»</span><span style="color:#cbd5e1;">Desactivar IA</span>
         </div>
       </div>
       <hr style="border:none;border-top:1px solid rgba(124,58,237,0.2);margin:0;">
@@ -222,6 +244,8 @@
       zoomActive: false,
       // Search highlights
       searchHighlights: [],
+      // Voice Language (Default to Colombian Spanish, persistent)
+      voiceLang: localStorage.getItem('portfolio_voice_lang') || 'es-CO',
     };
   }
   var S = window._globalAIState;
@@ -295,6 +319,58 @@
   }
 
   // ═══════════════════════════════════════════════════════════════
+  //  LANGUAGE MANAGEMENT (Spanish <-> English)
+  // ═══════════════════════════════════════════════════════════════
+  function updateLangUI() {
+    var lang = S.voiceLang || 'es-CO';
+    var isEs = lang.startsWith('es');
+    var label = document.getElementById('voice-lang-label');
+    if (label) label.textContent = isEs ? '🇪🇸 ES' : '🇺🇸 EN';
+    var btn = document.getElementById('voice-lang-btn');
+    if (btn) btn.title = isEs ? 'Idioma actual: Español (clic para English)' : 'Current: English (click for Español)';
+
+    var esBtn = document.getElementById('lang-btn-es');
+    var enBtn = document.getElementById('lang-btn-en');
+    if (esBtn && enBtn) {
+      if (isEs) {
+        esBtn.style.background = '#7c3aed';
+        esBtn.style.color = '#ffffff';
+        enBtn.style.background = 'transparent';
+        enBtn.style.color = '#94a3b8';
+      } else {
+        enBtn.style.background = '#7c3aed';
+        enBtn.style.color = '#ffffff';
+        esBtn.style.background = 'transparent';
+        esBtn.style.color = '#94a3b8';
+      }
+    }
+  }
+
+  function setVoiceLanguage(lang) {
+    if (lang !== 'es-CO' && lang !== 'en-US') {
+      lang = (lang && lang.startsWith('en')) ? 'en-US' : 'es-CO';
+    }
+    S.voiceLang = lang;
+    localStorage.setItem('portfolio_voice_lang', lang);
+    updateLangUI();
+    var isEs = lang === 'es-CO';
+    showToast(isEs ? 'Idioma de voz: Español 🇪🇸' : 'Voice language: English 🇺🇸', isEs ? '🇪🇸' : '🇺🇸', 2500);
+    if (S.isListening || S.active) {
+      stopVoice();
+      setTimeout(function() {
+        if (S.active || localStorage.getItem('portfolio_ai_active') === '1') {
+          startVoice();
+        }
+      }, 250);
+    }
+  }
+
+  function toggleVoiceLanguage() {
+    var nextLang = (S.voiceLang === 'es-CO') ? 'en-US' : 'es-CO';
+    setVoiceLanguage(nextLang);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
   //  UPDATE UI — syncs DOM buttons and preview with state
   // ═══════════════════════════════════════════════════════════════
   function updateUI() {
@@ -303,6 +379,8 @@
     var webcamBox = document.getElementById('global-webcam-container');
     var cursor = document.getElementById('global-virtual-cursor');
     if (!btn || !btnText) return;
+
+    updateLangUI();
 
     if (S.active) {
       btnText.textContent = 'IA Encendida';
@@ -408,11 +486,11 @@
     }
     var text = mainContent.innerText.substring(0, 3000);
     var utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'es-CO';
+    utterance.lang = (S.voiceLang && S.voiceLang.startsWith('en')) ? 'en-US' : 'es-CO';
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
-    utterance.onstart = function() { S.ttsActive = true; showToast('Leyendo contenido...', '📖', 2000); };
-    utterance.onend = function() { S.ttsActive = false; showToast('Lectura finalizada', '✅', 1500); };
+    utterance.onstart = function() { S.ttsActive = true; showToast(S.voiceLang === 'en-US' ? 'Reading content aloud...' : 'Leyendo contenido...', '📖', 2000); };
+    utterance.onend = function() { S.ttsActive = false; showToast(S.voiceLang === 'en-US' ? 'Finished reading' : 'Lectura finalizada', '✅', 1500); };
     utterance.onerror = function() { S.ttsActive = false; };
     window.speechSynthesis.speak(utterance);
   }
@@ -576,13 +654,17 @@
 
     try {
       var rec = new SR();
-      rec.lang = navigator.language || 'es-419';
+      var activeLang = S.voiceLang || localStorage.getItem('portfolio_voice_lang') || 'es-CO';
+      rec.lang = activeLang;
       rec.continuous = false;
       rec.interimResults = true;
       rec.maxAlternatives = 1;
       S.recognition = rec;
 
-      rec.onstart = function() { S.isListening = true; setVoiceText('Escuchando comandos...'); };
+      rec.onstart = function() {
+        S.isListening = true;
+        setVoiceText(activeLang.startsWith('es') ? 'Escuchando comandos...' : 'Listening commands...');
+      };
 
       rec.onresult = function(event) {
         if (!event.results || event.results.length === 0) return;
@@ -653,60 +735,82 @@
     var now = Date.now();
     if (now - S.lastVoiceActionTime < 1300) return;
 
-    // 1. APAGAR / DETENER IA
-    var stopKeywords = ['apagar', 'detener', 'parar', 'desactivar', 'cerrar ia', 'apaga ia', 'stop'];
+    // 0. CAMBIAR IDIOMA / SWITCH VOICE LANGUAGE
+    if (text.includes('cambiar a inglés') || text.includes('cambiar a ingles') || text.includes('idioma inglés') || text.includes('idioma ingles') || text.includes('hablar en inglés') || text.includes('hablar en ingles') || text.includes('switch to english') || text.includes('english mode') || text.includes('speak english')) {
+      S.lastVoiceActionTime = now;
+      setVoiceLanguage('en-US');
+      return;
+    }
+    if (text.includes('cambiar a español') || text.includes('idioma español') || text.includes('hablar en español') || text.includes('switch to spanish') || text.includes('spanish mode') || text.includes('speak spanish')) {
+      S.lastVoiceActionTime = now;
+      setVoiceLanguage('es-CO');
+      return;
+    }
+
+    // 1. APAGAR / DETENER IA (ES & EN)
+    var stopKeywords = [
+      'apagar', 'detener', 'parar', 'desactivar', 'cerrar ia', 'apaga ia', 'apagar ia', 'detener ia',
+      'stop', 'turn off', 'shut down', 'exit', 'quit', 'disable ai', 'deactivate'
+    ];
     for (var s = 0; s < stopKeywords.length; s++) {
       if (text.includes(stopKeywords[s])) {
         S.lastVoiceActionTime = now;
-        showToast('Apagando IA...', '🛑', 2000);
+        showToast(S.voiceLang === 'en-US' ? 'Stopping AI...' : 'Apagando IA...', '🛑', 2000);
         setTimeout(stopAI, 500);
         return;
       }
     }
 
-    // 2. HELP PANEL
-    if (text.includes('ayuda') || text.includes('comandos') || text.includes('help')) {
+    // 2. HELP PANEL (ES & EN)
+    if (text.includes('ayuda') || text.includes('comandos') || text.includes('mostrar comandos') || text.includes('panel de ayuda') || text.includes('ver comandos') || text.includes('help') || text.includes('commands') || text.includes('show commands') || text.includes('help panel')) {
       S.lastVoiceActionTime = now;
       toggleHelpPanel();
       return;
     }
 
-    // 3. CLOSE HELP
-    if (text.includes('cerrar ayuda') || text.includes('cerrar panel') || (text.includes('cerrar') && S.helpOpen)) {
+    // 3. CLOSE HELP (ES & EN)
+    if (text.includes('cerrar ayuda') || text.includes('cerrar panel') || text.includes('ocultar ayuda') || text.includes('close help') || text.includes('close panel') || text.includes('hide help') || ((text.includes('cerrar') || text.includes('close')) && S.helpOpen)) {
       S.lastVoiceActionTime = now;
       closeHelpPanel();
-      showToast('Panel cerrado', '✕', 1500);
+      showToast(S.voiceLang === 'en-US' ? 'Panel closed' : 'Panel cerrado', '✕', 1500);
       return;
     }
 
-    // 4. TEXT-TO-SPEECH
-    if (text.includes('leer página') || text.includes('leer esto') || text.includes('lee la página') || text.includes('leer contenido')) {
+    // 4. TEXT-TO-SPEECH (ES & EN)
+    if (text.includes('leer página') || text.includes('leer pagina') || text.includes('leer esto') || text.includes('lee la página') || text.includes('lee la pagina') || text.includes('leer contenido') || text.includes('léeme') || text.includes('leeme') || text.includes('read page') || text.includes('read aloud') || text.includes('read this') || text.includes('read content') || text.includes('speak page')) {
       S.lastVoiceActionTime = now;
       readPageAloud();
       return;
     }
-    if (text.includes('para de leer') || text.includes('silencio') || text.includes('dejar de leer') || text.includes('cállate') || text.includes('callate')) {
+    if (text.includes('para de leer') || text.includes('silencio') || text.includes('dejar de leer') || text.includes('cállate') || text.includes('callate') || text.includes('detener lectura') || text.includes('stop reading') || text.includes('quiet') || text.includes('shut up') || text.includes('mute') || text.includes('stop speaking')) {
       S.lastVoiceActionTime = now;
       stopReading();
       return;
     }
 
-    // 5. ZOOM
-    if (text.includes('zoom') || text.includes('ampliar') || text.includes('agrandar') || text.includes('más grande')) {
+    // 5. ZOOM (ES & EN)
+    if (text.includes('zoom in') || text.includes('ampliar') || text.includes('agrandar') || text.includes('más grande') || text.includes('mas grande') || text.includes('acercar') || text.includes('enlarge') || text.includes('magnify') || text.includes('zoom')) {
       S.lastVoiceActionTime = now;
       toggleZoom(true);
       return;
     }
-    if (text.includes('normal') || text.includes('restablecer') || text.includes('restaurar') || text.includes('tamaño normal')) {
+    if (text.includes('normal') || text.includes('restablecer') || text.includes('restaurar') || text.includes('tamaño normal') || text.includes('tamano normal') || text.includes('quitar zoom') || text.includes('zoom out') || text.includes('reset zoom') || text.includes('normal size') || text.includes('reset')) {
       S.lastVoiceActionTime = now;
       toggleZoom(false);
       clearSearchHighlights();
       return;
     }
 
-    // 6. SEARCH
-    if (text.includes('buscar ')) {
-      var searchQuery = text.split('buscar ')[1];
+    // 6. SEARCH (ES & EN)
+    var searchPrefix = null;
+    if (text.includes('buscar ')) searchPrefix = 'buscar ';
+    else if (text.includes('busca ')) searchPrefix = 'busca ';
+    else if (text.includes('search ')) searchPrefix = 'search ';
+    else if (text.includes('search for ')) searchPrefix = 'search for ';
+    else if (text.includes('find ')) searchPrefix = 'find ';
+
+    if (searchPrefix) {
+      var searchQuery = text.split(searchPrefix)[1];
       if (searchQuery && searchQuery.length > 1) {
         S.lastVoiceActionTime = now;
         searchAndHighlight(searchQuery.trim());
@@ -714,87 +818,87 @@
       }
     }
 
-    // 7. VIDEO CONTROLS
-    if (text.includes('siguiente video') || text.includes('próximo video') || text.includes('next video')) {
+    // 7. VIDEO CONTROLS (ES & EN)
+    if (text.includes('siguiente video') || text.includes('próximo video') || text.includes('proximo video') || text.includes('otro video') || text.includes('next video') || text.includes('next')) {
       S.lastVoiceActionTime = now; scrollToVideo(1); return;
     }
-    if (text.includes('video anterior') || text.includes('anterior video') || text.includes('previous video')) {
+    if (text.includes('video anterior') || text.includes('anterior video') || text.includes('atrás video') || text.includes('previous video') || text.includes('prev video') || text.includes('last video')) {
       S.lastVoiceActionTime = now; scrollToVideo(-1); return;
     }
-    if (text.includes('reproducir') || text.includes('play') || text.includes('reproducir video')) {
+    if (text.includes('reproducir') || text.includes('play') || text.includes('reproducir video') || text.includes('play video') || text.includes('pausar') || text.includes('pause')) {
       S.lastVoiceActionTime = now; playVisibleVideo(); return;
     }
-    if (text.includes('pantalla completa') || text.includes('fullscreen') || text.includes('pantalla grande')) {
+    if (text.includes('pantalla completa') || text.includes('pantalla grande') || text.includes('maximizar') || text.includes('fullscreen') || text.includes('full screen')) {
       S.lastVoiceActionTime = now; fullscreenVideo(); return;
     }
 
-    // 8. SCROLL ARRIBA / ABAJO
-    if (text.includes('subir') || text.includes('sube') || text.includes('arriba') || text.includes('scroll arriba')) {
+    // 8. SCROLL ARRIBA / ABAJO (ES & EN + phonetic fallbacks)
+    if (text.includes('subir') || text.includes('sube') || text.includes('arriba') || text.includes('scroll arriba') || text.includes('desplazar arriba') || text.includes('scroll up') || text.includes('page up') || text.includes('go up') || text.includes('super') || text.includes('so beer')) {
       S.lastVoiceActionTime = now;
       window.scrollBy({ top: -380, behavior: 'smooth' });
-      showToast('Subiendo página', '⬆️', 1500);
+      showToast(S.voiceLang === 'en-US' ? 'Scrolling up' : 'Subiendo página', '⬆️', 1500);
       return;
     }
-    if (text.includes('bajar') || text.includes('baja') || text.includes('abajo') || text.includes('scroll abajo')) {
+    if (text.includes('bajar') || text.includes('baja') || text.includes('abajo') || text.includes('scroll abajo') || text.includes('desplazar abajo') || text.includes('scroll down') || text.includes('page down') || text.includes('go down') || text.includes('badger')) {
       S.lastVoiceActionTime = now;
       window.scrollBy({ top: 380, behavior: 'smooth' });
-      showToast('Bajando página', '⬇️', 1500);
+      showToast(S.voiceLang === 'en-US' ? 'Scrolling down' : 'Bajando página', '⬇️', 1500);
       return;
     }
 
-    // 9. SCROLL EXTREMES
-    if (text.includes('ir arriba') || text.includes('ir al inicio') || text.includes('inicio de página') || text.includes('al principio')) {
+    // 9. SCROLL EXTREMES (ES & EN)
+    if (text.includes('ir arriba') || text.includes('ir al inicio') || text.includes('inicio de página') || text.includes('inicio de pagina') || text.includes('al principio') || text.includes('subir todo') || text.includes('scroll to top') || text.includes('go to top') || text.includes('top of page') || text.includes('scroll top')) {
       S.lastVoiceActionTime = now;
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      showToast('Ir al inicio', '⬆️', 1500);
+      showToast(S.voiceLang === 'en-US' ? 'Back to top' : 'Ir al inicio', '⬆️', 1500);
       return;
     }
-    if (text.includes('ir abajo') || text.includes('ir al final') || text.includes('final de página') || text.includes('al final')) {
+    if (text.includes('ir abajo') || text.includes('ir al final') || text.includes('final de página') || text.includes('final de pagina') || text.includes('al final') || text.includes('bajar todo') || text.includes('scroll to bottom') || text.includes('go to bottom') || text.includes('bottom of page') || text.includes('scroll bottom')) {
       S.lastVoiceActionTime = now;
       window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
-      showToast('Ir al final', '⬇️', 1500);
+      showToast(S.voiceLang === 'en-US' ? 'Scroll to bottom' : 'Ir al final', '⬇️', 1500);
       return;
     }
 
-    // 10. CAMBIO DE TEMA
-    if (text.includes('modo oscuro') || text.includes('modo claro') || text.includes('tema oscuro') || text.includes('tema claro') || text.includes('cambiar tema')) {
+    // 10. CAMBIO DE TEMA (ES & EN)
+    if (text.includes('modo oscuro') || text.includes('modo claro') || text.includes('tema oscuro') || text.includes('tema claro') || text.includes('cambiar tema') || text.includes('dark mode') || text.includes('light mode') || text.includes('switch theme') || text.includes('toggle theme') || text.includes('change theme')) {
       S.lastVoiceActionTime = now;
       var themeBtn = document.querySelector('theme-toggle button');
-      if (themeBtn) { themeBtn.click(); showToast('Tema cambiado', '🌓', 1500); }
+      if (themeBtn) { themeBtn.click(); showToast(S.voiceLang === 'en-US' ? 'Theme toggled' : 'Tema cambiado', '🌓', 1500); }
       return;
     }
 
-    // 11. SHARE / COPY LINK
-    if (text.includes('compartir') || text.includes('copiar enlace') || text.includes('copiar link') || text.includes('share')) {
+    // 11. SHARE / COPY LINK (ES & EN)
+    if (text.includes('compartir') || text.includes('copiar enlace') || text.includes('copiar link') || text.includes('share') || text.includes('copy link') || text.includes('copy url') || text.includes('share page')) {
       S.lastVoiceActionTime = now; copyPageLink(); return;
     }
 
-    // 12. PRINT
-    if (text.includes('imprimir') || text.includes('print') || text.includes('descargar página')) {
+    // 12. PRINT (ES & EN)
+    if (text.includes('imprimir') || text.includes('print') || text.includes('descargar página') || text.includes('descargar pagina') || text.includes('print page')) {
       S.lastVoiceActionTime = now;
-      showToast('Abriendo impresión...', '🖨️', 2000);
+      showToast(S.voiceLang === 'en-US' ? 'Opening print dialog...' : 'Abriendo impresión...', '🖨️', 2000);
       setTimeout(function() { window.print(); }, 500);
       return;
     }
 
-    // 13. MOBILE MENU
-    if (text.includes('abrir menú') || text.includes('abrir menu') || text.includes('mostrar menú')) {
+    // 13. MOBILE MENU (ES & EN)
+    if (text.includes('abrir menú') || text.includes('abrir menu') || text.includes('mostrar menú') || text.includes('mostrar menu') || text.includes('open menu') || text.includes('show menu') || text.includes('toggle menu')) {
       S.lastVoiceActionTime = now; toggleMobileMenu(); return;
     }
-    if (text.includes('cerrar menú') || text.includes('cerrar menu') || text.includes('ocultar menú')) {
+    if (text.includes('cerrar menú') || text.includes('cerrar menu') || text.includes('ocultar menú') || text.includes('ocultar menu') || text.includes('close menu') || text.includes('hide menu')) {
       S.lastVoiceActionTime = now; toggleMobileMenu(); return;
     }
 
-    // 14. NAVEGACIÓN POR RUTAS
+    // 14. NAVEGACIÓN POR RUTAS (ES & EN)
     var navMap = [
-      { keys: ['inicio', 'home', 'hogar', 'portada', 'principal'], url: '/' },
-      { keys: ['servicio', 'servicios'], url: '/services/' },
-      { keys: ['trabajo', 'trabajos', 'trabajar', 'proyecto', 'proyectos', 'portafolio'], url: '/work/' },
-      { keys: ['curso', 'cursos', 'react', 'curso react', 'cursos react'], url: '/work/cursos-react/' },
-      { keys: ['tienda', 'productos', 'shop', 'comercio', 'comprar'], url: '/shop/' },
-      { keys: ['sobre mi', 'sobre mí', 'acerca', 'acerca de', 'perfil', 'biografia', 'biografía'], url: '/about/' },
-      { keys: ['video', 'gesto', 'gestos', 'interactivo'], url: '/gesture-video/' },
-      { keys: ['contacto', 'contactar', 'mensaje', 'escribir'], url: '#contact' },
+      { keys: ['inicio', 'home', 'hogar', 'portada', 'principal', 'start page', 'main page'], url: '/', label: 'Inicio / Home' },
+      { keys: ['servicio', 'servicios', 'service', 'services', 'what i do'], url: '/services/', label: 'Servicios' },
+      { keys: ['trabajo', 'trabajos', 'trabajar', 'proyecto', 'proyectos', 'portafolio', 'work', 'projects', 'portfolio'], url: '/work/', label: 'Proyectos' },
+      { keys: ['curso', 'cursos', 'react', 'curso react', 'cursos react', 'course', 'courses', 'react course'], url: '/work/cursos-react/', label: 'Cursos React' },
+      { keys: ['tienda', 'productos', 'shop', 'comercio', 'comprar', 'store', 'products'], url: '/shop/', label: 'Tienda' },
+      { keys: ['sobre mi', 'sobre mí', 'acerca', 'acerca de', 'perfil', 'biografia', 'biografía', 'about', 'about me'], url: '/about/', label: 'Sobre mí' },
+      { keys: ['video', 'gesto', 'gestos', 'interactivo', 'gesture', 'gestures', 'interactive'], url: '/gesture-video/', label: 'Gestos Video' },
+      { keys: ['contacto', 'contactar', 'mensaje', 'escribir', 'contact', 'contact me', 'email'], url: '#contact', label: 'Contacto' },
     ];
 
     for (var n = 0; n < navMap.length; n++) {
@@ -803,7 +907,7 @@
         var keyword = item.keys[k];
         if (text.includes(keyword)) {
           S.lastVoiceActionTime = now;
-          showToast('Navegando a ' + keyword + '...', '🚀', 2000);
+          showToast((S.voiceLang === 'en-US' ? 'Navigating to ' : 'Navegando a ') + (item.label || keyword) + '...', '🚀', 2000);
           var targetDest = item.url;
           setTimeout(function() { navigateSmooth(targetDest); }, 120);
           return;
@@ -1294,6 +1398,28 @@
           }).catch(function() { window.prompt('Copia esta ruta:', url); });
         } else { window.prompt('Copia esta ruta:', url); }
       });
+    }
+
+    // Voice language button binding
+    var voiceLangBtn = document.getElementById('voice-lang-btn');
+    if (voiceLangBtn && !voiceLangBtn.dataset.bound) {
+      voiceLangBtn.dataset.bound = 'true';
+      voiceLangBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleVoiceLanguage();
+      });
+    }
+
+    // Help panel language toggle buttons
+    var langBtnEs = document.getElementById('lang-btn-es');
+    if (langBtnEs && !langBtnEs.dataset.bound) {
+      langBtnEs.dataset.bound = 'true';
+      langBtnEs.addEventListener('click', function() { setVoiceLanguage('es-CO'); });
+    }
+    var langBtnEn = document.getElementById('lang-btn-en');
+    if (langBtnEn && !langBtnEn.dataset.bound) {
+      langBtnEn.dataset.bound = 'true';
+      langBtnEn.addEventListener('click', function() { setVoiceLanguage('en-US'); });
     }
 
     // Help panel bindings
