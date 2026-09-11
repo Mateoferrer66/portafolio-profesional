@@ -99,7 +99,7 @@ const chatWidgetClass = shouldStack
 		<div id="scroll-progress"></div>
 		<!-- 3D Metaverse Background (replaces static images, persists across all page transitions) -->
 		<div id="three-d-bg-wrap" transition:persist="three-d-background" style="position:fixed;inset:0;z-index:0;pointer-events:none;">
-			<ThreeDBackground client:load />
+			<ThreeDBackground client:idle />
 		</div>
 		<div class="stack gap-20 backgrounds">
 			<Nav />
@@ -109,7 +109,7 @@ const chatWidgetClass = shouldStack
 
 		<div id="floating-buttons" class:list={[{ stacked: shouldStack }]}>
 			<WhatsAppButton />
-			<ChatWidget client:load className={chatWidgetClass} />
+			<ChatWidget client:idle className={chatWidgetClass} />
 		</div>
 
 		<ScrollReveal />

@@ -29,6 +29,7 @@ function removeLargeVideoPlugin() {
 // https://astro.build/config
 export default defineConfig({
   site: 'https://mateo-ferrer.pages.dev/',
+  compressHTML: true,
   integrations: [
     react(),
     sitemap(),
@@ -46,9 +47,12 @@ export default defineConfig({
     build: {
       rollupOptions: {
         output: {
-          // Automatic chunk splitting is usually sufficient when using React.lazy
+          manualChunks: {
+            'three-vendor': ['three', '@react-three/fiber', '@react-three/drei'],
+            'react-vendor': ['react', 'react-dom'],
+          }
         }
       }
     }
   }
-});
+});

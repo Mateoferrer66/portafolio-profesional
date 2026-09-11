@@ -2,6 +2,7 @@
 // GlobalControls.astro
 // Voice + Gesture AI controls that persist across page navigations.
 // Uses MediaPipe Hands for gesture detection and Web Speech API for voice.
+// v2.0: Expanded commands, smoother cursor, help panel
 ---
 
 <div id="global-ai-controls" transition:persist="global-ai-controls" style="position:fixed;z-index:12000;inset:0;pointer-events:none;">
@@ -49,11 +50,15 @@
     </div>
   </div>
 
-  <!-- Virtual Cursor Global -->
-  <div id="global-virtual-cursor" style="position:fixed;pointer-events:none;z-index:20000;transform:translate(-50%,-50%);display:none;">
-    <div style="width:36px;height:36px;border:2px solid #a855f7;border-radius:50%;animation:cursorPulse 1.5s ease-in-out infinite;box-shadow:0 0 15px rgba(168,85,247,0.6);"></div>
+  <!-- Virtual Cursor Global — now with trail elements -->
+  <div id="global-virtual-cursor" style="position:fixed;pointer-events:none;z-index:20000;transform:translate(-50%,-50%);display:none;will-change:left,top,transform;">
+    <div id="cursor-ring" style="width:36px;height:36px;border:2px solid #a855f7;border-radius:50%;animation:cursorPulse 1.5s ease-in-out infinite;box-shadow:0 0 15px rgba(168,85,247,0.6);transition:transform 0.1s ease;"></div>
     <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:8px;height:8px;background:#4ade80;border-radius:50%;box-shadow:0 0 8px #4ade80;"></div>
   </div>
+  <!-- Cursor trail dots -->
+  <div id="cursor-trail-0" class="cursor-trail-dot" style="position:fixed;pointer-events:none;z-index:19998;display:none;width:6px;height:6px;background:rgba(168,85,247,0.4);border-radius:50%;will-change:left,top;"></div>
+  <div id="cursor-trail-1" class="cursor-trail-dot" style="position:fixed;pointer-events:none;z-index:19997;display:none;width:4px;height:4px;background:rgba(168,85,247,0.25);border-radius:50%;will-change:left,top;"></div>
+  <div id="cursor-trail-2" class="cursor-trail-dot" style="position:fixed;pointer-events:none;z-index:19996;display:none;width:3px;height:3px;background:rgba(168,85,247,0.15);border-radius:50%;will-change:left,top;"></div>
   
   <!-- Hidden link for seamless ViewTransitions navigation -->
   <a id="global-gesture-nav-link" href="#" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden;z-index:-1;"></a>
@@ -63,6 +68,58 @@
     <span id="ai-toast-icon">ℹ️</span>
     <span id="ai-toast-msg">Mensaje</span>
   </div>
+
+  <!-- Help Panel Modal -->
+  <div id="ai-help-panel" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:min(520px,90vw);max-height:80vh;overflow-y:auto;background:rgba(10,8,20,0.96);border:1px solid rgba(124,58,237,0.5);border-radius:20px;padding:28px;z-index:20002;pointer-events:auto;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:#e2e8f0;box-shadow:0 25px 60px rgba(0,0,0,0.7),0 0 40px rgba(124,58,237,0.15);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <h3 style="margin:0;font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,#a855f7,#4ade80);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">🤖 Comandos IA</h3>
+      <button id="help-close-btn" type="button" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#e2e8f0;padding:4px 12px;cursor:pointer;font-size:0.8rem;transition:background 0.2s;">✕ Cerrar</button>
+    </div>
+    <div style="display:grid;gap:16px;">
+      <div>
+        <h4 style="color:#a855f7;font-size:0.8rem;font-weight:700;margin:0 0 8px;text-transform:uppercase;letter-spacing:0.05em;">🎙️ Comandos de Voz</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:0.72rem;">
+          <span style="color:#94a3b8;">«subir» / «bajar»</span><span style="color:#cbd5e1;">Scroll arriba/abajo</span>
+          <span style="color:#94a3b8;">«ir arriba» / «ir abajo»</span><span style="color:#cbd5e1;">Ir al inicio/final</span>
+          <span style="color:#94a3b8;">«inicio» / «servicios»...</span><span style="color:#cbd5e1;">Navegar entre páginas</span>
+          <span style="color:#94a3b8;">«modo oscuro» / «claro»</span><span style="color:#cbd5e1;">Cambiar tema</span>
+          <span style="color:#94a3b8;">«leer página»</span><span style="color:#cbd5e1;">Leer contenido en voz alta</span>
+          <span style="color:#94a3b8;">«silencio» / «para de leer»</span><span style="color:#cbd5e1;">Detener lectura</span>
+          <span style="color:#94a3b8;">«zoom» / «ampliar»</span><span style="color:#cbd5e1;">Aumentar tamaño de texto</span>
+          <span style="color:#94a3b8;">«normal» / «restablecer»</span><span style="color:#cbd5e1;">Restaurar tamaño</span>
+          <span style="color:#94a3b8;">«buscar [texto]»</span><span style="color:#cbd5e1;">Resaltar texto en página</span>
+          <span style="color:#94a3b8;">«siguiente video»</span><span style="color:#cbd5e1;">Ir al siguiente video</span>
+          <span style="color:#94a3b8;">«video anterior»</span><span style="color:#cbd5e1;">Ir al video anterior</span>
+          <span style="color:#94a3b8;">«reproducir» / «play»</span><span style="color:#cbd5e1;">Reproducir video visible</span>
+          <span style="color:#94a3b8;">«pantalla completa»</span><span style="color:#cbd5e1;">Fullscreen video actual</span>
+          <span style="color:#94a3b8;">«compartir» / «copiar enlace»</span><span style="color:#cbd5e1;">Copiar URL</span>
+          <span style="color:#94a3b8;">«imprimir»</span><span style="color:#cbd5e1;">Imprimir página</span>
+          <span style="color:#94a3b8;">«abrir menú» / «cerrar menú»</span><span style="color:#cbd5e1;">Toggle navegación</span>
+          <span style="color:#94a3b8;">«ayuda» / «comandos»</span><span style="color:#cbd5e1;">Mostrar este panel</span>
+          <span style="color:#94a3b8;">«apagar» / «detener»</span><span style="color:#cbd5e1;">Desactivar IA</span>
+        </div>
+      </div>
+      <hr style="border:none;border-top:1px solid rgba(124,58,237,0.2);margin:0;">
+      <div>
+        <h4 style="color:#4ade80;font-size:0.8rem;font-weight:700;margin:0 0 8px;text-transform:uppercase;letter-spacing:0.05em;">🖐️ Gestos con la Mano</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:0.72rem;">
+          <span style="color:#94a3b8;">✋ Mano abierta</span><span style="color:#cbd5e1;">Scroll hacia arriba</span>
+          <span style="color:#94a3b8;">✊ Puño cerrado</span><span style="color:#cbd5e1;">Scroll hacia abajo</span>
+          <span style="color:#94a3b8;">🤏 Pinch (pulgar+índice)</span><span style="color:#cbd5e1;">Clic en elemento</span>
+          <span style="color:#94a3b8;">✌️ Victoria / Peace</span><span style="color:#cbd5e1;">Zoom in / Ampliar</span>
+          <span style="color:#94a3b8;">🤟 Rock (pulgar+índice+meñique)</span><span style="color:#cbd5e1;">Ir a página de inicio</span>
+          <span style="color:#94a3b8;">👆 Solo índice arriba</span><span style="color:#cbd5e1;">Ir al inicio de la página</span>
+          <span style="color:#94a3b8;">👍 Thumbs Up</span><span style="color:#cbd5e1;">Compartir / Copiar enlace</span>
+          <span style="color:#94a3b8;">👋→ Swipe derecha</span><span style="color:#cbd5e1;">Siguiente página</span>
+          <span style="color:#94a3b8;">👋← Swipe izquierda</span><span style="color:#cbd5e1;">Página anterior</span>
+          <span style="color:#94a3b8;">🤏🤏 Doble Pinch</span><span style="color:#cbd5e1;">Abrir/cerrar ayuda</span>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:14px;text-align:center;font-size:0.65rem;color:#64748b;">Di «cerrar» o haz doble pinch para cerrar este panel</div>
+  </div>
+  <!-- Help panel backdrop -->
+  <div id="ai-help-backdrop" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:20001;pointer-events:auto;"></div>
 </div>
 
 <style is:global>
@@ -85,6 +142,26 @@
   @keyframes rippleAnim {
     0% { width: 20px; height: 20px; opacity: 1; }
     100% { width: 80px; height: 80px; opacity: 0; }
+  }
+
+  /* Search highlight */
+  :global(.ai-search-highlight) {
+    background: rgba(168, 85, 247, 0.35) !important;
+    color: #fff !important;
+    border-radius: 3px;
+    padding: 1px 3px;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+    animation: highlightPulse 2s ease-in-out infinite;
+  }
+  @keyframes highlightPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(168, 85, 247, 0.4); }
+    50% { box-shadow: 0 0 16px rgba(168, 85, 247, 0.7); }
+  }
+
+  /* Zoom mode */
+  :global(.ai-zoom-active) {
+    font-size: 120% !important;
+    transition: font-size 0.4s ease;
   }
 </style>
 
@@ -112,14 +189,39 @@
       isListening: false,
       voiceRestartTimer: null,
       lastVoiceActionTime: 0,
+      // Cursor: smooth tracking state
       cursorX: window.innerWidth / 2,
       cursorY: window.innerHeight / 2,
       targetCursorX: window.innerWidth / 2,
       targetCursorY: window.innerHeight / 2,
+      // Rolling average buffer (3 positions)
+      posBuffer: [],
+      // Velocity tracking
+      prevTargetX: window.innerWidth / 2,
+      prevTargetY: window.innerHeight / 2,
+      velocityX: 0,
+      velocityY: 0,
+      // Trail positions
+      trailPositions: [{x: 0, y: 0}, {x: 0, y: 0}, {x: 0, y: 0}],
+      // Gesture cooldowns
       pinchCooldown: false,
       scrollCooldown: false,
       toastTimer: null,
       lastGesture: 'none',
+      // Swipe detection
+      prevWristX: null,
+      swipeCooldown: false,
+      // Double pinch detection
+      lastPinchTime: 0,
+      doublePinchCooldown: false,
+      // Help panel
+      helpOpen: false,
+      // TTS
+      ttsActive: false,
+      // Zoom
+      zoomActive: false,
+      // Search highlights
+      searchHighlights: [],
     };
   }
   var S = window._globalAIState;
@@ -171,6 +273,28 @@
   }
 
   // ═══════════════════════════════════════════════════════════════
+  //  HELP PANEL
+  // ═══════════════════════════════════════════════════════════════
+  function toggleHelpPanel() {
+    S.helpOpen = !S.helpOpen;
+    var panel = document.getElementById('ai-help-panel');
+    var backdrop = document.getElementById('ai-help-backdrop');
+    if (panel) panel.style.display = S.helpOpen ? 'block' : 'none';
+    if (backdrop) backdrop.style.display = S.helpOpen ? 'block' : 'none';
+    if (S.helpOpen) {
+      showToast('Panel de ayuda abierto', '📖', 1500);
+    }
+  }
+
+  function closeHelpPanel() {
+    S.helpOpen = false;
+    var panel = document.getElementById('ai-help-panel');
+    var backdrop = document.getElementById('ai-help-backdrop');
+    if (panel) panel.style.display = 'none';
+    if (backdrop) backdrop.style.display = 'none';
+  }
+
+  // ═══════════════════════════════════════════════════════════════
   //  UPDATE UI — syncs DOM buttons and preview with state
   // ═══════════════════════════════════════════════════════════════
   function updateUI() {
@@ -196,6 +320,11 @@
       }
       if (cursor) {
         cursor.style.display = 'none';
+      }
+      // Hide trail dots
+      for (var i = 0; i < 3; i++) {
+        var dot = document.getElementById('cursor-trail-' + i);
+        if (dot) dot.style.display = 'none';
       }
     }
   }
@@ -229,7 +358,6 @@
 
     console.log('[AI Nav] Moving from', currentPath, 'to', cleanUrl);
 
-    // 1. Search for real rendered navigation link in the DOM to trigger Astro ViewTransitions smoothly
     var allLinks = document.querySelectorAll('nav a[href], header a[href], a[href]');
     for (var i = 0; i < allLinks.length; i++) {
       var a = allLinks[i];
@@ -239,7 +367,6 @@
         if (normH === targetPath && a.target !== '_blank') {
           console.log('[AI Nav] Clicking real DOM link:', href);
           a.click();
-          // Watchdog: If URL didn't change after 400ms, force direct navigation!
           setTimeout(function() {
             var nowP = window.location.pathname.replace(/\/$/, '') || '/';
             if (nowP !== targetPath) {
@@ -252,7 +379,6 @@
       }
     }
 
-    // 2. Direct browser navigation fallback
     console.log('[AI Nav] Direct redirect to:', cleanUrl);
     window.location.href = cleanUrl;
   }
@@ -266,6 +392,173 @@
   }
 
   // ═══════════════════════════════════════════════════════════════
+  //  EXPANDED VOICE FEATURES: TTS, Zoom, Search, Video Control
+  // ═══════════════════════════════════════════════════════════════
+
+  function readPageAloud() {
+    if (!window.speechSynthesis) {
+      showToast('Tu navegador no soporta lectura en voz alta', '🔇', 3000);
+      return;
+    }
+    window.speechSynthesis.cancel();
+    var mainContent = document.querySelector('main') || document.querySelector('.content') || document.querySelector('.stack');
+    if (!mainContent) {
+      showToast('No hay contenido para leer', '📄', 2000);
+      return;
+    }
+    var text = mainContent.innerText.substring(0, 3000);
+    var utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-CO';
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+    utterance.onstart = function() { S.ttsActive = true; showToast('Leyendo contenido...', '📖', 2000); };
+    utterance.onend = function() { S.ttsActive = false; showToast('Lectura finalizada', '✅', 1500); };
+    utterance.onerror = function() { S.ttsActive = false; };
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function stopReading() {
+    if (window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      S.ttsActive = false;
+      showToast('Lectura detenida', '🔇', 1500);
+    }
+  }
+
+  function toggleZoom(enable) {
+    var body = document.body;
+    if (enable) {
+      body.classList.add('ai-zoom-active');
+      S.zoomActive = true;
+      showToast('Zoom activado (+20%)', '🔍', 2000);
+    } else {
+      body.classList.remove('ai-zoom-active');
+      S.zoomActive = false;
+      showToast('Tamaño normal restaurado', '🔍', 1500);
+    }
+  }
+
+  function searchAndHighlight(query) {
+    clearSearchHighlights();
+    if (!query || query.length < 2) return;
+    var mainContent = document.querySelector('main') || document.body;
+    var walker = document.createTreeWalker(mainContent, NodeFilter.SHOW_TEXT, null, false);
+    var matches = 0;
+    var firstMatch = null;
+    var textNodes = [];
+    while (walker.nextNode()) { textNodes.push(walker.currentNode); }
+    for (var i = 0; i < textNodes.length; i++) {
+      var node = textNodes[i];
+      var text = node.textContent;
+      var idx = text.toLowerCase().indexOf(query.toLowerCase());
+      if (idx !== -1 && node.parentNode && !node.parentNode.classList.contains('ai-search-highlight')) {
+        var span = document.createElement('span');
+        span.className = 'ai-search-highlight';
+        var before = text.substring(0, idx);
+        var match = text.substring(idx, idx + query.length);
+        var after = text.substring(idx + query.length);
+        var parent = node.parentNode;
+        if (before) parent.insertBefore(document.createTextNode(before), node);
+        span.textContent = match;
+        parent.insertBefore(span, node);
+        if (after) parent.insertBefore(document.createTextNode(after), node);
+        parent.removeChild(node);
+        S.searchHighlights.push(span);
+        matches++;
+        if (!firstMatch) firstMatch = span;
+        if (matches >= 20) break;
+      }
+    }
+    if (firstMatch) {
+      firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      showToast(matches + ' resultado' + (matches > 1 ? 's' : '') + ' encontrado' + (matches > 1 ? 's' : ''), '🔍', 2500);
+    } else {
+      showToast('No se encontró: "' + query + '"', '❌', 2000);
+    }
+  }
+
+  function clearSearchHighlights() {
+    for (var i = 0; i < S.searchHighlights.length; i++) {
+      var span = S.searchHighlights[i];
+      if (span.parentNode) {
+        var textNode = document.createTextNode(span.textContent);
+        span.parentNode.replaceChild(textNode, span);
+      }
+    }
+    S.searchHighlights = [];
+  }
+
+  function getVideoElements() {
+    return document.querySelectorAll('.lite-youtube, iframe[src*="youtube"], iframe[src*="youtu.be"], video');
+  }
+
+  function getVisibleVideoIndex() {
+    var videos = getVideoElements();
+    var viewportCenter = window.innerHeight / 2;
+    var closestIdx = -1;
+    var closestDist = Infinity;
+    for (var i = 0; i < videos.length; i++) {
+      var rect = videos[i].getBoundingClientRect();
+      var center = rect.top + rect.height / 2;
+      var dist = Math.abs(center - viewportCenter);
+      if (dist < closestDist) { closestDist = dist; closestIdx = i; }
+    }
+    return closestIdx;
+  }
+
+  function scrollToVideo(direction) {
+    var videos = getVideoElements();
+    if (videos.length === 0) { showToast('No hay videos en esta página', '📹', 2000); return; }
+    var currentIdx = getVisibleVideoIndex();
+    var nextIdx = Math.max(0, Math.min(videos.length - 1, currentIdx + direction));
+    videos[nextIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    showToast('Video ' + (nextIdx + 1) + ' de ' + videos.length, '📹', 1500);
+  }
+
+  function playVisibleVideo() {
+    var videos = getVideoElements();
+    var idx = getVisibleVideoIndex();
+    if (idx < 0) { showToast('No hay videos en esta página', '📹', 2000); return; }
+    var el = videos[idx];
+    if (el.classList && el.classList.contains('lite-youtube')) {
+      el.click();
+      showToast('Cargando video...', '▶️', 2000);
+    } else if (el.tagName === 'VIDEO') {
+      el.play();
+      showToast('Reproduciendo video', '▶️', 1500);
+    } else {
+      showToast('Video en reproducción', '▶️', 1500);
+    }
+  }
+
+  function fullscreenVideo() {
+    var videos = getVideoElements();
+    var idx = getVisibleVideoIndex();
+    if (idx < 0) return;
+    var el = videos[idx];
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    showToast('Pantalla completa', '🖥️', 1500);
+  }
+
+  function copyPageLink() {
+    var url = window.location.href;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function() {
+        showToast('¡Enlace copiado! ' + url, '🔗', 3000);
+      }).catch(function() { showToast('Enlace: ' + url, '🔗', 4000); });
+    } else {
+      showToast('Enlace: ' + url, '🔗', 4000);
+    }
+  }
+
+  function toggleMobileMenu() {
+    var menuToggle = document.querySelector('.menu-toggle') || document.querySelector('[aria-label="Menu"]') || document.querySelector('nav button') || document.querySelector('.hamburger');
+    if (menuToggle) { menuToggle.click(); showToast('Menú toggled', '📱', 1500); }
+    else { showToast('No se encontró el menú', '❌', 2000); }
+  }
+
+  // ═══════════════════════════════════════════════════════════════
   //  VOICE RECOGNITION (Web Speech API)
   // ═══════════════════════════════════════════════════════════════
   function startVoice() {
@@ -276,87 +569,57 @@
       return;
     }
 
-    // Clean up previous instance first to avoid InvalidStateError
     if (S.recognition) {
-      try {
-        S.recognition.onstart = null;
-        S.recognition.onresult = null;
-        S.recognition.onerror = null;
-        S.recognition.onend = null;
-        S.recognition.abort();
-      } catch(e) {}
+      try { S.recognition.onstart = null; S.recognition.onresult = null; S.recognition.onerror = null; S.recognition.onend = null; S.recognition.abort(); } catch(e) {}
       S.recognition = null;
     }
 
     try {
       var rec = new SR();
-      // Use regional language with fallback
       rec.lang = navigator.language || 'es-419';
-      // continuous: false is CRITICAL to prevent Google Cloud speech WebSocket timeouts
-      // Each utterance is captured crisply and onend immediately loops to the next utterance
       rec.continuous = false;
       rec.interimResults = true;
       rec.maxAlternatives = 1;
       S.recognition = rec;
 
-      rec.onstart = function() {
-        S.isListening = true;
-        setVoiceText('Escuchando comandos...');
-        console.log('[AI Voice] Recognition active.');
-      };
+      rec.onstart = function() { S.isListening = true; setVoiceText('Escuchando comandos...'); };
 
       rec.onresult = function(event) {
         if (!event.results || event.results.length === 0) return;
-        
         var latestResult = event.results[event.results.length - 1];
         var transcript = latestResult[0].transcript.toLowerCase().trim();
         var isFinal = latestResult.isFinal;
-        
         setVoiceText('🗣️ "' + transcript + '"');
         processVoiceCommand(transcript, isFinal);
       };
 
       rec.onerror = function(event) {
         var err = event.error;
-        // Silence detection and abort are standard lifecycle events, not real errors
-        if (err === 'no-speech' || err === 'aborted') {
-          return;
-        }
+        if (err === 'no-speech' || err === 'aborted') return;
         console.warn('[AI Voice] Recognition event error:', err);
-
         if (err === 'not-allowed' || err === 'service-not-allowed') {
           S.isListening = false;
           setVoiceText('Micrófono bloqueado 🔒');
-          showToast('Permiso de micrófono no otorgado. Habilítalo en el candado 🔒 de tu navegador.', '🎙️', 5000);
+          showToast('Permiso de micrófono no otorgado.', '🎙️', 5000);
           return;
         }
-        if (err === 'audio-capture') {
-          setVoiceText('Micrófono no detectado');
-          showToast('El micrófono está ocupado o desconectado.', '🎙️', 4000);
-          return;
-        }
+        if (err === 'audio-capture') { setVoiceText('Micrófono no detectado'); return; }
         if (err === 'network') {
           S.networkErrors = (S.networkErrors || 0) + 1;
           var braveTip = document.getElementById('brave-tip');
           if (isBraveBrowser) {
             setVoiceText('Brave: activa voz en ajustes ⚙️');
             if (braveTip) braveTip.style.display = 'flex';
-            if (S.networkErrors === 1) {
-              showToast('En Brave: activa "Usar los servicios de Google para reconocimiento de voz" en brave://settings/extensions o usa Google Chrome.', '🦁', 8000);
-            }
+            if (S.networkErrors === 1) showToast('En Brave: activa voz en brave://settings/extensions o usa Chrome.', '🦁', 8000);
           } else if (S.networkErrors >= 3) {
             setVoiceText('Voz: usa Google Chrome');
             if (braveTip) braveTip.style.display = 'flex';
-            showToast('El navegador bloqueó la conexión de voz. Abre el sitio en Google Chrome o Edge.', '🎙️', 6000);
-          } else {
-            setVoiceText('Reconectando voz...');
-          }
+          } else { setVoiceText('Reconectando voz...'); }
         }
       };
 
       rec.onend = function() {
         S.isListening = false;
-        // In continuous utterance loop: instantly start next clean utterance
         if (S.active || localStorage.getItem('portfolio_ai_active') === '1') {
           var restartDelay = (S.networkErrors && S.networkErrors >= 2) ? 2000 : 100;
           scheduleVoiceRestart(restartDelay);
@@ -366,34 +629,21 @@
       rec.start();
     } catch(e) {
       console.warn('[AI Voice] Start exception:', e);
-      if (S.active || localStorage.getItem('portfolio_ai_active') === '1') {
-        scheduleVoiceRestart(1000);
-      }
+      if (S.active || localStorage.getItem('portfolio_ai_active') === '1') scheduleVoiceRestart(1000);
     }
   }
 
   function scheduleVoiceRestart(delay) {
     if (S.voiceRestartTimer) clearTimeout(S.voiceRestartTimer);
     S.voiceRestartTimer = setTimeout(function() {
-      if ((S.active || localStorage.getItem('portfolio_ai_active') === '1') && !S.isListening) {
-        startVoice();
-      }
+      if ((S.active || localStorage.getItem('portfolio_ai_active') === '1') && !S.isListening) startVoice();
     }, delay || 350);
   }
 
   function stopVoice() {
-    if (S.voiceRestartTimer) {
-      clearTimeout(S.voiceRestartTimer);
-      S.voiceRestartTimer = null;
-    }
+    if (S.voiceRestartTimer) { clearTimeout(S.voiceRestartTimer); S.voiceRestartTimer = null; }
     if (S.recognition) {
-      try {
-        S.recognition.onstart = null;
-        S.recognition.onresult = null;
-        S.recognition.onerror = null;
-        S.recognition.onend = null;
-        S.recognition.abort();
-      } catch(e) {}
+      try { S.recognition.onstart = null; S.recognition.onresult = null; S.recognition.onerror = null; S.recognition.onend = null; S.recognition.abort(); } catch(e) {}
       S.recognition = null;
     }
     S.isListening = false;
@@ -401,7 +651,6 @@
 
   function processVoiceCommand(text, isFinal) {
     var now = Date.now();
-    // Debounce commands to avoid repeating during interim results
     if (now - S.lastVoiceActionTime < 1300) return;
 
     // 1. APAGAR / DETENER IA
@@ -415,7 +664,71 @@
       }
     }
 
-    // 2. SCROLL ARRIBA / ABAJO
+    // 2. HELP PANEL
+    if (text.includes('ayuda') || text.includes('comandos') || text.includes('help')) {
+      S.lastVoiceActionTime = now;
+      toggleHelpPanel();
+      return;
+    }
+
+    // 3. CLOSE HELP
+    if (text.includes('cerrar ayuda') || text.includes('cerrar panel') || (text.includes('cerrar') && S.helpOpen)) {
+      S.lastVoiceActionTime = now;
+      closeHelpPanel();
+      showToast('Panel cerrado', '✕', 1500);
+      return;
+    }
+
+    // 4. TEXT-TO-SPEECH
+    if (text.includes('leer página') || text.includes('leer esto') || text.includes('lee la página') || text.includes('leer contenido')) {
+      S.lastVoiceActionTime = now;
+      readPageAloud();
+      return;
+    }
+    if (text.includes('para de leer') || text.includes('silencio') || text.includes('dejar de leer') || text.includes('cállate') || text.includes('callate')) {
+      S.lastVoiceActionTime = now;
+      stopReading();
+      return;
+    }
+
+    // 5. ZOOM
+    if (text.includes('zoom') || text.includes('ampliar') || text.includes('agrandar') || text.includes('más grande')) {
+      S.lastVoiceActionTime = now;
+      toggleZoom(true);
+      return;
+    }
+    if (text.includes('normal') || text.includes('restablecer') || text.includes('restaurar') || text.includes('tamaño normal')) {
+      S.lastVoiceActionTime = now;
+      toggleZoom(false);
+      clearSearchHighlights();
+      return;
+    }
+
+    // 6. SEARCH
+    if (text.includes('buscar ')) {
+      var searchQuery = text.split('buscar ')[1];
+      if (searchQuery && searchQuery.length > 1) {
+        S.lastVoiceActionTime = now;
+        searchAndHighlight(searchQuery.trim());
+        return;
+      }
+    }
+
+    // 7. VIDEO CONTROLS
+    if (text.includes('siguiente video') || text.includes('próximo video') || text.includes('next video')) {
+      S.lastVoiceActionTime = now; scrollToVideo(1); return;
+    }
+    if (text.includes('video anterior') || text.includes('anterior video') || text.includes('previous video')) {
+      S.lastVoiceActionTime = now; scrollToVideo(-1); return;
+    }
+    if (text.includes('reproducir') || text.includes('play') || text.includes('reproducir video')) {
+      S.lastVoiceActionTime = now; playVisibleVideo(); return;
+    }
+    if (text.includes('pantalla completa') || text.includes('fullscreen') || text.includes('pantalla grande')) {
+      S.lastVoiceActionTime = now; fullscreenVideo(); return;
+    }
+
+    // 8. SCROLL ARRIBA / ABAJO
     if (text.includes('subir') || text.includes('sube') || text.includes('arriba') || text.includes('scroll arriba')) {
       S.lastVoiceActionTime = now;
       window.scrollBy({ top: -380, behavior: 'smooth' });
@@ -429,18 +742,50 @@
       return;
     }
 
-    // 3. CAMBIO DE TEMA (CLARO / OSCURO)
-    if (text.includes('modo oscuro') || text.includes('modo claro') || text.includes('tema oscuro') || text.includes('tema claro') || text.includes('cambiar tema')) {
+    // 9. SCROLL EXTREMES
+    if (text.includes('ir arriba') || text.includes('ir al inicio') || text.includes('inicio de página') || text.includes('al principio')) {
       S.lastVoiceActionTime = now;
-      var themeBtn = document.querySelector('theme-toggle button');
-      if (themeBtn) {
-        themeBtn.click();
-        showToast('Tema cambiado', '🌓', 1500);
-      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      showToast('Ir al inicio', '⬆️', 1500);
+      return;
+    }
+    if (text.includes('ir abajo') || text.includes('ir al final') || text.includes('final de página') || text.includes('al final')) {
+      S.lastVoiceActionTime = now;
+      window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+      showToast('Ir al final', '⬇️', 1500);
       return;
     }
 
-    // 4. NAVEGACIÓN POR RUTAS
+    // 10. CAMBIO DE TEMA
+    if (text.includes('modo oscuro') || text.includes('modo claro') || text.includes('tema oscuro') || text.includes('tema claro') || text.includes('cambiar tema')) {
+      S.lastVoiceActionTime = now;
+      var themeBtn = document.querySelector('theme-toggle button');
+      if (themeBtn) { themeBtn.click(); showToast('Tema cambiado', '🌓', 1500); }
+      return;
+    }
+
+    // 11. SHARE / COPY LINK
+    if (text.includes('compartir') || text.includes('copiar enlace') || text.includes('copiar link') || text.includes('share')) {
+      S.lastVoiceActionTime = now; copyPageLink(); return;
+    }
+
+    // 12. PRINT
+    if (text.includes('imprimir') || text.includes('print') || text.includes('descargar página')) {
+      S.lastVoiceActionTime = now;
+      showToast('Abriendo impresión...', '🖨️', 2000);
+      setTimeout(function() { window.print(); }, 500);
+      return;
+    }
+
+    // 13. MOBILE MENU
+    if (text.includes('abrir menú') || text.includes('abrir menu') || text.includes('mostrar menú')) {
+      S.lastVoiceActionTime = now; toggleMobileMenu(); return;
+    }
+    if (text.includes('cerrar menú') || text.includes('cerrar menu') || text.includes('ocultar menú')) {
+      S.lastVoiceActionTime = now; toggleMobileMenu(); return;
+    }
+
+    // 14. NAVEGACIÓN POR RUTAS
     var navMap = [
       { keys: ['inicio', 'home', 'hogar', 'portada', 'principal'], url: '/' },
       { keys: ['servicio', 'servicios'], url: '/services/' },
@@ -460,9 +805,7 @@
           S.lastVoiceActionTime = now;
           showToast('Navegando a ' + keyword + '...', '🚀', 2000);
           var targetDest = item.url;
-          setTimeout(function() {
-            navigateSmooth(targetDest);
-          }, 120);
+          setTimeout(function() { navigateSmooth(targetDest); }, 120);
           return;
         }
       }
@@ -480,10 +823,7 @@
       return;
     }
 
-    if (S.handsInstance && S.handsReady) {
-      startFrameLoop();
-      return;
-    }
+    if (S.handsInstance && S.handsReady) { startFrameLoop(); return; }
 
     showLoading(true);
     setLoadingText('Iniciando IA...');
@@ -504,7 +844,6 @@
 
       S.handsInstance.onResults(onHandResults);
 
-      // Warm up model
       var testCanvas = document.createElement('canvas');
       testCanvas.width = 4;
       testCanvas.height = 4;
@@ -532,30 +871,67 @@
 
     var vid = document.getElementById('global-webcam-feed');
     var cursor = document.getElementById('global-virtual-cursor');
+    var cursorRing = document.getElementById('cursor-ring');
+    var trailDots = [
+      document.getElementById('cursor-trail-0'),
+      document.getElementById('cursor-trail-1'),
+      document.getElementById('cursor-trail-2')
+    ];
     if (!vid) return;
 
     function processFrame() {
-      if (!S.active) {
-        S.animFrameId = null;
-        return;
-      }
+      if (!S.active) { S.animFrameId = null; return; }
 
-      // Smooth cursor interpolation
+      // ══════ ULTRA-SMOOTH CURSOR INTERPOLATION (60fps) ══════
       if (cursor && cursor.style.display !== 'none') {
-        S.cursorX += (S.targetCursorX - S.cursorX) * 0.35;
-        S.cursorY += (S.targetCursorY - S.cursorY) * 0.35;
+        var dx = S.targetCursorX - S.cursorX;
+        var dy = S.targetCursorY - S.cursorY;
+        var dist = Math.sqrt(dx * dx + dy * dy);
+
+        // Dead-zone: ignore micro-movements < 2px to prevent jitter
+        if (dist > 2) {
+          // Adaptive lerp: slower when close (precision), faster when far (responsiveness)
+          var baseLerp = 0.12;
+          var distanceFactor = Math.min(dist / 200, 1.0);
+          var lerpFactor = baseLerp + distanceFactor * 0.20;
+
+          // Velocity prediction
+          var predictionStrength = 0.08;
+          var predictedX = Math.max(0, Math.min(window.innerWidth, S.targetCursorX + S.velocityX * predictionStrength));
+          var predictedY = Math.max(0, Math.min(window.innerHeight, S.targetCursorY + S.velocityY * predictionStrength));
+
+          S.cursorX += (predictedX - S.cursorX) * lerpFactor;
+          S.cursorY += (predictedY - S.cursorY) * lerpFactor;
+        }
+
         cursor.style.left = S.cursorX + 'px';
         cursor.style.top = S.cursorY + 'px';
+
+        // Dynamic cursor scale based on velocity
+        if (cursorRing) {
+          var speed = Math.sqrt(S.velocityX * S.velocityX + S.velocityY * S.velocityY);
+          var scale = 1.0 - Math.min(speed / 800, 0.3);
+          cursorRing.style.transform = 'scale(' + scale.toFixed(3) + ')';
+        }
+
+        // Trail effect
+        for (var t = 2; t >= 0; t--) {
+          var prev = t === 0 ? { x: S.cursorX, y: S.cursorY } : S.trailPositions[t - 1];
+          var trailLerp = 0.2 - t * 0.04;
+          S.trailPositions[t].x += (prev.x - S.trailPositions[t].x) * trailLerp;
+          S.trailPositions[t].y += (prev.y - S.trailPositions[t].y) * trailLerp;
+          if (trailDots[t]) {
+            trailDots[t].style.display = 'block';
+            trailDots[t].style.left = S.trailPositions[t].x + 'px';
+            trailDots[t].style.top = S.trailPositions[t].y + 'px';
+          }
+        }
       }
 
-      // Send frame to MediaPipe only when previous frame finished
+      // Send frame to MediaPipe
       if (S.handsInstance && S.handsReady && vid.readyState >= 2 && !S.isProcessingFrame) {
         S.isProcessingFrame = true;
-        S.handsInstance.send({image: vid})
-          .catch(function() {})
-          .finally(function() {
-            S.isProcessingFrame = false;
-          });
+        S.handsInstance.send({image: vid}).catch(function() {}).finally(function() { S.isProcessingFrame = false; });
       }
 
       S.animFrameId = requestAnimationFrame(processFrame);
@@ -565,10 +941,7 @@
   }
 
   function stopFrameLoop() {
-    if (S.animFrameId) {
-      cancelAnimationFrame(S.animFrameId);
-      S.animFrameId = null;
-    }
+    if (S.animFrameId) { cancelAnimationFrame(S.animFrameId); S.animFrameId = null; }
   }
 
   function onHandResults(results) {
@@ -586,10 +959,8 @@
 
       // Draw hand skeleton
       var connections = [
-        [0,1],[1,2],[2,3],[3,4],
-        [0,5],[5,6],[6,7],[7,8],
-        [5,9],[9,10],[10,11],[11,12],
-        [9,13],[13,14],[14,15],[15,16],
+        [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+        [5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],
         [13,17],[17,18],[18,19],[19,20],[0,17]
       ];
       ctx.strokeStyle = 'rgba(168,85,247,0.6)';
@@ -613,19 +984,36 @@
         ctx.fill();
       }
 
-      // Map index fingertip to screen
+      // Map index fingertip to screen — with rolling average
       var indexTip = landmarks[8];
-      var normX = 1 - indexTip.x;
-      var normY = indexTip.y;
+      var rawX = (1 - indexTip.x) * window.innerWidth;
+      var rawY = indexTip.y * window.innerHeight;
 
-      S.targetCursorX = Math.max(0, Math.min(window.innerWidth, normX * window.innerWidth));
-      S.targetCursorY = Math.max(0, Math.min(window.innerHeight, normY * window.innerHeight));
+      S.posBuffer.push({ x: rawX, y: rawY });
+      if (S.posBuffer.length > 3) S.posBuffer.shift();
+
+      var avgX = 0, avgY = 0;
+      for (var p = 0; p < S.posBuffer.length; p++) { avgX += S.posBuffer[p].x; avgY += S.posBuffer[p].y; }
+      avgX /= S.posBuffer.length;
+      avgY /= S.posBuffer.length;
+
+      // Velocity tracking
+      S.velocityX = avgX - S.prevTargetX;
+      S.velocityY = avgY - S.prevTargetY;
+      S.prevTargetX = avgX;
+      S.prevTargetY = avgY;
+
+      S.targetCursorX = Math.max(0, Math.min(window.innerWidth, avgX));
+      S.targetCursorY = Math.max(0, Math.min(window.innerHeight, avgY));
 
       var gesture = detectGesture(landmarks);
+      detectSwipe(landmarks);
       executeGesture(gesture, cursor);
     } else {
       cursor.style.display = 'none';
       setGestureBadge(null);
+      for (var h = 0; h < 3; h++) { var dot = document.getElementById('cursor-trail-' + h); if (dot) dot.style.display = 'none'; }
+      S.prevWristX = null;
     }
     ctx.restore();
   }
@@ -649,20 +1037,64 @@
     var fingersUp = (indexUp?1:0) + (middleUp?1:0) + (ringUp?1:0) + (pinkyUp?1:0) + (thumbUp?1:0);
 
     if (pinchDist < 0.08) return 'pinch';
+
+    // Thumbs Up: only thumb extended upward, others closed
+    var thumbPointingUp = thumbTip.y < wrist.y - 0.1;
+    if (thumbUp && thumbPointingUp && !indexUp && !middleUp && !ringUp && !pinkyUp) return 'thumbsup';
+
+    // Peace/Victory: index + middle up, ring + pinky down
+    if (indexUp && middleUp && !ringUp && !pinkyUp) return 'peace';
+
+    // Rock/ILoveYou: thumb + index + pinky up, middle + ring down
+    if (thumbUp && indexUp && pinkyUp && !middleUp && !ringUp) return 'rock';
+
+    // Point Up: only index up
+    if (indexUp && !middleUp && !ringUp && !pinkyUp && !thumbUp) return 'pointup';
+
     if (fingersUp >= 3) return 'open';
     if (fingersUp <= 1 && !indexUp) return 'fist';
     return 'none';
+  }
+
+  function detectSwipe(lm) {
+    var wrist = lm[0];
+    var currentWristX = wrist.x;
+    if (S.prevWristX !== null && !S.swipeCooldown) {
+      var deltaX = currentWristX - S.prevWristX;
+      if (Math.abs(deltaX) > 0.12) {
+        S.swipeCooldown = true;
+        if (deltaX > 0) {
+          setGestureBadge('👋← Página anterior');
+          showToast('Página anterior', '⬅️', 1500);
+          setTimeout(function() { window.history.back(); }, 300);
+        } else {
+          setGestureBadge('👋→ Siguiente');
+          showToast('Siguiente página', '➡️', 1500);
+          setTimeout(function() { window.history.forward(); }, 300);
+        }
+        setTimeout(function() { S.swipeCooldown = false; }, 1500);
+      }
+    }
+    S.prevWristX = currentWristX;
   }
 
   function executeGesture(gesture, cursor) {
     switch (gesture) {
       case 'pinch':
         setGestureBadge('🤏 Clic');
+        var now = Date.now();
         if (!S.pinchCooldown) {
           S.pinchCooldown = true;
-          cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
-          setTimeout(function() { cursor.style.transform = 'translate(-50%, -50%)'; }, 250);
-          performClick(S.cursorX, S.cursorY);
+          if (now - S.lastPinchTime < 800 && !S.doublePinchCooldown) {
+            S.doublePinchCooldown = true;
+            toggleHelpPanel();
+            setTimeout(function() { S.doublePinchCooldown = false; }, 1500);
+          } else {
+            cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
+            setTimeout(function() { cursor.style.transform = 'translate(-50%, -50%)'; }, 250);
+            performClick(S.cursorX, S.cursorY);
+          }
+          S.lastPinchTime = now;
           setTimeout(function() { S.pinchCooldown = false; }, 600);
         }
         break;
@@ -685,6 +1117,44 @@
         }
         break;
 
+      case 'peace':
+        setGestureBadge('✌️ Zoom');
+        if (!S.scrollCooldown) {
+          S.scrollCooldown = true;
+          if (!S.zoomActive) toggleZoom(true);
+          setTimeout(function() { S.scrollCooldown = false; }, 1500);
+        }
+        break;
+
+      case 'rock':
+        setGestureBadge('🤟 Inicio');
+        if (!S.scrollCooldown) {
+          S.scrollCooldown = true;
+          showToast('Navegando al inicio...', '🏠', 2000);
+          setTimeout(function() { navigateSmooth('/'); }, 200);
+          setTimeout(function() { S.scrollCooldown = false; }, 2000);
+        }
+        break;
+
+      case 'pointup':
+        setGestureBadge('👆 Ir arriba');
+        if (!S.scrollCooldown) {
+          S.scrollCooldown = true;
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          showToast('Ir al inicio de la página', '⬆️', 1500);
+          setTimeout(function() { S.scrollCooldown = false; }, 1500);
+        }
+        break;
+
+      case 'thumbsup':
+        setGestureBadge('👍 Compartir');
+        if (!S.scrollCooldown) {
+          S.scrollCooldown = true;
+          copyPageLink();
+          setTimeout(function() { S.scrollCooldown = false; }, 2000);
+        }
+        break;
+
       default:
         setGestureBadge('🖐️ Mano activa');
         break;
@@ -703,21 +1173,13 @@
 
     var link = el.closest('a[href]');
     if (link) {
-      if (link.target === '_blank') {
-        window.open(link.href, '_blank');
-      } else {
-        // Native click triggers ViewTransitions router
-        link.click();
-      }
+      if (link.target === '_blank') window.open(link.href, '_blank');
+      else link.click();
       return;
     }
 
     var button = el.closest('button');
-    if (button) {
-      button.click();
-      return;
-    }
-
+    if (button) { button.click(); return; }
     el.click();
   }
 
@@ -740,15 +1202,11 @@
     var btnText = document.getElementById('ai-btn-text');
     if (btnText) btnText.textContent = 'Iniciando...';
 
-    // Persist intent to localStorage: MUST STAY ON UNTIL MANUALLY TURNED OFF!
     localStorage.setItem('portfolio_ai_active', '1');
     S.active = true;
-
-    // Start voice recognition immediately
     startVoice();
 
     try {
-      // Request ONLY video in getUserMedia. SpeechRecognition captures mic independently!
       var stream = S.stream;
       if (!stream || !stream.active) {
         stream = await navigator.mediaDevices.getUserMedia({
@@ -760,42 +1218,30 @@
 
       S.isStarting = false;
 
-      // Attach stream to video element
       var vid = document.getElementById('global-webcam-feed');
       var cvs = document.getElementById('global-webcam-canvas');
       if (vid) {
         vid.srcObject = stream;
         vid.onloadedmetadata = function() {
           vid.play().catch(function(){});
-          if (cvs) {
-            cvs.width = vid.videoWidth || 320;
-            cvs.height = vid.videoHeight || 240;
-          }
+          if (cvs) { cvs.width = vid.videoWidth || 320; cvs.height = vid.videoHeight || 240; }
         };
         vid.play().catch(function(){});
       }
 
       updateUI();
-      showToast('¡IA Activa! Gestos y Voz listos 🖐️🎙️', '✨', 3500);
-
-      // Start gesture detection
+      showToast('¡IA Activa! Gestos y Voz listos 🖐️🎙️ Di "ayuda" para ver comandos', '✨', 4000);
       initHands();
 
     } catch(err) {
       console.warn('[AI] Camera initialization warning:', err);
       S.isStarting = false;
-
-      // Keep active if user still wants it (Voice is already active!)
       if (localStorage.getItem('portfolio_ai_active') === '1') {
         S.active = true;
         updateUI();
-        if (err.name === 'NotAllowedError') {
-          showToast('Permiso de cámara denegado. Voz activa. Permite cámara para gestos.', '📷', 5000);
-        } else if (err.name === 'NotFoundError') {
-          showToast('Cámara no detectada. Comandos de voz activos 🎙️', '🎙️', 4000);
-        } else {
-          showToast('Cámara ocupada. Comandos de voz activos 🎙️', '🎙️', 4000);
-        }
+        if (err.name === 'NotAllowedError') showToast('Permiso de cámara denegado. Voz activa.', '📷', 5000);
+        else if (err.name === 'NotFoundError') showToast('Cámara no detectada. Voz activa 🎙️', '🎙️', 4000);
+        else showToast('Cámara ocupada. Voz activa 🎙️', '🎙️', 4000);
       }
     }
   }
@@ -807,43 +1253,30 @@
     console.log('[AI] Explicit stop by user.');
     S.active = false;
     S.isStarting = false;
-
-    // The ONLY place where active is set to 0 in localStorage
     localStorage.setItem('portfolio_ai_active', '0');
-
-    // Stop frame loop
     stopFrameLoop();
-
-    // Stop camera tracks
-    if (S.stream) {
-      S.stream.getTracks().forEach(function(track) { track.stop(); });
-      S.stream = null;
-    }
-
-    // Clear video element
+    if (S.stream) { S.stream.getTracks().forEach(function(track) { track.stop(); }); S.stream = null; }
     var vid = document.getElementById('global-webcam-feed');
     if (vid) vid.srcObject = null;
-
-    // Stop voice
     stopVoice();
-
+    stopReading();
+    toggleZoom(false);
+    clearSearchHighlights();
+    closeHelpPanel();
     updateUI();
     showToast('IA Desactivada por el usuario', '🔴', 3000);
   }
 
   // ═══════════════════════════════════════════════════════════════
-  //  DOM BINDING & PERSISTENCE (Runs on every page navigation)
+  //  DOM BINDING & PERSISTENCE
   // ═══════════════════════════════════════════════════════════════
   function bindDOM() {
     var aiBtn = document.getElementById('global-ai-btn');
     if (aiBtn && !aiBtn.dataset.bound) {
       aiBtn.dataset.bound = 'true';
       aiBtn.addEventListener('click', function() {
-        if (S.active) {
-          stopAI();
-        } else {
-          startAI();
-        }
+        if (S.active) stopAI();
+        else startAI();
       });
     }
 
@@ -857,44 +1290,41 @@
           navigator.clipboard.writeText(url).then(function() {
             copyBtn.textContent = '¡Copiado!';
             setTimeout(function() { copyBtn.textContent = 'Copiar'; }, 2000);
-            showToast('Ruta copiada al portapapeles. Pégala en una nueva pestaña en Brave.', '📋', 4500);
-          }).catch(function() {
-            window.prompt('Copia esta ruta y ábrela en una pestaña de Brave:', url);
-          });
-        } else {
-          window.prompt('Copia esta ruta y ábrela en una pestaña de Brave:', url);
-        }
+            showToast('Ruta copiada al portapapeles.', '📋', 4500);
+          }).catch(function() { window.prompt('Copia esta ruta:', url); });
+        } else { window.prompt('Copia esta ruta:', url); }
       });
+    }
+
+    // Help panel bindings
+    var helpCloseBtn = document.getElementById('help-close-btn');
+    if (helpCloseBtn && !helpCloseBtn.dataset.bound) {
+      helpCloseBtn.dataset.bound = 'true';
+      helpCloseBtn.addEventListener('click', closeHelpPanel);
+    }
+    var helpBackdrop = document.getElementById('ai-help-backdrop');
+    if (helpBackdrop && !helpBackdrop.dataset.bound) {
+      helpBackdrop.dataset.bound = 'true';
+      helpBackdrop.addEventListener('click', closeHelpPanel);
     }
 
     updateUI();
 
-    // Check if AI should be active based on localStorage
     var shouldBeActive = localStorage.getItem('portfolio_ai_active') === '1';
-
     if (shouldBeActive) {
       if (!S.active && !S.isStarting) {
-        // Auto-resume after hard refresh or first load if was active
         console.log('[AI] Resuming active session from localStorage...');
         startAI();
       } else if (S.active) {
-        // Re-attach existing live stream to DOM video if DOM was swapped
         var vid = document.getElementById('global-webcam-feed');
         var cvs = document.getElementById('global-webcam-canvas');
         if (vid && S.stream && vid.srcObject !== S.stream) {
           vid.srcObject = S.stream;
           vid.play().catch(function(){});
-          if (cvs) {
-            cvs.width = vid.videoWidth || 320;
-            cvs.height = vid.videoHeight || 240;
-          }
+          if (cvs) { cvs.width = vid.videoWidth || 320; cvs.height = vid.videoHeight || 240; }
         }
-        if (S.handsReady && !S.animFrameId) {
-          startFrameLoop();
-        }
-        if (!S.isListening) {
-          startVoice();
-        }
+        if (S.handsReady && !S.animFrameId) startFrameLoop();
+        if (!S.isListening) startVoice();
       }
     }
   }
