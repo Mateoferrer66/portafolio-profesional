@@ -1,15 +1,19 @@
 ---
 import Icon from "./Icon.astro";
 import ThemeToggle from "./ThemeToggle.astro";
+import LanguageToggle from "./LanguageToggle.astro";
+import AvailabilityBadge from "./AvailabilityBadge.astro";
 import type { iconPaths } from "./IconPaths";
 
 /** Main menu items */
 const textLinks: { label: string; href: string }[] = [
 	{ label: "Home", href: "/" },
 	{ label: "Work", href: "/work/" },
+	{ label: "Gallery", href: "/gallery/" },
 	{ label: "About", href: "/about/" },
 	{ label: "Shop", href: "/shop/" },
 	{ label: "Services", href: "/services/" },
+	{ label: "Contact", href: "/contact/" },
 ];
 
 /** Icon links to social media — edit these with links to your profiles! */
@@ -52,6 +56,7 @@ const iconLinks: {
 			/>
 			Mateo Ferrer
 		</a>
+		<AvailabilityBadge variant="nav" />
 		<menu-button>
 			<template>
 				<button class="menu-button" aria-expanded="false">
@@ -141,6 +146,7 @@ const iconLinks: {
 			</div>
 
 			<div class="theme-toggle">
+				<LanguageToggle />
 				<ThemeToggle />
 			</div>
 		</div>

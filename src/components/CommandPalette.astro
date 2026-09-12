@@ -1,0 +1,422 @@
+---
+// CommandPalette.astro
+// VS Code / Spotlight-style Command Palette (Ctrl+K / ⌘+K)
+// Searches pages, projects, services and provides quick actions
+---
+
+<div id="cmd-palette-backdrop" class="cmd-backdrop" style="display:none;">
+  <div id="cmd-palette" class="cmd-palette">
+    <div class="cmd-header">
+      <span class="cmd-icon">⚡</span>
+      <input 
+        type="text" 
+        id="cmd-input" 
+        placeholder="Buscar páginas, proyectos, acciones..." 
+        autocomplete="off" 
+        spellcheck="false"
+      />
+      <kbd class="cmd-kbd">ESC</kbd>
+    </div>
+    <div id="cmd-results" class="cmd-results"></div>
+    <div class="cmd-footer">
+      <span><kbd>↑↓</kbd> Navegar</span>
+      <span><kbd>↵</kbd> Seleccionar</span>
+      <span><kbd>Ctrl+K</kbd> Abrir</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    type CmdItem = {
+      icon: string;
+      label: string;
+      sublabel?: string;
+      category: string;
+      action: () => void;
+    };
+
+    const items: CmdItem[] = [
+      // Pages
+      { icon: '🏠', label: 'Inicio', sublabel: 'Página principal', category: 'Páginas', action: () => navigate('/') },
+      { icon: '💼', label: 'Proyectos', sublabel: 'Ver todos los proyectos', category: 'Páginas', action: () => navigate('/work/') },
+      { icon: '👤', label: 'Sobre Mí', sublabel: 'Acerca de Mateo', category: 'Páginas', action: () => navigate('/about/') },
+      { icon: '🛒', label: 'Tienda', sublabel: 'Productos digitales', category: 'Páginas', action: () => navigate('/shop/') },
+      { icon: '🔧', label: 'Servicios', sublabel: 'Servicios profesionales', category: 'Páginas', action: () => navigate('/services/') },
+      { icon: '📬', label: 'Contacto', sublabel: 'Formulario de contacto', category: 'Páginas', action: () => navigate('/contact/') },
+      { icon: '🖼️', label: 'Galería', sublabel: 'Showcase visual de proyectos', category: 'Páginas', action: () => navigate('/gallery/') },
+      
+      // Actions
+      { icon: '🌙', label: 'Cambiar Tema', sublabel: 'Dark / Light mode', category: 'Acciones', action: () => {
+        document.documentElement.classList.toggle('theme-dark');
+        closePalette();
+      }},
+      { icon: '⬆️', label: 'Ir al Inicio', sublabel: 'Scroll to top', category: 'Acciones', action: () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        closePalette();
+      }},
+      { icon: '⬇️', label: 'Ir al Final', sublabel: 'Scroll to bottom', category: 'Acciones', action: () => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        closePalette();
+      }},
+      { icon: '📄', label: 'Descargar CV', sublabel: 'PDF del curriculum', category: 'Acciones', action: () => {
+        window.open('/assets/HV_MATEOFERRER_2026-01.pdf', '_blank');
+        closePalette();
+      }},
+      { icon: '💬', label: 'WhatsApp', sublabel: 'Cotizar proyecto', category: 'Acciones', action: () => {
+        window.open('https://wa.me/573005059987', '_blank');
+        closePalette();
+      }},
+      { icon: '🤖', label: 'Activar IA', sublabel: 'Gestos y voz', category: 'Acciones', action: () => {
+        const btn = document.getElementById('global-ai-btn');
+        if (btn) btn.click();
+        closePalette();
+      }},
+
+      // Projects (quick access to featured)
+      { icon: '🏗️', label: 'Nexus Law', sublabel: 'Legal tech platform', category: 'Proyectos', action: () => navigate('/work/nexus-law/') },
+      { icon: '📊', label: 'SaaS Dashboard', sublabel: 'Analytics dashboard', category: 'Proyectos', action: () => navigate('/work/saas-dashboard/') },
+      { icon: '🏦', label: 'NeoBank', sublabel: 'Fintech application', category: 'Proyectos', action: () => navigate('/work/neobank/') },
+      { icon: '📈', label: 'TraderShip', sublabel: 'Trading platform', category: 'Proyectos', action: () => navigate('/work/tradership/') },
+      { icon: '🛍️', label: 'EcoMarket', sublabel: 'E-commerce platform', category: 'Proyectos', action: () => navigate('/work/ecomarket/') },
+      { icon: '🏠', label: 'SmartHome IoT', sublabel: 'IoT platform', category: 'Proyectos', action: () => navigate('/work/smarthome-iot/') },
+    ];
+
+    const backdrop = document.getElementById('cmd-palette-backdrop')!;
+    const input = document.getElementById('cmd-input') as HTMLInputElement;
+    const results = document.getElementById('cmd-results')!;
+    let selectedIndex = 0;
+    let filteredItems: CmdItem[] = [];
+
+    function navigate(path: string) {
+      closePalette();
+      // Use view transitions if available
+      const link = document.querySelector('a[href="' + path + '"]') as HTMLAnchorElement;
+      if (link) {
+        link.click();
+      } else {
+        window.location.href = path;
+      }
+    }
+
+    function openPalette() {
+      backdrop.style.display = 'flex';
+      input.value = '';
+      selectedIndex = 0;
+      renderResults('');
+      requestAnimationFrame(() => {
+        input.focus();
+        backdrop.classList.add('cmd-visible');
+      });
+    }
+
+    function closePalette() {
+      backdrop.classList.remove('cmd-visible');
+      setTimeout(() => { backdrop.style.display = 'none'; }, 200);
+    }
+
+    function fuzzyMatch(query: string, text: string): boolean {
+      const q = query.toLowerCase();
+      const t = text.toLowerCase();
+      if (t.includes(q)) return true;
+      let qi = 0;
+      for (let ti = 0; ti < t.length && qi < q.length; ti++) {
+        if (t[ti] === q[qi]) qi++;
+      }
+      return qi === q.length;
+    }
+
+    function renderResults(query: string) {
+      filteredItems = query 
+        ? items.filter(item => 
+            fuzzyMatch(query, item.label) || 
+            fuzzyMatch(query, item.sublabel || '') || 
+            fuzzyMatch(query, item.category)
+          )
+        : [...items];
+
+      if (selectedIndex >= filteredItems.length) selectedIndex = 0;
+
+      const grouped: Record<string, CmdItem[]> = {};
+      filteredItems.forEach(item => {
+        if (!grouped[item.category]) grouped[item.category] = [];
+        grouped[item.category].push(item);
+      });
+
+      let html = '';
+      let globalIdx = 0;
+
+      for (const [category, catItems] of Object.entries(grouped)) {
+        html += `<div class="cmd-category">${category}</div>`;
+        catItems.forEach(item => {
+          const isSelected = globalIdx === selectedIndex;
+          html += `<div class="cmd-item ${isSelected ? 'cmd-selected' : ''}" data-idx="${globalIdx}">
+            <span class="cmd-item-icon">${item.icon}</span>
+            <div class="cmd-item-text">
+              <span class="cmd-item-label">${highlightMatch(item.label, query)}</span>
+              ${item.sublabel ? `<span class="cmd-item-sub">${item.sublabel}</span>` : ''}
+            </div>
+          </div>`;
+          globalIdx++;
+        });
+      }
+
+      if (filteredItems.length === 0) {
+        html = `<div class="cmd-empty">
+          <span style="font-size:2rem;">🔍</span>
+          <span>No se encontraron resultados para "${query}"</span>
+        </div>`;
+      }
+
+      results.innerHTML = html;
+
+      // Add click handlers
+      results.querySelectorAll('.cmd-item').forEach(el => {
+        el.addEventListener('click', () => {
+          const idx = parseInt(el.getAttribute('data-idx') || '0');
+          if (filteredItems[idx]) filteredItems[idx].action();
+        });
+        el.addEventListener('mouseenter', () => {
+          selectedIndex = parseInt(el.getAttribute('data-idx') || '0');
+          updateSelection();
+        });
+      });
+    }
+
+    function highlightMatch(text: string, query: string): string {
+      if (!query) return text;
+      const idx = text.toLowerCase().indexOf(query.toLowerCase());
+      if (idx === -1) return text;
+      return text.slice(0, idx) + '<mark>' + text.slice(idx, idx + query.length) + '</mark>' + text.slice(idx + query.length);
+    }
+
+    function updateSelection() {
+      results.querySelectorAll('.cmd-item').forEach((el, i) => {
+        el.classList.toggle('cmd-selected', i === selectedIndex);
+      });
+      // Scroll into view
+      const selected = results.querySelector('.cmd-selected');
+      if (selected) selected.scrollIntoView({ block: 'nearest' });
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Open palette: Ctrl+K or Cmd+K
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        if (backdrop.style.display === 'none') {
+          openPalette();
+        } else {
+          closePalette();
+        }
+        return;
+      }
+
+      // Only handle keys when palette is open
+      if (backdrop.style.display === 'none') return;
+
+      if (e.key === 'Escape') {
+        closePalette();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, filteredItems.length - 1);
+        updateSelection();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, 0);
+        updateSelection();
+      } else if (e.key === 'Enter') {
+        e.preventDefault();
+        if (filteredItems[selectedIndex]) filteredItems[selectedIndex].action();
+      }
+    });
+
+    // Filter on input
+    input?.addEventListener('input', () => {
+      renderResults(input.value);
+    });
+
+    // Close on backdrop click
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closePalette();
+    });
+  })();
+</script>
+
+<style>
+  .cmd-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 50000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .cmd-backdrop.cmd-visible {
+    opacity: 1;
+  }
+
+  .cmd-palette {
+    width: min(580px, 92vw);
+    background: rgba(15, 12, 30, 0.97);
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    border-radius: 16px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8), 0 0 60px rgba(124, 58, 237, 0.15);
+    overflow: hidden;
+    transform: scale(0.95) translateY(-10px);
+    transition: transform 0.2s ease;
+  }
+
+  .cmd-visible .cmd-palette {
+    transform: scale(1) translateY(0);
+  }
+
+  .cmd-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(124, 58, 237, 0.25);
+  }
+
+  .cmd-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  #cmd-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #e2e8f0;
+    font-size: 1rem;
+    font-family: inherit;
+    caret-color: #a855f7;
+  }
+
+  #cmd-input::placeholder {
+    color: #64748b;
+  }
+
+  .cmd-kbd {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    font-family: inherit;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .cmd-results {
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 6px 0;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(124, 58, 237, 0.3) transparent;
+  }
+
+  .cmd-category {
+    padding: 8px 18px 4px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #64748b;
+  }
+
+  .cmd-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    cursor: pointer;
+    transition: background 0.12s ease;
+    border-radius: 0;
+  }
+
+  .cmd-item:hover,
+  .cmd-item.cmd-selected {
+    background: rgba(124, 58, 237, 0.15);
+  }
+
+  .cmd-item.cmd-selected {
+    border-left: 2px solid #a855f7;
+  }
+
+  .cmd-item-icon {
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    width: 28px;
+    text-align: center;
+  }
+
+  .cmd-item-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+
+  .cmd-item-label {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .cmd-item-label :global(mark) {
+    background: rgba(168, 85, 247, 0.35);
+    color: #e9d5ff;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  .cmd-item-sub {
+    color: #64748b;
+    font-size: 0.75rem;
+  }
+
+  .cmd-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 32px 18px;
+    color: #64748b;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  .cmd-footer {
+    display: flex;
+    gap: 16px;
+    padding: 10px 18px;
+    border-top: 1px solid rgba(124, 58, 237, 0.2);
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+
+  .cmd-footer kbd {
+    display: inline-flex;
+    padding: 1px 5px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-family: inherit;
+    color: #94a3b8;
+    margin-right: 4px;
+  }
+</style>

@@ -20,6 +20,9 @@ import ServiceCard from "../components/ServiceCard.astro";
 import TestimonialCard from "../components/TestimonialCard.astro";
 import TechMarquee from "../components/TechMarquee.astro";
 import ExperienceTimeline from "../components/ExperienceTimeline.astro";
+import LiveStats from "../components/LiveStats.astro";
+import CertificationsShowcase from "../components/CertificationsShowcase.astro";
+import AvailabilityBadge from "../components/AvailabilityBadge.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -65,6 +68,9 @@ const liveWebsites = [
 		}
 	</script>
 	<div class="stack gap-20 lg:gap-48">
+		<!-- Live Stats Dashboard -->
+		<LiveStats />
+		
 		<div class="wrapper stack gap-8 lg:gap-20 reveal">
 			<header class="hero">
 				<Hero
@@ -72,6 +78,7 @@ const liveWebsites = [
 					tagline="Master Software Engineer | Full Stack Developer | Dev Ops and IA Specialist | Software Enginner | +220 certified courses"
 					align="center"
 				>
+					<AvailabilityBadge variant="hero" />
 					<div class="roles">
 						<Pill
 							><Icon icon="code" size="1.33em" /> Software Engineer</Pill
@@ -423,6 +430,8 @@ const liveWebsites = [
 					</div>
 				</div>
 			</section>
+			<!-- Certifications Showcase -->
+			<CertificationsShowcase />
 		</main>
 
 		<ContactCTA />

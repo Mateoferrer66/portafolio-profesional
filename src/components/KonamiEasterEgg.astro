@@ -1,0 +1,179 @@
+---
+// KonamiEasterEgg.astro
+// Secret Konami Code (↑↑↓↓←→←→BA) easter egg with confetti, glitch, and matrix rain
+---
+
+<div id="konami-overlay" style="display:none;position:fixed;inset:0;z-index:99999;pointer-events:none;">
+  <canvas id="konami-canvas" style="width:100%;height:100%;"></canvas>
+  <div id="konami-msg" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:0;transition:opacity 0.5s;text-align:center;">
+    <div style="font-size:3rem;margin-bottom:12px;">🎮✨🚀</div>
+    <div style="font-size:1.4rem;font-weight:800;background:linear-gradient(135deg,#a855f7,#4ade80,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;">
+      ¡Has descubierto el secreto!
+    </div>
+    <div style="font-size:0.85rem;color:#94a3b8;margin-top:8px;">Developer Mode Activated 🔓</div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let buffer: string[] = [];
+    let activated = false;
+
+    document.addEventListener('keydown', (e) => {
+      if (activated) return;
+      buffer.push(e.key);
+      if (buffer.length > KONAMI.length) buffer.shift();
+
+      if (buffer.length === KONAMI.length && buffer.every((k, i) => k.toLowerCase() === KONAMI[i].toLowerCase())) {
+        activated = true;
+        triggerEasterEgg();
+      }
+    });
+
+    function triggerEasterEgg() {
+      const overlay = document.getElementById('konami-overlay');
+      const canvas = document.getElementById('konami-canvas') as HTMLCanvasElement;
+      const msg = document.getElementById('konami-msg');
+      if (!overlay || !canvas || !msg) return;
+
+      overlay.style.display = 'block';
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      const ctx = canvas.getContext('2d')!;
+
+      // Glitch effect on hero text
+      document.querySelectorAll('h1, h2, .hero').forEach(el => {
+        (el as HTMLElement).style.animation = 'konamiGlitch 0.3s ease-in-out 5';
+      });
+
+      // Confetti particles
+      const particles: Array<{x:number;y:number;vx:number;vy:number;size:number;color:string;rotation:number;rotSpeed:number;shape:string}> = [];
+      const colors = ['#a855f7','#4ade80','#38bdf8','#f472b6','#facc15','#fb923c','#34d399','#818cf8'];
+      const shapes = ['circle','rect','star'];
+      
+      for (let i = 0; i < 200; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: -20 - Math.random() * canvas.height * 0.5,
+          vx: (Math.random() - 0.5) * 6,
+          vy: Math.random() * 4 + 2,
+          size: Math.random() * 8 + 3,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * Math.PI * 2,
+          rotSpeed: (Math.random() - 0.5) * 0.3,
+          shape: shapes[Math.floor(Math.random() * shapes.length)]
+        });
+      }
+
+      // Matrix rain characters
+      const matrixCols = Math.floor(canvas.width / 14);
+      const matrixDrops: number[] = new Array(matrixCols).fill(0).map(() => Math.random() * -100);
+      const matrixChars = '01アイウエオカキクケコMATEO{}[]<>/=+*';
+
+      let frame = 0;
+      const maxFrames = 300; // ~5 seconds at 60fps
+
+      // Show message
+      setTimeout(() => { msg.style.opacity = '1'; }, 500);
+
+      function animate() {
+        frame++;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Matrix rain (fades in first half, fades out second half)
+        const matrixAlpha = frame < 60 ? frame / 60 * 0.12 : frame > 240 ? (300 - frame) / 60 * 0.12 : 0.12;
+        ctx.font = '13px monospace';
+        ctx.fillStyle = `rgba(74, 222, 128, ${matrixAlpha})`;
+        for (let i = 0; i < matrixCols; i++) {
+          const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+          ctx.fillText(char, i * 14, matrixDrops[i] * 14);
+          matrixDrops[i]++;
+          if (matrixDrops[i] * 14 > canvas.height && Math.random() > 0.975) {
+            matrixDrops[i] = 0;
+          }
+        }
+
+        // Confetti
+        const confettiAlpha = frame > 240 ? (300 - frame) / 60 : 1;
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.05; // gravity
+          p.rotation += p.rotSpeed;
+          p.vx *= 0.99;
+
+          ctx.save();
+          ctx.globalAlpha = confettiAlpha;
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.rotation);
+          ctx.fillStyle = p.color;
+
+          if (p.shape === 'circle') {
+            ctx.beginPath();
+            ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+            ctx.fill();
+          } else if (p.shape === 'rect') {
+            ctx.fillRect(-p.size, -p.size / 2, p.size * 2, p.size);
+          } else {
+            // star
+            ctx.beginPath();
+            for (let s = 0; s < 5; s++) {
+              const angle = (s * 4 * Math.PI) / 5 - Math.PI / 2;
+              const method = s === 0 ? 'moveTo' : 'lineTo';
+              ctx[method](Math.cos(angle) * p.size, Math.sin(angle) * p.size);
+            }
+            ctx.closePath();
+            ctx.fill();
+          }
+          ctx.restore();
+        });
+
+        if (frame < maxFrames) {
+          requestAnimationFrame(animate);
+        } else {
+          // Clean up
+          msg!.style.opacity = '0';
+          setTimeout(() => {
+            overlay!.style.display = 'none';
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            document.querySelectorAll('h1, h2, .hero').forEach(el => {
+              (el as HTMLElement).style.animation = '';
+            });
+            activated = false;
+            buffer = [];
+          }, 600);
+        }
+      }
+
+      requestAnimationFrame(animate);
+
+      // Sound effect (optional, web audio)
+      try {
+        const audioCtx = new AudioContext();
+        const notes = [523.25, 659.25, 783.99, 1046.5];
+        notes.forEach((freq, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime + i * 0.15);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.15 + 0.4);
+          osc.connect(gain).connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime + i * 0.15);
+          osc.stop(audioCtx.currentTime + i * 0.15 + 0.5);
+        });
+      } catch(e) {}
+    }
+  })();
+</script>
+
+<style is:global>
+  @keyframes konamiGlitch {
+    0%, 100% { transform: translate(0); filter: none; }
+    20% { transform: translate(-3px, 2px); filter: hue-rotate(90deg); }
+    40% { transform: translate(3px, -2px); filter: hue-rotate(180deg); }
+    60% { transform: translate(-2px, -3px); filter: hue-rotate(270deg); }
+    80% { transform: translate(2px, 3px); filter: hue-rotate(45deg); }
+  }
+</style>

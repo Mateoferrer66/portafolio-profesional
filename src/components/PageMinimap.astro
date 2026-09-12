@@ -1,0 +1,196 @@
+---
+// PageMinimap.astro
+// VS Code-style minimap sidebar showing scroll position and page sections
+// Desktop-only, semi-transparent, click-to-navigate
+---
+
+<div id="page-minimap" class="page-minimap">
+  <div class="minimap-track">
+    <div class="minimap-viewport" id="minimap-viewport"></div>
+  </div>
+  <div class="minimap-sections" id="minimap-sections"></div>
+</div>
+
+<script>
+  (function() {
+    const minimap = document.getElementById('page-minimap');
+    const viewport = document.getElementById('minimap-viewport');
+    const sectionsEl = document.getElementById('minimap-sections');
+    if (!minimap || !viewport || !sectionsEl) return;
+
+    // Don't show on mobile
+    if (window.innerWidth < 900) {
+      minimap.style.display = 'none';
+      return;
+    }
+
+    // Discover sections on the page
+    const sectionSelectors = 'section, .hero, main, footer, .stats-section, .services-section, .testimonials-section';
+    const colors = ['#a855f7', '#4ade80', '#38bdf8', '#f472b6', '#facc15', '#818cf8', '#34d399', '#fb923c'];
+
+    function updateMinimap() {
+      const docHeight = document.documentElement.scrollHeight;
+      const winHeight = window.innerHeight;
+      const scrollY = window.scrollY;
+
+      if (docHeight <= winHeight) {
+        minimap!.style.display = 'none';
+        return;
+      }
+
+      minimap!.style.display = '';
+
+      // Update viewport indicator
+      const minimapHeight = minimap!.clientHeight;
+      const vpTop = (scrollY / docHeight) * minimapHeight;
+      const vpHeight = Math.max((winHeight / docHeight) * minimapHeight, 20);
+      viewport!.style.top = vpTop + 'px';
+      viewport!.style.height = vpHeight + 'px';
+
+      // Discover and render sections (only once)
+      if (!sectionsEl!.hasChildNodes()) {
+        const sections = document.querySelectorAll(sectionSelectors);
+        sections.forEach((section, i) => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = (rect.top + scrollY) / docHeight;
+          const sectionHeight = rect.height / docHeight;
+          
+          const dot = document.createElement('div');
+          dot.className = 'minimap-section-dot';
+          dot.style.top = (sectionTop * minimapHeight) + 'px';
+          dot.style.height = Math.max(sectionHeight * minimapHeight, 3) + 'px';
+          dot.style.background = colors[i % colors.length];
+          dot.title = (section as HTMLElement).querySelector('h2')?.textContent || 'Section ' + (i + 1);
+          
+          dot.addEventListener('click', () => {
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+          
+          sectionsEl!.appendChild(dot);
+        });
+      }
+    }
+
+    // Click on track to jump
+    minimap.addEventListener('click', (e) => {
+      if (e.target === viewport || (e.target as HTMLElement).classList.contains('minimap-section-dot')) return;
+      const rect = minimap.getBoundingClientRect();
+      const clickY = e.clientY - rect.top;
+      const ratio = clickY / minimap.clientHeight;
+      const targetScroll = ratio * document.documentElement.scrollHeight;
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    });
+
+    // Drag viewport
+    let dragging = false;
+    viewport.addEventListener('mousedown', (e) => {
+      dragging = true;
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!dragging) return;
+      const rect = minimap.getBoundingClientRect();
+      const clickY = e.clientY - rect.top;
+      const ratio = Math.max(0, Math.min(1, clickY / minimap.clientHeight));
+      const targetScroll = ratio * (document.documentElement.scrollHeight - window.innerHeight);
+      window.scrollTo({ top: targetScroll });
+    });
+
+    window.addEventListener('mouseup', () => { dragging = false; });
+
+    // Listen to scroll
+    let rafPending = false;
+    window.addEventListener('scroll', () => {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => {
+        updateMinimap();
+        rafPending = false;
+      });
+    }, { passive: true });
+
+    // Initial render
+    setTimeout(updateMinimap, 500);
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 900) {
+        minimap.style.display = 'none';
+      } else {
+        sectionsEl.innerHTML = '';
+        updateMinimap();
+      }
+    });
+  })();
+</script>
+
+<style>
+  .page-minimap {
+    position: fixed;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 60vh;
+    max-height: 500px;
+    z-index: 9990;
+    opacity: 0.2;
+    transition: opacity 0.3s ease, width 0.3s ease;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .page-minimap:hover {
+    opacity: 0.7;
+    width: 12px;
+  }
+
+  .minimap-track {
+    position: absolute;
+    inset: 0;
+    background: rgba(124, 58, 237, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .minimap-viewport {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: rgba(168, 85, 247, 0.4);
+    border-radius: 4px;
+    border: 1px solid rgba(168, 85, 247, 0.6);
+    transition: top 0.1s ease;
+    cursor: grab;
+  }
+
+  .minimap-viewport:active {
+    cursor: grabbing;
+  }
+
+  .minimap-sections {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .minimap-section-dot {
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    border-radius: 2px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    pointer-events: auto;
+    cursor: pointer;
+  }
+
+  .minimap-section-dot:hover {
+    opacity: 1;
+  }
+
+  @media (max-width: 900px) {
+    .page-minimap {
+      display: none;
+    }
+  }
+</style>

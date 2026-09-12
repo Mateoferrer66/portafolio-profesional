@@ -18,6 +18,10 @@ import ChatWidget from "../components/ChatWidget";
 import MagicCursor from "../components/MagicCursor";
 import FAQSchema from "../components/FAQSchema.astro";
 import GlobalControls from "../components/GlobalControls.astro";
+import Preloader from "../components/Preloader.astro";
+import CommandPalette from "../components/CommandPalette.astro";
+import KonamiEasterEgg from "../components/KonamiEasterEgg.astro";
+import PageMinimap from "../components/PageMinimap.astro";
 
 interface Props {
 	title?: string | undefined;
@@ -95,6 +99,7 @@ const chatWidgetClass = shouldStack
 		<slot name="head" />
 	</head>
 	<body>
+		<Preloader />
 		<GoogleTagManagerNoScript />
 		<div id="scroll-progress"></div>
 		<!-- 3D Metaverse Background (replaces static images, persists across all page transitions) -->
@@ -117,6 +122,12 @@ const chatWidgetClass = shouldStack
 		<MagicCursor client:only="react" />
 		<!-- Global AI Controls (Voz y Gestos) -->
 		{!hideGlobalAI && <GlobalControls />}
+		<!-- Command Palette (Ctrl+K) -->
+		<CommandPalette />
+		<!-- Konami Code Easter Egg -->
+		<KonamiEasterEgg />
+		<!-- Page Minimap -->
+		<PageMinimap />
 		
 		<!-- Gesture Control Bridge: listens for postMessage commands from the gesture controller -->
 		<Fragment set:html={`<script src="/gesture-bridge.js"></script>`} />
@@ -145,6 +156,11 @@ const chatWidgetClass = shouldStack
 					rafPending = false;
 				});
 			}, { passive: true });
+
+			// PWA Service Worker Registration
+			if ('serviceWorker' in navigator) {
+				navigator.serviceWorker.register('/sw.js').catch(() => {});
+			}
 		</script>
 
 		<style>

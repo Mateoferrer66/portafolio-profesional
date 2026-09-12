@@ -1,0 +1,265 @@
+---
+// Preloader.astro
+// Cinematic loading screen with animated logo, progress bar, and particles
+// Only shows on first visit per session
+---
+
+<div id="preloader" class="preloader">
+  <div class="preloader-bg">
+    <canvas id="preloader-particles" class="preloader-canvas"></canvas>
+  </div>
+  <div class="preloader-content">
+    <div class="preloader-logo">
+      <span class="logo-bracket">&lt;</span>
+      <span class="logo-text">MF</span>
+      <span class="logo-bracket">/&gt;</span>
+    </div>
+    <div class="preloader-name">
+      <span class="typing-text"></span>
+      <span class="typing-cursor">|</span>
+    </div>
+    <div class="preloader-bar-container">
+      <div class="preloader-bar" id="preloader-bar"></div>
+    </div>
+    <p class="preloader-tagline">Cargando experiencia...</p>
+  </div>
+</div>
+
+<script is:inline>
+  // Check if already visited this session
+  (function() {
+    if (sessionStorage.getItem('preloader-done')) {
+      const el = document.getElementById('preloader');
+      if (el) el.style.display = 'none';
+      return;
+    }
+
+    const preloader = document.getElementById('preloader');
+    const bar = document.getElementById('preloader-bar');
+    const canvas = document.getElementById('preloader-particles');
+    const typingText = document.querySelector('.typing-text');
+
+    if (!preloader || !bar || !canvas || !typingText) return;
+
+    // Typing effect
+    const fullText = 'Mateo Ferrer';
+    let charIndex = 0;
+    const typeInterval = setInterval(() => {
+      if (charIndex <= fullText.length) {
+        typingText.textContent = fullText.slice(0, charIndex);
+        charIndex++;
+      } else {
+        clearInterval(typeInterval);
+      }
+    }, 100);
+
+    // Particles
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 2 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        opacity: Math.random() * 0.5 + 0.1
+      });
+    }
+
+    let animating = true;
+    function animateParticles() {
+      if (!animating) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(168, 85, 247, ' + p.opacity + ')';
+        ctx.fill();
+      });
+
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = 'rgba(124, 58, 237, ' + (1 - dist / 120) * 0.15 + ')';
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // Progress bar animation
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += Math.random() * 15 + 5;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(progressInterval);
+      }
+      bar.style.width = progress + '%';
+    }, 200);
+
+    // Dismiss preloader
+    function dismissPreloader() {
+      sessionStorage.setItem('preloader-done', '1');
+      preloader.classList.add('preloader-exit');
+      animating = false;
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 800);
+    }
+
+    // Wait for page load + minimum display time
+    const minTime = 2200;
+    const startTime = Date.now();
+
+    window.addEventListener('load', () => {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, minTime - elapsed);
+      setTimeout(dismissPreloader, remaining);
+    });
+
+    // Fallback: dismiss after 4 seconds max
+    setTimeout(() => {
+      if (preloader.style.display !== 'none') dismissPreloader();
+    }, 4000);
+  })();
+</script>
+
+<style>
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #05010a;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .preloader-exit {
+    opacity: 0;
+    transform: scale(1.05);
+    pointer-events: none;
+  }
+
+  .preloader-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .preloader-canvas {
+    width: 100%;
+    height: 100%;
+  }
+
+  .preloader-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .preloader-logo {
+    font-size: 3.5rem;
+    font-weight: 900;
+    font-family: 'Rubik', monospace;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    animation: logoFloat 3s ease-in-out infinite;
+  }
+
+  .logo-bracket {
+    color: #7c3aed;
+    opacity: 0.7;
+    font-size: 2.8rem;
+  }
+
+  .logo-text {
+    background: linear-gradient(135deg, #a855f7 0%, #4ade80 50%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: logoGradient 3s ease-in-out infinite;
+  }
+
+  @keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  @keyframes logoGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .preloader-name {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    height: 1.8em;
+    display: flex;
+    align-items: center;
+  }
+
+  .typing-cursor {
+    color: #a855f7;
+    animation: cursorBlink 0.8s step-end infinite;
+    font-weight: 300;
+    margin-left: 2px;
+  }
+
+  @keyframes cursorBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .preloader-bar-container {
+    width: 200px;
+    height: 3px;
+    background: rgba(124, 58, 237, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .preloader-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #7c3aed, #a855f7, #4ade80);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+  }
+
+  .preloader-tagline {
+    color: #64748b;
+    font-size: 0.8rem;
+    margin: 0;
+    letter-spacing: 0.05em;
+  }
+</style>

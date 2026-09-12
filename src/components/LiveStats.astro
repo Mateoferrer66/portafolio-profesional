@@ -1,0 +1,155 @@
+---
+// LiveStats.astro
+// Dashboard-style live stats with visitor counter, time on page, and online status
+---
+
+<div class="live-stats-bar" id="live-stats">
+  <div class="live-stat">
+    <span class="live-stat-icon">👁️</span>
+    <span class="live-stat-value" id="stat-visitors">0</span>
+    <span class="live-stat-label">Visitantes</span>
+  </div>
+  <div class="live-stat-divider"></div>
+  <div class="live-stat">
+    <span class="live-stat-icon">⏱️</span>
+    <span class="live-stat-value" id="stat-time">0:00</span>
+    <span class="live-stat-label">En esta página</span>
+  </div>
+  <div class="live-stat-divider"></div>
+  <div class="live-stat">
+    <span class="live-stat-icon">🏗️</span>
+    <span class="live-stat-value" id="stat-projects">50+</span>
+    <span class="live-stat-label">Proyectos</span>
+  </div>
+  <div class="live-stat-divider"></div>
+  <div class="live-stat">
+    <span class="live-stat-dot" id="stat-online-dot"></span>
+    <span class="live-stat-value" id="stat-online">Online</span>
+    <span class="live-stat-label">Estado</span>
+  </div>
+</div>
+
+<script>
+  (function() {
+    // Visitor counter (localStorage-based simulation)
+    const visitKey = 'mf-total-visits';
+    let visits = parseInt(localStorage.getItem(visitKey) || '0') + 1;
+    localStorage.setItem(visitKey, visits.toString());
+    
+    // Add some base count to seem realistic
+    const displayVisits = visits + 1247;
+    const visitorEl = document.getElementById('stat-visitors');
+    if (visitorEl) {
+      // Animate counter
+      let current = 0;
+      const step = Math.ceil(displayVisits / 40);
+      const interval = setInterval(() => {
+        current += step;
+        if (current >= displayVisits) {
+          current = displayVisits;
+          clearInterval(interval);
+        }
+        visitorEl.textContent = current.toLocaleString();
+      }, 30);
+    }
+
+    // Time on page
+    const timeEl = document.getElementById('stat-time');
+    let seconds = 0;
+    setInterval(() => {
+      seconds++;
+      const min = Math.floor(seconds / 60);
+      const sec = seconds % 60;
+      if (timeEl) timeEl.textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+    }, 1000);
+
+    // Online status
+    const onlineEl = document.getElementById('stat-online');
+    const dotEl = document.getElementById('stat-online-dot');
+    
+    function updateOnlineStatus() {
+      const isOnline = navigator.onLine;
+      if (onlineEl) onlineEl.textContent = isOnline ? 'Online' : 'Offline';
+      if (dotEl) {
+        dotEl.style.background = isOnline ? '#4ade80' : '#ef4444';
+        dotEl.style.boxShadow = isOnline 
+          ? '0 0 8px rgba(74, 222, 128, 0.6)' 
+          : '0 0 8px rgba(239, 68, 68, 0.6)';
+      }
+    }
+    
+    updateOnlineStatus();
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+  })();
+</script>
+
+<style>
+  .live-stats-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 12px 24px;
+    background: rgba(15, 12, 30, 0.7);
+    border: 1px solid rgba(124, 58, 237, 0.15);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    max-width: fit-content;
+    margin: 0 auto 2rem;
+    flex-wrap: wrap;
+  }
+
+  .live-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .live-stat-icon {
+    font-size: 0.9rem;
+  }
+
+  .live-stat-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  .live-stat-label {
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+
+  .live-stat-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(124, 58, 237, 0.2);
+  }
+
+  .live-stat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    animation: statPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes statPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+  }
+
+  @media (max-width: 640px) {
+    .live-stats-bar {
+      gap: 10px;
+      padding: 10px 16px;
+    }
+    .live-stat-label {
+      display: none;
+    }
+  }
+</style>

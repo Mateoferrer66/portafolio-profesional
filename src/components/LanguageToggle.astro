@@ -1,0 +1,97 @@
+---
+// LanguageToggle.astro
+// ES/EN toggle that saves preference and dispatches a custom event
+---
+
+<div class="lang-toggle" id="lang-toggle">
+  <button class="lang-btn lang-active" id="lang-es" data-lang="es" type="button" title="Español">
+    🇪🇸 <span class="lang-label">ES</span>
+  </button>
+  <button class="lang-btn" id="lang-en" data-lang="en" type="button" title="English">
+    🇺🇸 <span class="lang-label">EN</span>
+  </button>
+</div>
+
+<script>
+  (function() {
+    const saved = localStorage.getItem('mf-lang') || 'es';
+    applyLang(saved);
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const lang = (btn as HTMLElement).dataset.lang || 'es';
+        applyLang(lang);
+        localStorage.setItem('mf-lang', lang);
+        window.dispatchEvent(new CustomEvent('langchange', { detail: { lang } }));
+      });
+    });
+
+    function applyLang(lang: string) {
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('lang-active', (btn as HTMLElement).dataset.lang === lang);
+      });
+      document.documentElement.setAttribute('data-lang', lang);
+
+      // Translate elements with data-es and data-en attributes
+      document.querySelectorAll('[data-es][data-en]').forEach(el => {
+        const htmlEl = el as HTMLElement;
+        const text = htmlEl.getAttribute(`data-${lang}`);
+        if (text) htmlEl.textContent = text;
+      });
+    }
+
+    // Re-apply after view transitions
+    document.addEventListener('astro:after-swap', () => {
+      const lang = localStorage.getItem('mf-lang') || 'es';
+      applyLang(lang);
+    });
+  })();
+</script>
+
+<style>
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    border-radius: 999px;
+    padding: 2px;
+    gap: 2px;
+  }
+
+  .lang-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .lang-btn:hover {
+    color: #cbd5e1;
+  }
+
+  .lang-btn.lang-active {
+    background: rgba(124, 58, 237, 0.3);
+    color: #e9d5ff;
+    box-shadow: 0 0 8px rgba(124, 58, 237, 0.15);
+  }
+
+  .lang-label {
+    font-size: 0.65rem;
+  }
+
+  @media (max-width: 50em) {
+    .lang-toggle {
+      margin-left: auto;
+    }
+  }
+</style>

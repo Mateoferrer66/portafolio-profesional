@@ -1,0 +1,31 @@
+{
+  "name": "Mateo Ferrer — Portafolio Profesional",
+  "short_name": "MF Portfolio",
+  "description": "Portafolio profesional de Mateo Ferrer. Desarrollo web, diseño y servicios digitales.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05010a",
+  "theme_color": "#7c3aed",
+  "orientation": "any",
+  "categories": ["portfolio", "development", "design"],
+  "lang": "es",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

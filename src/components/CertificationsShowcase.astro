@@ -1,0 +1,270 @@
+---
+// CertificationsShowcase.astro
+// Interactive grid of certifications with platform filter and animated counter
+import { certifications, platforms } from '../data/certifications';
+---
+
+<section class="certifications-section reveal" id="certifications">
+  <header class="section-header stack gap-2 lg:gap-4">
+    <h2>Certificaciones Verificadas</h2>
+    <p>Más de 220 certificaciones en desarrollo de software, diseño, IA y más.</p>
+  </header>
+
+  <!-- Counter -->
+  <div class="cert-counter">
+    <span class="cert-counter-number" data-target="220">0</span>
+    <span class="cert-counter-label">+ Certificaciones</span>
+  </div>
+
+  <!-- Platform Filter -->
+  <div class="cert-filters">
+    <button class="cert-filter-btn active" data-filter="all">
+      <span class="filter-icon">🌐</span>
+      <span>Todas</span>
+    </button>
+    {platforms.map(platform => (
+      <button class="cert-filter-btn" data-filter={platform.id}>
+        <span class="filter-icon">{platform.icon}</span>
+        <span>{platform.name}</span>
+      </button>
+    ))}
+  </div>
+
+  <!-- Certifications Grid -->
+  <div class="cert-grid" id="cert-grid">
+    {certifications.map((cert, index) => (
+      <a 
+        href={cert.url} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="cert-card" 
+        data-platform={cert.platform}
+        style={`animation-delay: ${index * 50}ms`}
+      >
+        <div class="cert-card-icon">{cert.icon}</div>
+        <div class="cert-card-info">
+          <h4 class="cert-card-title">{cert.name}</h4>
+          <span class="cert-card-platform">{cert.platformName}</span>
+        </div>
+        <div class="cert-card-verify">
+          <span class="verify-badge">✓ Verificar</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>
+
+<script>
+  // Animated counter
+  const counterEl = document.querySelector('.cert-counter-number') as HTMLElement;
+  if (counterEl) {
+    const target = parseInt(counterEl.dataset.target || '220');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        let start: number | null = null;
+        const step = (timestamp: number) => {
+          if (!start) start = timestamp;
+          const progress = Math.min((timestamp - start) / 2000, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          counterEl.textContent = Math.floor(eased * target).toString();
+          if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.3 });
+    observer.observe(counterEl);
+  }
+
+  // Filter logic
+  document.querySelectorAll('.cert-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const filter = (btn as HTMLElement).dataset.filter;
+      
+      // Update active state
+      document.querySelectorAll('.cert-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Filter cards
+      document.querySelectorAll('.cert-card').forEach((card, index) => {
+        const cardEl = card as HTMLElement;
+        const platform = cardEl.dataset.platform;
+        const show = filter === 'all' || platform === filter;
+        
+        if (show) {
+          cardEl.style.display = '';
+          cardEl.style.animation = `certFadeIn 0.4s ease ${index * 30}ms both`;
+        } else {
+          cardEl.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .certifications-section {
+    padding: 4rem 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .cert-counter {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    margin: 1.5rem 0 2rem;
+  }
+
+  .cert-counter-number {
+    font-size: 3.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #a855f7, #4ade80);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+
+  .cert-counter-label {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    font-weight: 600;
+  }
+
+  /* Filters */
+  .cert-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+
+  .cert-filter-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(124, 58, 237, 0.2);
+    border-radius: 999px;
+    color: #94a3b8;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    font-family: inherit;
+  }
+
+  .cert-filter-btn:hover {
+    background: rgba(124, 58, 237, 0.1);
+    border-color: rgba(124, 58, 237, 0.5);
+    color: #e2e8f0;
+  }
+
+  .cert-filter-btn.active {
+    background: rgba(124, 58, 237, 0.25);
+    border-color: #a855f7;
+    color: #e9d5ff;
+    box-shadow: 0 0 15px rgba(124, 58, 237, 0.2);
+  }
+
+  .filter-icon {
+    font-size: 0.9rem;
+  }
+
+  /* Grid */
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    padding: 0 1rem;
+  }
+
+  .cert-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(15, 12, 30, 0.6);
+    border: 1px solid rgba(124, 58, 237, 0.15);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    animation: certFadeIn 0.4s ease both;
+  }
+
+  .cert-card:hover {
+    background: rgba(124, 58, 237, 0.08);
+    border-color: rgba(124, 58, 237, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  }
+
+  @keyframes certFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .cert-card-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+    width: 36px;
+    text-align: center;
+  }
+
+  .cert-card-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cert-card-title {
+    margin: 0;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cert-card-platform {
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+
+  .cert-card-verify {
+    flex-shrink: 0;
+  }
+
+  .verify-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 6px;
+    color: #4ade80;
+    font-size: 0.65rem;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .cert-card:hover .verify-badge {
+    opacity: 1;
+  }
+
+  @media (max-width: 640px) {
+    .cert-grid {
+      grid-template-columns: 1fr;
+    }
+    .cert-counter-number {
+      font-size: 2.5rem;
+    }
+  }
+</style>

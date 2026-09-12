@@ -1,0 +1,194 @@
+---
+// AvailabilityBadge.astro
+// Animated availability indicator showing if you're open for new projects
+interface Props {
+  variant?: 'hero' | 'nav';
+}
+const { variant = 'hero' } = Astro.props;
+const isAvailable = true; // Toggle this when you're busy
+---
+
+<div class:list={['availability-badge', `availability-${variant}`, { available: isAvailable, busy: !isAvailable }]}>
+  <a href="https://wa.me/573005059987" target="_blank" rel="noopener noreferrer" class="availability-link">
+    <span class="availability-dot"></span>
+    <span class="availability-text">
+      {isAvailable ? 'Disponible para proyectos' : 'Ocupado — Agenda en lista de espera'}
+    </span>
+  </a>
+  <div class="availability-tooltip">
+    <div class="tooltip-arrow"></div>
+    <div class="tooltip-content">
+      <p class="tooltip-title">{isAvailable ? '🟢 Aceptando proyectos' : '🔴 Sin disponibilidad'}</p>
+      <ul>
+        <li>✅ Desarrollo Web Full Stack</li>
+        <li>✅ E-Commerce y Tiendas</li>
+        <li>✅ UI/UX Design</li>
+        <li>✅ Consultoría Técnica</li>
+      </ul>
+      <p class="tooltip-cta">Click para cotizar por WhatsApp →</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .availability-badge {
+    position: relative;
+    display: inline-flex;
+    z-index: 10;
+  }
+
+  .availability-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(15, 15, 25, 0.8);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 999px;
+    text-decoration: none;
+    color: #e2e8f0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .availability-link:hover {
+    background: rgba(74, 222, 128, 0.1);
+    border-color: rgba(74, 222, 128, 0.6);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 20px rgba(74, 222, 128, 0.15);
+  }
+
+  .busy .availability-link {
+    border-color: rgba(239, 68, 68, 0.3);
+  }
+
+  .busy .availability-link:hover {
+    border-color: rgba(239, 68, 68, 0.6);
+    background: rgba(239, 68, 68, 0.1);
+  }
+
+  .availability-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .available .availability-dot {
+    background: #4ade80;
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    animation: availPulse 2s ease-in-out infinite;
+  }
+
+  .busy .availability-dot {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+  }
+
+  @keyframes availPulse {
+    0%, 100% { box-shadow: 0 0 4px rgba(74, 222, 128, 0.4); transform: scale(1); }
+    50% { box-shadow: 0 0 12px rgba(74, 222, 128, 0.8); transform: scale(1.2); }
+  }
+
+  .availability-text {
+    white-space: nowrap;
+    font-size: 0.78rem;
+  }
+
+  /* Tooltip */
+  .availability-tooltip {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) scale(0.95);
+    width: 240px;
+    background: rgba(15, 12, 30, 0.97);
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    border-radius: 12px;
+    padding: 14px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+    pointer-events: none;
+    z-index: 100;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+  }
+
+  .availability-badge:hover .availability-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) scale(1);
+    pointer-events: auto;
+  }
+
+  .tooltip-arrow {
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background: rgba(15, 12, 30, 0.97);
+    border-top: 1px solid rgba(124, 58, 237, 0.4);
+    border-left: 1px solid rgba(124, 58, 237, 0.4);
+  }
+
+  .tooltip-content {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+  }
+
+  .tooltip-title {
+    font-weight: 700;
+    margin: 0 0 8px;
+    font-size: 0.82rem;
+    color: #e2e8f0;
+  }
+
+  .tooltip-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .tooltip-content li {
+    font-size: 0.72rem;
+    color: #94a3b8;
+  }
+
+  .tooltip-cta {
+    margin: 0;
+    color: #a855f7;
+    font-weight: 600;
+    font-size: 0.72rem;
+  }
+
+  /* Nav variant: more compact */
+  .availability-nav .availability-link {
+    padding: 3px 10px;
+    font-size: 0.7rem;
+    gap: 5px;
+  }
+
+  .availability-nav .availability-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .availability-nav .availability-text {
+    font-size: 0.68rem;
+  }
+
+  @media (max-width: 50em) {
+    .availability-nav {
+      display: none;
+    }
+  }
+</style>
