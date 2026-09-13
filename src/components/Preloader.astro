@@ -4,7 +4,7 @@
 // Only shows on first visit per session
 ---
 
-<div id="preloader" class="preloader">
+<div id="preloader" class="preloader" transition:persist="site-preloader">
   <div class="preloader-bg">
     <canvas id="preloader-particles" class="preloader-canvas"></canvas>
   </div>
@@ -26,40 +26,52 @@
 </div>
 
 <script is:inline>
-  // Check if already visited this session
+  // === Preloader Logic ===
+  // Handles both initial page load AND Astro View Transitions (SPA navigation)
   (function() {
-    if (sessionStorage.getItem('preloader-done')) {
-      const el = document.getElementById('preloader');
-      if (el) el.style.display = 'none';
+    var alreadyDone = false;
+    try {
+      alreadyDone = !!sessionStorage.getItem('preloader-done');
+    } catch(e) {}
+
+    var preloaderEl = document.getElementById('preloader');
+    if (alreadyDone) {
+      if (preloaderEl) preloaderEl.style.display = 'none';
+      document.documentElement.classList.add('preloader-hidden');
       return;
     }
 
-    const preloader = document.getElementById('preloader');
-    const bar = document.getElementById('preloader-bar');
-    const canvas = document.getElementById('preloader-particles');
-    const typingText = document.querySelector('.typing-text');
+    if (!preloaderEl) return;
 
-    if (!preloader || !bar || !canvas || !typingText) return;
+    var bar = document.getElementById('preloader-bar');
+    var canvas = document.getElementById('preloader-particles');
+    var typingText = document.querySelector('.typing-text');
+
+    if (!bar || !canvas || !typingText) {
+      preloaderEl.style.display = 'none';
+      try { sessionStorage.setItem('preloader-done', '1'); } catch(e) {}
+      return;
+    }
 
     // Typing effect
-    const fullText = 'Mateo Ferrer';
-    let charIndex = 0;
-    const typeInterval = setInterval(() => {
+    var fullText = 'Mateo Ferrer';
+    var charIndex = 0;
+    var typeInterval = setInterval(function() {
       if (charIndex <= fullText.length) {
         typingText.textContent = fullText.slice(0, charIndex);
         charIndex++;
       } else {
         clearInterval(typeInterval);
       }
-    }, 100);
+    }, 90);
 
     // Particles
-    const ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const particles = [];
-    for (let i = 0; i < 60; i++) {
+    var particles = [];
+    for (var i = 0; i < 50; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -70,11 +82,12 @@
       });
     }
 
-    let animating = true;
+    var animating = true;
     function animateParticles() {
       if (!animating) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
         p.x += p.speedX;
         p.y += p.speedY;
         if (p.x < 0) p.x = canvas.width;
@@ -86,19 +99,18 @@
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(168, 85, 247, ' + p.opacity + ')';
         ctx.fill();
-      });
+      }
 
-      // Draw connections
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 120) {
+      for (var i = 0; i < particles.length; i++) {
+        for (var j = i + 1; j < particles.length; j++) {
+          var dx = particles[i].x - particles[j].x;
+          var dy = particles[i].y - particles[j].y;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 100) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = 'rgba(124, 58, 237, ' + (1 - dist / 120) * 0.15 + ')';
+            ctx.strokeStyle = 'rgba(124, 58, 237, ' + (1 - dist / 100) * 0.15 + ')';
             ctx.stroke();
           }
         }
@@ -108,44 +120,78 @@
     animateParticles();
 
     // Progress bar animation
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-      progress += Math.random() * 15 + 5;
+    var progress = 0;
+    var progressInterval = setInterval(function() {
+      progress += Math.random() * 20 + 10;
       if (progress >= 100) {
         progress = 100;
         clearInterval(progressInterval);
       }
       bar.style.width = progress + '%';
-    }, 200);
+    }, 150);
 
     // Dismiss preloader
     function dismissPreloader() {
-      sessionStorage.setItem('preloader-done', '1');
-      preloader.classList.add('preloader-exit');
+      if (!preloaderEl || preloaderEl.style.display === 'none') return;
+      try { sessionStorage.setItem('preloader-done', '1'); } catch(e) {}
+      document.documentElement.classList.add('preloader-hidden');
+      preloaderEl.classList.add('preloader-exit');
       animating = false;
-      setTimeout(() => {
-        preloader.style.display = 'none';
-      }, 800);
+      clearInterval(typeInterval);
+      clearInterval(progressInterval);
+      setTimeout(function() {
+        preloaderEl.style.display = 'none';
+      }, 600);
     }
 
     // Wait for page load + minimum display time
-    const minTime = 2200;
-    const startTime = Date.now();
+    var minTime = 1800;
+    var startTime = Date.now();
 
-    window.addEventListener('load', () => {
-      const elapsed = Date.now() - startTime;
-      const remaining = Math.max(0, minTime - elapsed);
-      setTimeout(dismissPreloader, remaining);
-    });
+    if (document.readyState === 'complete') {
+      setTimeout(dismissPreloader, minTime);
+    } else {
+      window.addEventListener('load', function() {
+        var elapsed = Date.now() - startTime;
+        var remaining = Math.max(0, minTime - elapsed);
+        setTimeout(dismissPreloader, remaining);
+      });
+    }
 
-    // Fallback: dismiss after 4 seconds max
-    setTimeout(() => {
-      if (preloader.style.display !== 'none') dismissPreloader();
-    }, 4000);
+    // Absolute fallback: max 3.5 seconds
+    setTimeout(function() {
+      dismissPreloader();
+    }, 3500);
   })();
+
+  // === View Transitions Handlers ===
+  document.addEventListener('astro:before-swap', function(e) {
+    var done = false;
+    try { done = !!sessionStorage.getItem('preloader-done'); } catch(err) {}
+    if (done && e.newDocument) {
+      e.newDocument.documentElement.classList.add('preloader-hidden');
+      var newP = e.newDocument.getElementById('preloader');
+      if (newP) newP.style.display = 'none';
+    }
+  });
+
+  document.addEventListener('astro:page-load', function() {
+    var done = false;
+    try { done = !!sessionStorage.getItem('preloader-done'); } catch(err) {}
+    if (done) {
+      document.documentElement.classList.add('preloader-hidden');
+      var p = document.getElementById('preloader');
+      if (p) p.style.display = 'none';
+    }
+  });
 </script>
 
 <style>
+  :global(html.preloader-hidden) #preloader,
+  #preloader.preloader-hidden {
+    display: none !important;
+  }
+
   .preloader {
     position: fixed;
     inset: 0;

@@ -344,4 +344,45 @@ const currentYear = new Date().getFullYear();
 			font-size: var(--text-3xl);
 		}
 	}
+
+	/* Small Mobile */
+	@media (max-width: 480px) {
+		.footer-container {
+			padding: 2rem 1rem;
+		}
+
+		.footer-cta {
+			padding: 2rem 1.25rem;
+			border-radius: 16px;
+			margin-bottom: 2rem;
+		}
+
+		.cta-content h3 {
+			font-size: var(--text-xl);
+		}
+
+		.cta-content p {
+			font-size: var(--text-sm);
+		}
+
+		.cta-button {
+			padding: 0.75rem 1.5rem;
+			font-size: var(--text-sm);
+		}
+
+		.footer-brand {
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+		}
+
+		.brand-text {
+			text-align: center;
+		}
+
+		.social-link {
+			width: 40px;
+			height: 40px;
+		}
+	}
 </style>

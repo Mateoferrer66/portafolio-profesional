@@ -185,89 +185,93 @@ import Icon from "../components/Icon.astro";
 </BaseLayout>
 
 <script>
-  // Budget slider
-  const budgetSlider = document.getElementById('budget') as HTMLInputElement;
-  const budgetValue = document.getElementById('budget-value');
-  if (budgetSlider && budgetValue) {
-    budgetSlider.addEventListener('input', () => {
-      const val = parseInt(budgetSlider.value);
-      budgetValue.textContent = val >= 10000 ? '$10,000+ USD' : `$${val.toLocaleString()} USD`;
-    });
-  }
+  function initContactForm() {
+    // Budget slider
+    const budgetSlider = document.getElementById('budget') as HTMLInputElement;
+    const budgetValue = document.getElementById('budget-value');
+    if (budgetSlider && budgetValue) {
+      budgetSlider.addEventListener('input', () => {
+        const val = parseInt(budgetSlider.value);
+        budgetValue.textContent = val >= 10000 ? '$10,000+ USD' : `$${val.toLocaleString()} USD`;
+      });
+    }
 
-  // Real-time validation
-  function validateField(input: HTMLInputElement | HTMLTextAreaElement, errorId: string): boolean {
-    const errorEl = document.getElementById(errorId);
-    if (!input.validity.valid) {
-      input.classList.add('invalid');
-      input.classList.remove('valid');
-      if (errorEl) {
-        if (input.validity.valueMissing) errorEl.textContent = 'Este campo es requerido';
-        else if (input.validity.typeMismatch) errorEl.textContent = 'Formato inválido';
-        else errorEl.textContent = 'Valor inválido';
+    // Real-time validation
+    function validateField(input: HTMLInputElement | HTMLTextAreaElement, errorId: string): boolean {
+      const errorEl = document.getElementById(errorId);
+      if (!input.validity.valid) {
+        input.classList.add('invalid');
+        input.classList.remove('valid');
+        if (errorEl) {
+          if (input.validity.valueMissing) errorEl.textContent = 'Este campo es requerido';
+          else if (input.validity.typeMismatch) errorEl.textContent = 'Formato inválido';
+          else errorEl.textContent = 'Valor inválido';
+        }
+        return false;
+      } else if (input.value.trim()) {
+        input.classList.remove('invalid');
+        input.classList.add('valid');
+        if (errorEl) errorEl.textContent = '';
+        return true;
       }
-      return false;
-    } else if (input.value.trim()) {
-      input.classList.remove('invalid');
-      input.classList.add('valid');
-      if (errorEl) errorEl.textContent = '';
       return true;
     }
-    return true;
+
+    document.querySelectorAll('.form-input').forEach(input => {
+      const el = input as HTMLInputElement;
+      el.addEventListener('blur', () => validateField(el, el.id + '-error'));
+      el.addEventListener('input', () => {
+        if (el.classList.contains('invalid')) validateField(el, el.id + '-error');
+      });
+    });
+
+    // Form submission
+    const form = document.getElementById('contact-form') as HTMLFormElement;
+    const submitBtn = document.getElementById('submit-btn');
+    const formSuccess = document.getElementById('form-success');
+    const resetBtn = document.getElementById('form-reset-btn');
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      if (!submitBtn || !formSuccess) return;
+
+      // Show loader
+      const submitText = submitBtn.querySelector('.submit-text') as HTMLElement;
+      const submitIcon = submitBtn.querySelector('.submit-icon') as HTMLElement;
+      const submitLoader = submitBtn.querySelector('.submit-loader') as HTMLElement;
+      
+      if (submitText) submitText.style.display = 'none';
+      if (submitIcon) submitIcon.style.display = 'none';
+      if (submitLoader) submitLoader.style.display = 'flex';
+      (submitBtn as HTMLButtonElement).disabled = true;
+
+      // Simulate form submission (replace with actual formspree/emailjs)
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Show success
+      form.style.display = 'none';
+      formSuccess.style.display = 'flex';
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (!form || !formSuccess || !submitBtn) return;
+      form.reset();
+      form.style.display = 'flex';
+      formSuccess.style.display = 'none';
+      
+      const submitText = submitBtn.querySelector('.submit-text') as HTMLElement;
+      const submitIcon = submitBtn.querySelector('.submit-icon') as HTMLElement;
+      const submitLoader = submitBtn.querySelector('.submit-loader') as HTMLElement;
+      
+      if (submitText) submitText.style.display = '';
+      if (submitIcon) submitIcon.style.display = '';
+      if (submitLoader) submitLoader.style.display = 'none';
+      (submitBtn as HTMLButtonElement).disabled = false;
+    });
   }
 
-  document.querySelectorAll('.form-input').forEach(input => {
-    const el = input as HTMLInputElement;
-    el.addEventListener('blur', () => validateField(el, el.id + '-error'));
-    el.addEventListener('input', () => {
-      if (el.classList.contains('invalid')) validateField(el, el.id + '-error');
-    });
-  });
-
-  // Form submission
-  const form = document.getElementById('contact-form') as HTMLFormElement;
-  const submitBtn = document.getElementById('submit-btn');
-  const formSuccess = document.getElementById('form-success');
-  const resetBtn = document.getElementById('form-reset-btn');
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    if (!submitBtn || !formSuccess) return;
-
-    // Show loader
-    const submitText = submitBtn.querySelector('.submit-text') as HTMLElement;
-    const submitIcon = submitBtn.querySelector('.submit-icon') as HTMLElement;
-    const submitLoader = submitBtn.querySelector('.submit-loader') as HTMLElement;
-    
-    if (submitText) submitText.style.display = 'none';
-    if (submitIcon) submitIcon.style.display = 'none';
-    if (submitLoader) submitLoader.style.display = 'flex';
-    (submitBtn as HTMLButtonElement).disabled = true;
-
-    // Simulate form submission (replace with actual formspree/emailjs)
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Show success
-    form.style.display = 'none';
-    formSuccess.style.display = 'flex';
-  });
-
-  resetBtn?.addEventListener('click', () => {
-    if (!form || !formSuccess || !submitBtn) return;
-    form.reset();
-    form.style.display = 'flex';
-    formSuccess.style.display = 'none';
-    
-    const submitText = submitBtn.querySelector('.submit-text') as HTMLElement;
-    const submitIcon = submitBtn.querySelector('.submit-icon') as HTMLElement;
-    const submitLoader = submitBtn.querySelector('.submit-loader') as HTMLElement;
-    
-    if (submitText) submitText.style.display = '';
-    if (submitIcon) submitIcon.style.display = '';
-    if (submitLoader) submitLoader.style.display = 'none';
-    (submitBtn as HTMLButtonElement).disabled = false;
-  });
+  document.addEventListener('astro:page-load', initContactForm);
 </script>
 
 <style>

@@ -20,29 +20,36 @@ const { align = "center", tagline, title } = Astro.props;
 </div>
 
 <script>
-	const titles = document.querySelectorAll(".typewriter");
-	titles.forEach((title) => {
-		const text = title.textContent || "";
-		title.textContent = "";
-		let i = 0;
-		const type = () => {
-			if (i < text.length) {
-				title.textContent += text.charAt(i);
-				i++;
-				setTimeout(type, 50); // Speed of typing
-			}
-		};
-		// intersection observer to start typing when visible
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry) => {
-				if (entry.isIntersecting) {
-					type();
-					observer.unobserve(entry.target);
+	function initTypewriter() {
+		const titles = document.querySelectorAll(".typewriter");
+		titles.forEach((title) => {
+			const el = title as HTMLElement;
+			if (el.dataset.typed) return;
+			const text = el.textContent?.trim() || "";
+			if (!text) return;
+			el.dataset.typed = "true";
+			el.textContent = "";
+			let i = 0;
+			const type = () => {
+				if (i < text.length) {
+					el.textContent += text.charAt(i);
+					i++;
+					setTimeout(type, 50);
 				}
+			};
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry) => {
+					if (entry.isIntersecting) {
+						type();
+						observer.unobserve(entry.target);
+					}
+				});
 			});
+			observer.observe(el);
 		});
-		observer.observe(title);
-	});
+	}
+
+	document.addEventListener("astro:page-load", initTypewriter);
 </script>
 
 <style>

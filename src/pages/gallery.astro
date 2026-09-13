@@ -113,42 +113,49 @@ const allItems = [
 </BaseLayout>
 
 <script>
-  // Masonry-like stagger animation
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        (entry.target as HTMLElement).classList.add('gal-visible');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '50px' });
+  function initGallery() {
+    const cards = document.querySelectorAll('.gal-card');
+    if (!cards.length) return;
 
-  document.querySelectorAll('.gal-card').forEach(card => observer.observe(card));
-
-  // Filter logic
-  document.querySelectorAll('.gal-filter').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const filter = (btn as HTMLElement).dataset.filter;
-      
-      document.querySelectorAll('.gal-filter').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      document.querySelectorAll('.gal-card').forEach((card, index) => {
-        const cardEl = card as HTMLElement;
-        const type = cardEl.dataset.type;
-        const show = filter === 'all' || type === filter;
-        
-        if (show) {
-          cardEl.style.display = '';
-          cardEl.style.animationDelay = (index * 40) + 'ms';
-          cardEl.classList.remove('gal-visible');
-          setTimeout(() => cardEl.classList.add('gal-visible'), 10);
-        } else {
-          cardEl.style.display = 'none';
+    // Masonry-like stagger animation
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('gal-visible');
+          observer.unobserve(entry.target);
         }
       });
+    }, { threshold: 0.1, rootMargin: '50px' });
+
+    cards.forEach(card => observer.observe(card));
+
+    // Filter logic
+    document.querySelectorAll('.gal-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = (btn as HTMLElement).dataset.filter;
+        
+        document.querySelectorAll('.gal-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        document.querySelectorAll('.gal-card').forEach((card, index) => {
+          const cardEl = card as HTMLElement;
+          const type = cardEl.dataset.type;
+          const show = filter === 'all' || type === filter;
+          
+          if (show) {
+            cardEl.style.display = '';
+            cardEl.style.animationDelay = (index * 40) + 'ms';
+            cardEl.classList.remove('gal-visible');
+            setTimeout(() => cardEl.classList.add('gal-visible'), 10);
+          } else {
+            cardEl.style.display = 'none';
+          }
+        });
+      });
     });
-  });
+  }
+
+  document.addEventListener('astro:page-load', initGallery);
 </script>
 
 <style>

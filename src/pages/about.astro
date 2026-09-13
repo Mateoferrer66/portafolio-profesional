@@ -171,24 +171,27 @@ import Hero from "../components/Hero.astro";
     </main>
 
     <script>
-      const tabBtns = document.querySelectorAll(".tab-btn");
-      const tabContents = document.querySelectorAll(".tab-content");
+      function initAboutTabs() {
+        const tabBtns = document.querySelectorAll(".tab-btn");
+        const tabContents = document.querySelectorAll(".tab-content");
+        if (!tabBtns.length) return;
 
-      tabBtns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          // Remove active class
-          tabBtns.forEach((b) => b.classList.remove("active"));
-          tabContents.forEach((c) => c.classList.remove("active"));
+        tabBtns.forEach((btn) => {
+          btn.addEventListener("click", () => {
+            tabBtns.forEach((b) => b.classList.remove("active"));
+            tabContents.forEach((c) => c.classList.remove("active"));
 
-          // Add active class
-          btn.classList.add("active");
-          const tabId = btn.getAttribute("data-tab");
-          const targetContent = document.getElementById(tabId || "");
-          if (targetContent) {
-            targetContent.classList.add("active");
-          }
+            btn.classList.add("active");
+            const tabId = btn.getAttribute("data-tab");
+            const targetContent = document.getElementById(tabId || "");
+            if (targetContent) {
+              targetContent.classList.add("active");
+            }
+          });
         });
-      });
+      }
+
+      document.addEventListener("astro:page-load", initAboutTabs);
     </script>
 
     <ContactCTA />
@@ -297,14 +300,16 @@ import Hero from "../components/Hero.astro";
     display: block;
   }
 
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
+  @media (max-width: 480px) {
+    .tabs-nav {
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
     }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+
+    .tab-btn {
+      padding: 0.4rem 0.9rem;
+      font-size: var(--text-sm);
+      border-width: 1.5px;
     }
   }
 </style>

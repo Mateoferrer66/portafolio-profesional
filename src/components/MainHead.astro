@@ -143,5 +143,16 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 	document.addEventListener("astro:after-swap", () => {
 		document.documentElement.classList.add("theme-dark");
 		document.documentElement.classList.remove("theme-light");
+		try {
+			if (sessionStorage.getItem('preloader-done')) {
+				document.documentElement.classList.add('preloader-hidden');
+			}
+		} catch(e) {}
 	});
+
+	try {
+		if (sessionStorage.getItem('preloader-done')) {
+			document.documentElement.classList.add('preloader-hidden');
+		}
+	} catch(e) {}
 </script>

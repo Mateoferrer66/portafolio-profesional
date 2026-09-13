@@ -23,24 +23,30 @@
 </button>
 
 <script>
-    const scrollToTopBtn = document.getElementById("scrollToTop");
+    function initScrollToTop() {
+        const scrollToTopBtn = document.getElementById("scrollToTop");
+        if (!scrollToTopBtn) return;
 
-    const toggleValid = () => {
-        if (window.scrollY > 300) {
-            scrollToTopBtn?.classList.remove("opacity-0", "translate-y-10");
-            scrollToTopBtn?.classList.add("opacity-100", "translate-y-0");
-        } else {
-            scrollToTopBtn?.classList.add("opacity-0", "translate-y-10");
-            scrollToTopBtn?.classList.remove("opacity-100", "translate-y-0");
-        }
-    };
+        const toggleValid = () => {
+            if (window.scrollY > 300) {
+                scrollToTopBtn.classList.remove("opacity-0", "translate-y-10");
+                scrollToTopBtn.classList.add("opacity-100", "translate-y-0");
+            } else {
+                scrollToTopBtn.classList.add("opacity-0", "translate-y-10");
+                scrollToTopBtn.classList.remove("opacity-100", "translate-y-0");
+            }
+        };
 
-    window.addEventListener("scroll", toggleValid);
+        window.removeEventListener("scroll", toggleValid);
+        window.addEventListener("scroll", toggleValid);
 
-    scrollToTopBtn?.addEventListener("click", () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
-    });
+        scrollToTopBtn.onclick = () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+        };
+    }
+
+    document.addEventListener("astro:page-load", initScrollToTop);
 </script>

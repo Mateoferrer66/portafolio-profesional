@@ -103,8 +103,10 @@ const liveWebsites = [
 							<Icon icon="paper-plane-tilt" size="1.2em" /> Let's Talk
 						</a>
 						<a
-							href="/assets/HV_MATEOFERRER_2026-01.pdf"
-							download
+							href="/assets/HV_MATEOFERRER_2026-05.pdf"
+							target="_blank"
+							rel="noopener noreferrer"
+							download="HV_MATEOFERRER_2026-05.pdf"
 							class="cta-button secondary"
 						>
 							<Icon icon="paper-plane-tilt" size="1.2em" /> Download
@@ -178,22 +180,29 @@ const liveWebsites = [
 				requestAnimationFrame(step);
 			}
 
-			const observer = new IntersectionObserver((entries) => {
-				entries.forEach(entry => {
-					if (!entry.isIntersecting) return;
-					const numEl = entry.target.querySelector('.stat-number') as HTMLElement;
-					if (!numEl || numEl.dataset.animated) return;
-					numEl.dataset.animated = 'true';
+			function initCounters() {
+				const stats = document.querySelectorAll('.stat');
+				if (!stats.length) return;
 
-					const raw = (numEl.dataset.value || numEl.textContent || '').trim();
-					const suffix = raw.replace(/[\d,]+/, '');
-					const target = parseInt(raw.replace(/\D/g, ''), 10);
-					if (!isNaN(target)) animateCounter(numEl, target, suffix);
-					observer.unobserve(entry.target);
-				});
-			}, { threshold: 0.4 });
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (!entry.isIntersecting) return;
+						const numEl = entry.target.querySelector('.stat-number') as HTMLElement;
+						if (!numEl || numEl.dataset.animated) return;
+						numEl.dataset.animated = 'true';
 
-			document.querySelectorAll('.stat').forEach(el => observer.observe(el));
+						const raw = (numEl.dataset.value || numEl.textContent || '').trim();
+						const suffix = raw.replace(/[\d,]+/, '');
+						const target = parseInt(raw.replace(/\D/g, ''), 10);
+						if (!isNaN(target)) animateCounter(numEl, target, suffix);
+						observer.unobserve(entry.target);
+					});
+				}, { threshold: 0.4 });
+
+				stats.forEach(el => observer.observe(el));
+			}
+
+			document.addEventListener("astro:page-load", initCounters);
 		</script>
 
 		<ExperienceTimeline />
@@ -1031,6 +1040,59 @@ const liveWebsites = [
 		.cta-button {
 			padding: 0.875rem 2rem;
 			font-size: var(--text-lg);
+		}
+	}
+
+	/* Small Mobile Responsive */
+	@media (max-width: 480px) {
+		.stats-grid {
+			grid-template-columns: repeat(2, 1fr);
+			gap: 1rem;
+		}
+
+		.services-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.testimonials-grid {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+
+		.cta-buttons {
+			flex-direction: column;
+			align-items: stretch;
+		}
+
+		.cta-button {
+			justify-content: center;
+			padding: 0.75rem 1.25rem;
+			font-size: var(--text-sm);
+		}
+
+		.product-image {
+			height: 160px;
+		}
+
+		.hero img {
+			border-radius: 1rem;
+		}
+
+		.mention-card {
+			width: 160px;
+		}
+	}
+
+	/* Very Small Screens */
+	@media (max-width: 375px) {
+		.stats-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.cta-button {
+			font-size: var(--text-sm);
+			padding: 0.625rem 1rem;
 		}
 	}
 </style>
