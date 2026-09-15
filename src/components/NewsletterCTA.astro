@@ -1,0 +1,335 @@
+---
+// NewsletterCTA.astro
+// Lead capture section with glassmorphism design
+// Offers free resource in exchange for email subscription
+---
+
+<section class="newsletter-section reveal" id="newsletter">
+  <div class="newsletter-container">
+    <div class="newsletter-glow"></div>
+    <div class="newsletter-content">
+      <div class="newsletter-icon">📬</div>
+      <h2 class="newsletter-title">
+        Recibe Recursos <span class="gradient-text">Gratuitos</span>
+      </h2>
+      <p class="newsletter-description">
+        Únete a mi lista y recibe guías exclusivas de desarrollo web, tips de productividad, 
+        herramientas premium y descuentos en cursos. Sin spam, solo valor real.
+      </p>
+      
+      <form class="newsletter-form" id="newsletter-form">
+        <div class="input-group">
+          <input 
+            type="email" 
+            id="newsletter-email"
+            placeholder="tu@email.com" 
+            required 
+            autocomplete="email"
+            class="newsletter-input"
+          />
+          <button type="submit" class="newsletter-submit">
+            <span class="submit-text">Suscribirme</span>
+            <span class="submit-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </span>
+          </button>
+        </div>
+        <p class="newsletter-privacy">
+          🔒 Tu email está seguro. Sin spam, cancela cuando quieras.
+        </p>
+      </form>
+
+      <div class="newsletter-success" id="newsletter-success" style="display: none;">
+        <div class="success-icon">🎉</div>
+        <h3>¡Gracias por suscribirte!</h3>
+        <p>Revisa tu email para recibir tu guía gratuita.</p>
+      </div>
+
+      <div class="newsletter-stats">
+        <div class="ns-stat">
+          <span class="ns-stat-number">500+</span>
+          <span class="ns-stat-label">Suscriptores</span>
+        </div>
+        <div class="ns-stat-divider"></div>
+        <div class="ns-stat">
+          <span class="ns-stat-number">12</span>
+          <span class="ns-stat-label">Recursos Gratis</span>
+        </div>
+        <div class="ns-stat-divider"></div>
+        <div class="ns-stat">
+          <span class="ns-stat-number">Weekly</span>
+          <span class="ns-stat-label">Newsletter</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initNewsletter() {
+    const form = document.getElementById('newsletter-form') as HTMLFormElement;
+    const success = document.getElementById('newsletter-success');
+    
+    if (!form || !success) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = (document.getElementById('newsletter-email') as HTMLInputElement)?.value;
+      
+      if (!email) return;
+
+      // Store locally (in production, connect to Mailchimp/ConvertKit/etc.)
+      const subscribers = JSON.parse(localStorage.getItem('mf-newsletter') || '[]');
+      subscribers.push({ email, date: new Date().toISOString() });
+      localStorage.setItem('mf-newsletter', JSON.stringify(subscribers));
+
+      // Track event
+      if (typeof gtag === 'function') {
+        gtag('event', 'newsletter_signup', {
+          event_category: 'conversion',
+          event_label: 'Newsletter Subscription',
+        });
+      }
+
+      // Show success
+      form.style.display = 'none';
+      success.style.display = 'flex';
+    });
+  }
+
+  document.addEventListener('astro:page-load', initNewsletter);
+</script>
+
+<style>
+  .newsletter-section {
+    padding: 4rem 1.5rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .newsletter-container {
+    position: relative;
+    background: rgba(15, 12, 30, 0.6);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+    border-radius: 2rem;
+    padding: 3.5rem 2.5rem;
+    overflow: hidden;
+  }
+
+  .newsletter-glow {
+    position: absolute;
+    top: -50%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .newsletter-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .newsletter-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    animation: float-icon 3s ease-in-out infinite;
+  }
+
+  @keyframes float-icon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .newsletter-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #e2e8f0;
+    margin: 0 0 1rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #a855f7, #4ade80);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .newsletter-description {
+    color: #94a3b8;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+  }
+
+  /* Form */
+  .newsletter-form {
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .input-group {
+    display: flex;
+    gap: 0;
+    background: rgba(30, 24, 54, 0.8);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 999px;
+    padding: 4px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .input-group:focus-within {
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.12);
+  }
+
+  .newsletter-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 20px;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    outline: none;
+    font-family: inherit;
+    min-width: 0;
+  }
+
+  .newsletter-input::placeholder {
+    color: #64748b;
+  }
+
+  .newsletter-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 24px;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    color: white;
+    border: none;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+
+  .newsletter-submit:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+  }
+
+  .newsletter-privacy {
+    color: #64748b;
+    font-size: 0.7rem;
+    margin-top: 0.75rem;
+  }
+
+  /* Success */
+  .newsletter-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeInUp 0.5s ease;
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .success-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .newsletter-success h3 {
+    color: #4ade80;
+    font-size: 1.3rem;
+    margin: 0;
+  }
+
+  .newsletter-success p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+  }
+
+  /* Stats */
+  .newsletter-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(168, 85, 247, 0.1);
+  }
+
+  .ns-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .ns-stat-number {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #c084fc;
+  }
+
+  .ns-stat-label {
+    font-size: 0.65rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .ns-stat-divider {
+    width: 1px;
+    height: 30px;
+    background: rgba(168, 85, 247, 0.15);
+  }
+
+  @media (max-width: 640px) {
+    .newsletter-container {
+      padding: 2.5rem 1.5rem;
+      border-radius: 1.5rem;
+    }
+
+    .newsletter-title {
+      font-size: 1.5rem;
+    }
+
+    .input-group {
+      flex-direction: column;
+      border-radius: 16px;
+      gap: 0;
+    }
+
+    .newsletter-input {
+      text-align: center;
+      padding: 14px 16px;
+    }
+
+    .newsletter-submit {
+      border-radius: 12px;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .newsletter-stats {
+      gap: 1rem;
+    }
+  }
+</style>

@@ -23,6 +23,8 @@ import ExperienceTimeline from "../components/ExperienceTimeline.astro";
 import LiveStats from "../components/LiveStats.astro";
 import CertificationsShowcase from "../components/CertificationsShowcase.astro";
 import AvailabilityBadge from "../components/AvailabilityBadge.astro";
+import CoursesShowcase from "../components/CoursesShowcase.astro";
+import NewsletterCTA from "../components/NewsletterCTA.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -247,6 +249,9 @@ const liveWebsites = [
 			</div>
 		</section>
 
+		<!-- Courses & Mentorships Section -->
+		<CoursesShowcase />
+
 		<main class="wrapper stack gap-20 lg:gap-48">
 			<section class="section with-background with-cta reveal">
 				<header class="section-header stack gap-2 lg:gap-4">
@@ -372,6 +377,9 @@ const liveWebsites = [
 					</CallToAction>
 				</div>
 			</section>
+
+			<!-- Newsletter Lead Capture -->
+			<NewsletterCTA />
 
 			<!-- Testimonials Section -->
 			<section class="testimonials-section reveal">

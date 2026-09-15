@@ -22,6 +22,8 @@ import Preloader from "../components/Preloader.astro";
 import CommandPalette from "../components/CommandPalette.astro";
 import KonamiEasterEgg from "../components/KonamiEasterEgg.astro";
 import PageMinimap from "../components/PageMinimap.astro";
+import AnalyticsTracker from "../components/AnalyticsTracker.astro";
+import SocialProofBanner from "../components/SocialProofBanner.astro";
 
 interface Props {
 	title?: string | undefined;
@@ -113,12 +115,12 @@ const chatWidgetClass = shouldStack
 		</div>
 
 		<div id="floating-buttons" class:list={[{ stacked: shouldStack }]}>
+			<ScrollToTop />
 			<WhatsAppButton />
 			<ChatWidget client:idle className={chatWidgetClass} />
 		</div>
 
 		<ScrollReveal />
-		<ScrollToTop />
 		<MagicCursor client:only="react" />
 		<!-- Global AI Controls (Voz y Gestos) -->
 		{!hideGlobalAI && <GlobalControls />}
@@ -128,6 +130,10 @@ const chatWidgetClass = shouldStack
 		<KonamiEasterEgg />
 		<!-- Page Minimap -->
 		<PageMinimap />
+		<!-- Social Proof Notifications -->
+		<SocialProofBanner />
+		<!-- Advanced Analytics Event Tracking -->
+		<AnalyticsTracker />
 		
 		<!-- Gesture Control Bridge: listens for postMessage commands from the gesture controller -->
 		<Fragment set:html={`<script src="/gesture-bridge.js"></script>`} />
@@ -228,24 +234,38 @@ const chatWidgetClass = shouldStack
 			}
 
 			#floating-buttons.stacked {
-			position: fixed;
-			bottom: 5px;
-			right: 20px;
-			z-index: 11001;
-			display: flex;
-			flex-direction: column;
-			gap: 15px;
-			align-items: flex-end;
-		}
-
-		/* Small mobile: reduce floating button spacing */
-		@media (max-width: 480px) {
-			#floating-buttons.stacked {
-				right: 10px;
-				bottom: 10px;
-				gap: 10px;
+				position: fixed;
+				bottom: 20px;
+				right: 20px;
+				z-index: 11001;
+				display: flex;
+				flex-direction: column;
+				gap: 12px;
+				align-items: flex-end;
 			}
-		}
+
+			/* Ensure each floating button has consistent sizing */
+			#floating-buttons.stacked :global(.whatsapp-button),
+			#floating-buttons.stacked :global(.scroll-to-top-btn) {
+				width: 48px;
+				height: 48px;
+				position: static;
+			}
+
+			/* Small mobile: reduce floating button spacing */
+			@media (max-width: 480px) {
+				#floating-buttons.stacked {
+					right: 12px;
+					bottom: 12px;
+					gap: 10px;
+				}
+
+				#floating-buttons.stacked :global(.whatsapp-button),
+				#floating-buttons.stacked :global(.scroll-to-top-btn) {
+					width: 44px;
+					height: 44px;
+				}
+			}
 	</style>
 	</body>
 </html>

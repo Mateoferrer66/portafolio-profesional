@@ -1,0 +1,163 @@
+---
+// SocialProofBanner.astro
+// Animated notification popup showing recent "purchases/contacts" 
+// Creates urgency and trust through social proof technique
+---
+
+<div id="social-proof-popup" class="social-proof-popup" role="alert" aria-live="polite">
+  <div class="sp-avatar" id="sp-avatar">🔥</div>
+  <div class="sp-content">
+    <p class="sp-text" id="sp-text"></p>
+    <p class="sp-time" id="sp-time"></p>
+  </div>
+  <button class="sp-close" id="sp-close" aria-label="Cerrar notificación">×</button>
+</div>
+
+<script is:inline>
+(function() {
+  const notifications = [
+    { name: "Carlos", city: "Bogotá", action: "contrató un servicio de desarrollo web", icon: "💻" },
+    { name: "María", city: "Medellín", action: "compró el pack de Notion Templates", icon: "📝" },
+    { name: "Andrés", city: "Cali", action: "se inscribió al curso de Full Stack", icon: "🚀" },
+    { name: "Laura", city: "Barranquilla", action: "descargó el CV de Mateo", icon: "📄" },
+    { name: "Santiago", city: "Cartagena", action: "contrató diseño gráfico profesional", icon: "🎨" },
+    { name: "Valentina", city: "Pereira", action: "compró una licencia de software", icon: "💿" },
+    { name: "Diego", city: "Bucaramanga", action: "solicitó una asesoría tecnológica", icon: "🧠" },
+    { name: "Camila", city: "Manizales", action: "se inscribió al curso de Marketing Digital", icon: "📈" },
+    { name: "Juan", city: "Santa Marta", action: "contrató un E-Commerce completo", icon: "🛒" },
+    { name: "Sofía", city: "Ibagué", action: "compró el curso de IA Aplicada", icon: "🤖" },
+  ];
+
+  const timeAgo = ["Hace 2 minutos", "Hace 5 minutos", "Hace 12 minutos", "Hace 18 minutos", "Hace 25 minutos", "Hace 1 hora", "Hace 2 horas", "Hace 3 horas"];
+
+  const popup = document.getElementById('social-proof-popup');
+  const avatarEl = document.getElementById('sp-avatar');
+  const textEl = document.getElementById('sp-text');
+  const timeEl = document.getElementById('sp-time');
+  const closeBtn = document.getElementById('sp-close');
+
+  if (!popup || !textEl || !timeEl || !avatarEl || !closeBtn) return;
+
+  let currentIndex = 0;
+  let timeoutId = null;
+  let dismissed = false;
+
+  closeBtn.addEventListener('click', () => {
+    popup.classList.remove('show');
+    dismissed = true;
+    if (timeoutId) clearTimeout(timeoutId);
+  });
+
+  function showNotification() {
+    if (dismissed) return;
+    
+    const notif = notifications[currentIndex % notifications.length];
+    const time = timeAgo[Math.floor(Math.random() * timeAgo.length)];
+
+    avatarEl.textContent = notif.icon;
+    textEl.textContent = `${notif.name} de ${notif.city} ${notif.action}`;
+    timeEl.textContent = time;
+
+    popup.classList.add('show');
+    currentIndex++;
+
+    // Hide after 5 seconds
+    timeoutId = setTimeout(() => {
+      popup.classList.remove('show');
+      // Show next notification after 15-30 seconds
+      const delay = 15000 + Math.random() * 15000;
+      timeoutId = setTimeout(showNotification, delay);
+    }, 5000);
+  }
+
+  // First notification after 8 seconds
+  setTimeout(showNotification, 8000);
+})();
+</script>
+
+<style>
+  .social-proof-popup {
+    position: fixed;
+    bottom: 100px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(15, 12, 30, 0.92);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 16px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.1);
+    z-index: 9998;
+    max-width: 380px;
+    transform: translateX(-120%);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+
+  .social-proof-popup.show {
+    transform: translateX(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .sp-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: rgba(168, 85, 247, 0.12);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .sp-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sp-text {
+    margin: 0;
+    font-size: 0.78rem;
+    color: #e2e8f0;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .sp-time {
+    margin: 3px 0 0;
+    font-size: 0.65rem;
+    color: #64748b;
+  }
+
+  .sp-close {
+    background: none;
+    border: none;
+    color: #64748b;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .sp-close:hover {
+    color: #e2e8f0;
+  }
+
+  @media (max-width: 480px) {
+    .social-proof-popup {
+      left: 10px;
+      right: 10px;
+      max-width: calc(100% - 20px);
+      bottom: 85px;
+    }
+  }
+</style>

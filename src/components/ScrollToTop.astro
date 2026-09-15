@@ -5,7 +5,7 @@
 <button
     id="scrollToTop"
     aria-label="Scroll to top"
-    class="fixed bottom-28 right-8 z-50 p-4 rounded-full bg-slate-900 border border-slate-700 text-white opacity-0 translate-y-10 transition-all duration-300 hover:bg-[var(--accent-regular)] hover:border-[var(--accent-regular)] hover:shadow-lg hover:shadow-[var(--accent-regular)]/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent-regular)] focus:ring-offset-2 focus:ring-offset-slate-900"
+    class="scroll-to-top-btn"
 >
     <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -29,16 +29,14 @@
 
         const toggleValid = () => {
             if (window.scrollY > 300) {
-                scrollToTopBtn.classList.remove("opacity-0", "translate-y-10");
-                scrollToTopBtn.classList.add("opacity-100", "translate-y-0");
+                scrollToTopBtn.classList.add("visible");
             } else {
-                scrollToTopBtn.classList.add("opacity-0", "translate-y-10");
-                scrollToTopBtn.classList.remove("opacity-100", "translate-y-0");
+                scrollToTopBtn.classList.remove("visible");
             }
         };
 
         window.removeEventListener("scroll", toggleValid);
-        window.addEventListener("scroll", toggleValid);
+        window.addEventListener("scroll", toggleValid, { passive: true });
 
         scrollToTopBtn.onclick = () => {
             window.scrollTo({
@@ -50,3 +48,46 @@
 
     document.addEventListener("astro:page-load", initScrollToTop);
 </script>
+
+<style>
+    .scroll-to-top-btn {
+        /* When inside stacked container, position is relative (handled by parent) */
+        /* Standalone fallback: fixed positioning */
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(15, 12, 30, 0.85);
+        border: 1px solid rgba(124, 58, 237, 0.25);
+        color: #c084fc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+    }
+
+    .scroll-to-top-btn.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .scroll-to-top-btn:hover {
+        background: rgba(168, 85, 247, 0.8);
+        color: white;
+        border-color: #a855f7;
+        box-shadow: 0 4px 20px rgba(168, 85, 247, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .scroll-to-top-btn:focus {
+        outline: 2px solid #a855f7;
+        outline-offset: 2px;
+    }
+</style>

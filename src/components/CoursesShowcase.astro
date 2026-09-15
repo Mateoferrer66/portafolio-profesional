@@ -1,0 +1,469 @@
+---
+// CoursesShowcase.astro
+// Premium courses & mentorship section for the home page
+// Showcases educational offerings to drive conversions
+
+const courses = [
+  {
+    id: 1,
+    title: "Desarrollo Web Full Stack",
+    description: "Aprende a construir aplicaciones web completas con React, Node.js, y bases de datos. Desde cero hasta producción.",
+    icon: "💻",
+    level: "Intermedio",
+    duration: "12 semanas",
+    format: "Online / Presencial",
+    topics: ["React", "Node.js", "MongoDB", "API REST"],
+    badge: "Popular",
+    badgeColor: "#a855f7",
+  },
+  {
+    id: 2,
+    title: "Inteligencia Artificial Aplicada",
+    description: "Domina las herramientas de IA más potentes: ChatGPT, Copilot, Midjourney y aprende a integrarlas en tus proyectos.",
+    icon: "🤖",
+    level: "Todos los niveles",
+    duration: "8 semanas",
+    format: "Online",
+    topics: ["ChatGPT", "Prompt Engineering", "AI APIs", "Automatización"],
+    badge: "Nuevo",
+    badgeColor: "#4ade80",
+  },
+  {
+    id: 3,
+    title: "DevOps & Cloud Computing",
+    description: "Aprende a desplegar y gestionar aplicaciones en la nube con Docker, Kubernetes, AWS y CI/CD pipelines.",
+    icon: "☁️",
+    level: "Avanzado",
+    duration: "10 semanas",
+    format: "Online",
+    topics: ["Docker", "AWS", "CI/CD", "Kubernetes"],
+    badge: null,
+    badgeColor: null,
+  },
+  {
+    id: 4,
+    title: "Marketing Digital & SEO",
+    description: "Estrategias probadas para posicionar tu marca, atraer clientes y vender más usando Google Ads, SEO y redes sociales.",
+    icon: "📈",
+    level: "Principiante",
+    duration: "6 semanas",
+    format: "Online / Presencial",
+    topics: ["SEO", "Google Ads", "Analytics", "Social Media"],
+    badge: "Popular",
+    badgeColor: "#a855f7",
+  },
+  {
+    id: 5,
+    title: "Diseño UI/UX Profesional",
+    description: "Crea interfaces modernas y experiencias de usuario excepcionales con Figma, diseño responsive y sistemas de diseño.",
+    icon: "🎨",
+    level: "Intermedio",
+    duration: "8 semanas",
+    format: "Online",
+    topics: ["Figma", "Design Systems", "Prototyping", "UX Research"],
+    badge: null,
+    badgeColor: null,
+  },
+  {
+    id: 6,
+    title: "E-Commerce & Tiendas Online",
+    description: "Monta y escala tu tienda online: pasarelas de pago, SEO para e-commerce, y estrategias de conversión.",
+    icon: "🛒",
+    level: "Todos los niveles",
+    duration: "6 semanas",
+    format: "Online / Presencial",
+    topics: ["Shopify", "WooCommerce", "Pagos Online", "Conversión"],
+    badge: "Nuevo",
+    badgeColor: "#4ade80",
+  },
+];
+---
+
+<section class="courses-section reveal" id="courses">
+  <header class="section-header-courses">
+    <div class="courses-badge">
+      <span class="badge-pulse"></span>
+      <span>Aprende con un Experto</span>
+    </div>
+    <h2>Cursos & Mentorías</h2>
+    <p>Formación personalizada con más de 220 certificaciones y 5+ años de experiencia. Aprende las habilidades más demandadas del mercado.</p>
+  </header>
+
+  <div class="courses-grid" id="courses-grid">
+    {courses.map((course, index) => (
+      <div class="course-card" style={`animation-delay: ${index * 100}ms`}>
+        {course.badge && (
+          <span class="course-badge" style={`background: ${course.badgeColor}`}>
+            {course.badge}
+          </span>
+        )}
+        
+        <div class="course-icon">{course.icon}</div>
+        
+        <div class="course-content">
+          <h3 class="course-title">{course.title}</h3>
+          <p class="course-description">{course.description}</p>
+          
+          <div class="course-meta">
+            <span class="meta-item">
+              <span class="meta-icon">📊</span>
+              {course.level}
+            </span>
+            <span class="meta-item">
+              <span class="meta-icon">⏰</span>
+              {course.duration}
+            </span>
+            <span class="meta-item">
+              <span class="meta-icon">🎯</span>
+              {course.format}
+            </span>
+          </div>
+
+          <div class="course-topics">
+            {course.topics.map(topic => (
+              <span class="topic-tag">{topic}</span>
+            ))}
+          </div>
+        </div>
+
+        <a 
+          href={`https://wa.me/573005059987?text=Hola%20Mateo%2C%20me%20interesa%20el%20curso%20de%20${encodeURIComponent(course.title)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="course-card-cta"
+        >
+          Más Información
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    ))}
+  </div>
+
+  <div class="courses-cta-wrapper">
+    <a 
+      href="https://wa.me/573005059987?text=Hola%20Mateo%2C%20quiero%20información%20sobre%20todos%20los%20cursos%20disponibles"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="courses-main-cta"
+    >
+      <span>Ver Todos los Cursos</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14"></path>
+        <path d="m12 5 7 7-7 7"></path>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<script>
+  function initCourseCards() {
+    const cards = document.querySelectorAll('.course-card');
+    if (!cards.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          (entry.target as HTMLElement).classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    cards.forEach(card => observer.observe(card));
+  }
+
+  document.addEventListener('astro:page-load', initCourseCards);
+</script>
+
+<style>
+  .courses-section {
+    padding: 5rem 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-header-courses {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+
+  .section-header-courses h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0.75rem 0;
+    background: linear-gradient(135deg, #e2e8f0, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .section-header-courses p {
+    color: #94a3b8;
+    font-size: 1.05rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .courses-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(168, 85, 247, 0.12);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-radius: 999px;
+    color: #c084fc;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .badge-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #a855f7;
+    animation: pulse-badge 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-badge {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.5); }
+    50% { box-shadow: 0 0 0 8px rgba(168, 85, 247, 0); }
+  }
+
+  /* Grid */
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  /* Card */
+  .course-card {
+    position: relative;
+    background: rgba(15, 12, 30, 0.65);
+    border: 1px solid rgba(124, 58, 237, 0.12);
+    border-radius: 1.25rem;
+    padding: 2rem 1.75rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    opacity: 0;
+    transform: translateY(30px);
+    overflow: hidden;
+  }
+
+  .course-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .course-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(168, 85, 247, 0.06),
+      transparent 40%
+    );
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .course-card:hover::before {
+    opacity: 1;
+  }
+
+  .course-card:hover {
+    border-color: rgba(168, 85, 247, 0.35);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35), 
+                0 0 30px rgba(168, 85, 247, 0.08);
+  }
+
+  /* Badge */
+  .course-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Icon */
+  .course-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(168, 85, 247, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+    border-radius: 16px;
+  }
+
+  /* Content */
+  .course-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .course-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .course-description {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  /* Meta */
+  .course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+
+  .meta-icon {
+    font-size: 0.75rem;
+  }
+
+  /* Topics */
+  .course-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 0.25rem;
+  }
+
+  .topic-tag {
+    padding: 3px 10px;
+    background: rgba(168, 85, 247, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+    border-radius: 999px;
+    font-size: 0.68rem;
+    color: #c084fc;
+    font-weight: 600;
+  }
+
+  /* CTA */
+  .course-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(124, 58, 237, 0.2));
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-radius: 12px;
+    color: #c084fc;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 0.5rem;
+    justify-content: center;
+  }
+
+  .course-card-cta:hover {
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    color: white;
+    border-color: #a855f7;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.3);
+  }
+
+  .course-card-cta svg {
+    transition: transform 0.3s ease;
+  }
+
+  .course-card-cta:hover svg {
+    transform: translateX(4px);
+  }
+
+  /* Main CTA */
+  .courses-cta-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+  }
+
+  .courses-main-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3);
+  }
+
+  .courses-main-cta:hover {
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.4);
+  }
+
+  .courses-main-cta svg {
+    transition: transform 0.3s ease;
+  }
+
+  .courses-main-cta:hover svg {
+    transform: translateX(5px);
+  }
+
+  @media (max-width: 768px) {
+    .courses-grid {
+      grid-template-columns: 1fr;
+    }
+    .section-header-courses h2 {
+      font-size: 1.8rem;
+    }
+    .courses-section {
+      padding: 3rem 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .course-card {
+      padding: 1.5rem 1.25rem 1.25rem;
+    }
+    .course-meta {
+      gap: 0.5rem;
+    }
+  }
+</style>

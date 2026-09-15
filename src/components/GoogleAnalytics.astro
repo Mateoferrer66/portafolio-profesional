@@ -1,13 +1,18 @@
-<!-- Google tag (gtag.js) -->
-<script
-    type='text/partytown'
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=G-HD5XWZYCZQ">
-</script>
-<script type='text/partytown'>
+<!-- Google tag (gtag.js) - Fixed: loads directly without Partytown dependency -->
+<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-HD5XWZYCZQ"></script>
+<script is:inline>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-HD5XWZYCZQ');
+  gtag('config', 'G-HD5XWZYCZQ', {
+    // Enhanced measurement settings
+    send_page_view: true,
+    cookie_flags: 'SameSite=None;Secure',
+    // Custom dimensions for better segmentation
+    custom_map: {
+      'dimension1': 'page_type',
+      'dimension2': 'user_source'
+    }
+  });
 </script>

@@ -1,0 +1,208 @@
+---
+// AnalyticsTracker.astro
+// Advanced event tracking for clicks, scroll depth, conversions, and section impressions
+// Sends custom events to Google Analytics (gtag) automatically
+---
+
+<script is:inline>
+(function() {
+  'use strict';
+
+  // Ensure gtag is available
+  function sendEvent(eventName, params) {
+    if (typeof gtag === 'function') {
+      gtag('event', eventName, params);
+    }
+  }
+
+  // ── 1. CTA Click Tracking ──────────────────────────────────────────
+  function trackCTAClicks() {
+    const ctaSelectors = [
+      { selector: '#whatsapp-btn', label: 'WhatsApp Button', category: 'conversion' },
+      { selector: 'a[href*="wa.me"]', label: 'WhatsApp Link', category: 'conversion' },
+      { selector: '.cta-button.primary', label: 'Primary CTA', category: 'engagement' },
+      { selector: '.cta-button.secondary', label: 'Secondary CTA', category: 'engagement' },
+      { selector: 'a[download]', label: 'Download CV', category: 'conversion' },
+      { selector: 'a[href="/shop/"]', label: 'Visit Shop', category: 'navigation' },
+      { selector: 'a[href="/work/"]', label: 'View Work', category: 'navigation' },
+      { selector: 'a[href="/contact/"]', label: 'Contact Page', category: 'navigation' },
+      { selector: 'a[href="/services/"]', label: 'Services Page', category: 'navigation' },
+      { selector: '.product-link', label: 'Product Click', category: 'ecommerce' },
+      { selector: '.web-link', label: 'Live Website Click', category: 'portfolio' },
+      { selector: '.cert-card', label: 'Certification Click', category: 'engagement' },
+      { selector: '.course-card-cta', label: 'Course CTA Click', category: 'conversion' },
+      { selector: '.newsletter-submit', label: 'Newsletter Submit', category: 'conversion' },
+    ];
+
+    ctaSelectors.forEach(({ selector, label, category }) => {
+      document.querySelectorAll(selector).forEach(el => {
+        if (el.dataset.tracked) return;
+        el.dataset.tracked = 'true';
+        el.addEventListener('click', () => {
+          sendEvent('cta_click', {
+            event_category: category,
+            event_label: label,
+            button_text: el.textContent?.trim().substring(0, 50) || label,
+            page_location: window.location.pathname,
+          });
+        });
+      });
+    });
+  }
+
+  // ── 2. Scroll Depth Tracking ───────────────────────────────────────
+  function trackScrollDepth() {
+    const thresholds = [25, 50, 75, 100];
+    const reached = new Set();
+
+    function checkScroll() {
+      const winH = window.innerHeight;
+      const docH = document.documentElement.scrollHeight;
+      const scrolled = window.scrollY;
+      const percent = Math.round((scrolled / (docH - winH)) * 100);
+
+      thresholds.forEach(t => {
+        if (percent >= t && !reached.has(t)) {
+          reached.add(t);
+          sendEvent('scroll_depth', {
+            event_category: 'engagement',
+            event_label: `${t}%`,
+            value: t,
+            page_location: window.location.pathname,
+          });
+        }
+      });
+    }
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          checkScroll();
+          ticking = false;
+        });
+      }
+    }, { passive: true });
+  }
+
+  // ── 3. Section Impression Tracking ─────────────────────────────────
+  function trackSectionImpressions() {
+    const sections = document.querySelectorAll('section[class*="section"], .hero, .stats-section, .services-section, .testimonials-section, .certifications-section, .courses-section, .newsletter-section');
+    
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        if (el.dataset.impressionSent) return;
+        el.dataset.impressionSent = 'true';
+
+        const sectionName = el.querySelector('h2, h3')?.textContent?.trim() || 
+                           el.className.split(' ')[0] || 'unknown';
+
+        sendEvent('section_view', {
+          event_category: 'engagement',
+          event_label: sectionName,
+          page_location: window.location.pathname,
+        });
+
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.3 });
+
+    sections.forEach(s => observer.observe(s));
+  }
+
+  // ── 4. Time on Page (Engaged Time) ────────────────────────────────
+  function trackEngagedTime() {
+    let totalTime = 0;
+    let isActive = true;
+    let lastTick = Date.now();
+
+    // Track active vs idle
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        totalTime += Date.now() - lastTick;
+        isActive = false;
+      } else {
+        lastTick = Date.now();
+        isActive = true;
+      }
+    });
+
+    // Send engaged time on page unload
+    window.addEventListener('beforeunload', () => {
+      if (isActive) {
+        totalTime += Date.now() - lastTick;
+      }
+      const seconds = Math.round(totalTime / 1000);
+      sendEvent('engaged_time', {
+        event_category: 'engagement',
+        event_label: window.location.pathname,
+        value: seconds,
+        engaged_seconds: seconds,
+      });
+    });
+  }
+
+  // ── 5. Outbound Link Tracking ──────────────────────────────────────
+  function trackOutboundLinks() {
+    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+      if (link.dataset.outboundTracked) return;
+      link.dataset.outboundTracked = 'true';
+      link.addEventListener('click', () => {
+        sendEvent('outbound_click', {
+          event_category: 'outbound',
+          event_label: link.href,
+          link_url: link.href,
+          link_text: link.textContent?.trim().substring(0, 50) || 'Unknown',
+        });
+      });
+    });
+  }
+
+  // ── 6. Page Performance Tracking ───────────────────────────────────
+  function trackPerformance() {
+    if (!window.performance || !window.performance.getEntriesByType) return;
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const nav = performance.getEntriesByType('navigation')[0];
+        if (nav) {
+          sendEvent('page_performance', {
+            event_category: 'performance',
+            dom_load_time: Math.round(nav.domContentLoadedEventEnd - nav.startTime),
+            page_load_time: Math.round(nav.loadEventEnd - nav.startTime),
+            page_location: window.location.pathname,
+          });
+        }
+      }, 2000);
+    });
+  }
+
+  // ── Initialize All Trackers ────────────────────────────────────────
+  function initAllTrackers() {
+    trackCTAClicks();
+    trackScrollDepth();
+    trackSectionImpressions();
+    trackEngagedTime();
+    trackOutboundLinks();
+    trackPerformance();
+  }
+
+  // Run on initial load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAllTrackers);
+  } else {
+    initAllTrackers();
+  }
+
+  // Re-init on Astro page transitions
+  document.addEventListener('astro:page-load', () => {
+    // Small delay to let new DOM render
+    setTimeout(initAllTrackers, 500);
+  });
+})();
+</script>
