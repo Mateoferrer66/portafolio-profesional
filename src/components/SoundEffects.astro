@@ -1,0 +1,231 @@
+---
+// SoundEffects.astro
+// Web Audio API synthesized futuristic micro-interaction sound effects (0 KB external audio files)
+---
+
+<div id="sound-fx-controller" class="sound-controller">
+  <button
+    type="button"
+    id="sound-toggle-btn"
+    class="sound-toggle-btn"
+    title="Activar/Desactivar efectos de sonido sutiles"
+    aria-label="Alternar efectos de sonido"
+  >
+    <span id="sound-icon" class="sound-icon">🔇</span>
+    <span class="sound-tooltip">Audio FX: <strong id="sound-status-text">OFF</strong></span>
+  </button>
+</div>
+
+<script is:inline>
+(function() {
+  var audioCtx = null;
+  var isMuted = true;
+
+  function initAudioContext() {
+    if (!audioCtx && typeof (window.AudioContext || window.webkitAudioContext) !== 'undefined') {
+      var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      audioCtx = new AudioContextClass();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  // Synthesize soft futuristic click
+  function playClickSound() {
+    if (isMuted || !audioCtx) return;
+    try {
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.06);
+
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.06);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.06);
+    } catch (e) {}
+  }
+
+  // Synthesize subtle hover blip
+  function playHoverSound() {
+    if (isMuted || !audioCtx) return;
+    try {
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.04);
+
+      gain.gain.setValueAtTime(0.015, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.04);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.04);
+    } catch (e) {}
+  }
+
+  function bindSounds() {
+    var toggleBtn = document.getElementById('sound-toggle-btn');
+    var soundIcon = document.getElementById('sound-icon');
+    var statusText = document.getElementById('sound-status-text');
+
+    // Read stored preference
+    try {
+      var saved = localStorage.getItem('site_audio_fx');
+      isMuted = saved !== 'true'; // Default muted for accessibility
+    } catch (e) {
+      isMuted = true;
+    }
+
+    function updateUI() {
+      if (soundIcon && statusText) {
+        soundIcon.textContent = isMuted ? '🔇' : '🔊';
+        statusText.textContent = isMuted ? 'OFF' : 'ON';
+        if (toggleBtn) {
+          toggleBtn.classList.toggle('active', !isMuted);
+        }
+      }
+    }
+
+    updateUI();
+
+    if (toggleBtn && !toggleBtn.dataset.bound) {
+      toggleBtn.dataset.bound = 'true';
+      toggleBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        initAudioContext();
+        isMuted = !isMuted;
+        try {
+          localStorage.setItem('site_audio_fx', (!isMuted).toString());
+        } catch (err) {}
+        updateUI();
+        if (!isMuted) {
+          playClickSound();
+        }
+      });
+    }
+
+    // Attach to interactive elements
+    var interactiveElements = document.querySelectorAll(
+      '.cta-button, .estimator-btn, .quick-cmd-btn, .theme-toggle-btn, .nav-link, a.pill, .feature-chip'
+    );
+
+    interactiveElements.forEach(function(el) {
+      if (el.dataset.soundBound) return;
+      el.dataset.soundBound = 'true';
+
+      el.addEventListener('mouseenter', function() {
+        if (!isMuted) {
+          initAudioContext();
+          playHoverSound();
+        }
+      }, { passive: true });
+
+      el.addEventListener('click', function() {
+        if (!isMuted) {
+          initAudioContext();
+          playClickSound();
+        }
+      }, { passive: true });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bindSounds);
+  } else {
+    bindSounds();
+  }
+  document.addEventListener('astro:page-load', bindSounds);
+})();
+</script>
+
+<style>
+  .sound-controller {
+    position: fixed;
+    top: 5.5rem;
+    right: 1.25rem;
+    z-index: 999;
+  }
+
+  @media (max-width: 768px) {
+    .sound-controller {
+      top: auto;
+      bottom: 5.5rem;
+      left: 1.25rem;
+      right: auto;
+    }
+  }
+
+  .sound-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: var(--gray-200, #e2e8f0);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    position: relative;
+  }
+
+  .sound-toggle-btn:hover {
+    border-color: #a855f7;
+    transform: scale(1.08);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.35);
+  }
+
+  .sound-toggle-btn.active {
+    background: rgba(124, 58, 237, 0.35);
+    border-color: #c084fc;
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
+  }
+
+  .sound-icon {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .sound-tooltip {
+    position: absolute;
+    right: calc(100% + 0.6rem);
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.4rem;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.7rem;
+    color: #cbd5e1;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 768px) {
+    .sound-tooltip {
+      right: auto;
+      left: calc(100% + 0.6rem);
+      transform: translateX(-4px);
+    }
+  }
+
+  .sound-toggle-btn:hover .sound-tooltip {
+    opacity: 1;
+    transform: translateX(0);
+  }
+</style>

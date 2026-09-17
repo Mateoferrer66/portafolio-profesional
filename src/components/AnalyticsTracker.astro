@@ -1,23 +1,49 @@
 ---
 // AnalyticsTracker.astro
-// Advanced event tracking for clicks, scroll depth, conversions, and section impressions
-// Sends custom events to Google Analytics (gtag) automatically
+// Advanced event tracking for clicks, scroll depth, conversions, section impressions, and custom interactions.
+// Dispatches seamlessly to both Google Analytics 4 (gtag) and Google Tag Manager (dataLayer).
 ---
 
 <script is:inline>
 (function() {
   'use strict';
 
-  // Ensure gtag is available
+  // ── Unified Event Dispatcher (GA4 + GTM) ─────────────────────────
   function sendEvent(eventName, params) {
-    if (typeof gtag === 'function') {
-      gtag('event', eventName, params);
+    params = params || {};
+    var timestamp = Date.now();
+    var payload = Object.assign({}, params, {
+      event_timestamp: timestamp,
+      page_location: window.location.pathname
+    });
+
+    // 1. Dispatch to Google Analytics (gtag)
+    if (typeof window.gtag === 'function') {
+      try {
+        window.gtag('event', eventName, payload);
+      } catch (e) {
+        console.warn('[Analytics] GA4 event dispatch error:', e);
+      }
+    }
+
+    // 2. Dispatch to Google Tag Manager (dataLayer)
+    if (Array.isArray(window.dataLayer)) {
+      try {
+        window.dataLayer.push(Object.assign({ event: eventName }, payload));
+      } catch (e) {
+        console.warn('[Analytics] GTM dataLayer dispatch error:', e);
+      }
+    }
+
+    // Debug logging in development / when requested
+    if (window.__ANALYTICS_DEBUG__) {
+      console.log('[Analytics Event]', eventName, payload);
     }
   }
 
-  // ── 1. CTA Click Tracking ──────────────────────────────────────────
+  // ── 1. CTA & Interactive Element Click Tracking ─────────────────────
   function trackCTAClicks() {
-    const ctaSelectors = [
+    var ctaSelectors = [
       { selector: '#whatsapp-btn', label: 'WhatsApp Button', category: 'conversion' },
       { selector: 'a[href*="wa.me"]', label: 'WhatsApp Link', category: 'conversion' },
       { selector: '.cta-button.primary', label: 'Primary CTA', category: 'engagement' },
@@ -32,18 +58,23 @@
       { selector: '.cert-card', label: 'Certification Click', category: 'engagement' },
       { selector: '.course-card-cta', label: 'Course CTA Click', category: 'conversion' },
       { selector: '.newsletter-submit', label: 'Newsletter Submit', category: 'conversion' },
+      { selector: '.estimator-calc-btn', label: 'Estimator Calculated', category: 'lead_generation' },
+      { selector: '.estimator-whatsapp-btn', label: 'Estimator WhatsApp Contact', category: 'conversion' },
+      { selector: '.project-filter-btn', label: 'Project Filter Selected', category: 'portfolio' },
+      { selector: '.sound-toggle-btn', label: 'Sound FX Toggled', category: 'ui_interaction' },
+      { selector: '#open-terminal-btn', label: 'Terminal Opened', category: 'engagement' }
     ];
 
-    ctaSelectors.forEach(({ selector, label, category }) => {
-      document.querySelectorAll(selector).forEach(el => {
+    ctaSelectors.forEach(function(item) {
+      document.querySelectorAll(item.selector).forEach(function(el) {
         if (el.dataset.tracked) return;
         el.dataset.tracked = 'true';
-        el.addEventListener('click', () => {
+        el.addEventListener('click', function() {
           sendEvent('cta_click', {
-            event_category: category,
-            event_label: label,
-            button_text: el.textContent?.trim().substring(0, 50) || label,
-            page_location: window.location.pathname,
+            event_category: item.category,
+            event_label: item.label,
+            button_text: (el.textContent || item.label).trim().substring(0, 50),
+            page_location: window.location.pathname
           });
         });
       });
@@ -52,33 +83,36 @@
 
   // ── 2. Scroll Depth Tracking ───────────────────────────────────────
   function trackScrollDepth() {
-    const thresholds = [25, 50, 75, 100];
-    const reached = new Set();
+    var thresholds = [25, 50, 75, 100];
+    var reached = new Set();
 
     function checkScroll() {
-      const winH = window.innerHeight;
-      const docH = document.documentElement.scrollHeight;
-      const scrolled = window.scrollY;
-      const percent = Math.round((scrolled / (docH - winH)) * 100);
+      var winH = window.innerHeight;
+      var docH = document.documentElement.scrollHeight;
+      var scrolled = window.scrollY;
+      var maxScroll = docH - winH;
+      if (maxScroll <= 0) return;
 
-      thresholds.forEach(t => {
+      var percent = Math.round((scrolled / maxScroll) * 100);
+
+      thresholds.forEach(function(t) {
         if (percent >= t && !reached.has(t)) {
           reached.add(t);
           sendEvent('scroll_depth', {
             event_category: 'engagement',
-            event_label: `${t}%`,
+            event_label: t + '%',
             value: t,
-            page_location: window.location.pathname,
+            page_location: window.location.pathname
           });
         }
       });
     }
 
-    let ticking = false;
-    window.addEventListener('scroll', () => {
+    var ticking = false;
+    window.addEventListener('scroll', function() {
       if (!ticking) {
         ticking = true;
-        requestAnimationFrame(() => {
+        requestAnimationFrame(function() {
           checkScroll();
           ticking = false;
         });
@@ -88,41 +122,42 @@
 
   // ── 3. Section Impression Tracking ─────────────────────────────────
   function trackSectionImpressions() {
-    const sections = document.querySelectorAll('section[class*="section"], .hero, .stats-section, .services-section, .testimonials-section, .certifications-section, .courses-section, .newsletter-section');
+    var sections = document.querySelectorAll(
+      'section[class*="section"], .hero, .stats-section, .services-section, .testimonials-section, .certifications-section, .courses-section, .newsletter-section, .estimator-section, .terminal-section'
+    );
     
-    if (!sections.length) return;
+    if (!sections.length || !('IntersectionObserver' in window)) return;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
         if (!entry.isIntersecting) return;
-        const el = entry.target;
+        var el = entry.target;
         if (el.dataset.impressionSent) return;
         el.dataset.impressionSent = 'true';
 
-        const sectionName = el.querySelector('h2, h3')?.textContent?.trim() || 
-                           el.className.split(' ')[0] || 'unknown';
+        var header = el.querySelector('h2, h3');
+        var sectionName = header ? header.textContent.trim() : (el.className.split(' ')[0] || 'unknown');
 
         sendEvent('section_view', {
           event_category: 'engagement',
           event_label: sectionName,
-          page_location: window.location.pathname,
+          page_location: window.location.pathname
         });
 
         observer.unobserve(el);
       });
-    }, { threshold: 0.3 });
+    }, { threshold: 0.25 });
 
-    sections.forEach(s => observer.observe(s));
+    sections.forEach(function(s) { observer.observe(s); });
   }
 
   // ── 4. Time on Page (Engaged Time) ────────────────────────────────
   function trackEngagedTime() {
-    let totalTime = 0;
-    let isActive = true;
-    let lastTick = Date.now();
+    var totalTime = 0;
+    var isActive = true;
+    var lastTick = Date.now();
 
-    // Track active vs idle
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener('visibilitychange', function() {
       if (document.hidden) {
         totalTime += Date.now() - lastTick;
         isActive = false;
@@ -132,32 +167,33 @@
       }
     });
 
-    // Send engaged time on page unload
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('beforeunload', function() {
       if (isActive) {
         totalTime += Date.now() - lastTick;
       }
-      const seconds = Math.round(totalTime / 1000);
-      sendEvent('engaged_time', {
-        event_category: 'engagement',
-        event_label: window.location.pathname,
-        value: seconds,
-        engaged_seconds: seconds,
-      });
+      var seconds = Math.round(totalTime / 1000);
+      if (seconds > 1) {
+        sendEvent('engaged_time', {
+          event_category: 'engagement',
+          event_label: window.location.pathname,
+          value: seconds,
+          engaged_seconds: seconds
+        });
+      }
     });
   }
 
   // ── 5. Outbound Link Tracking ──────────────────────────────────────
   function trackOutboundLinks() {
-    document.querySelectorAll('a[target="_blank"]').forEach(link => {
+    document.querySelectorAll('a[target="_blank"]').forEach(function(link) {
       if (link.dataset.outboundTracked) return;
       link.dataset.outboundTracked = 'true';
-      link.addEventListener('click', () => {
+      link.addEventListener('click', function() {
         sendEvent('outbound_click', {
           event_category: 'outbound',
           event_label: link.href,
           link_url: link.href,
-          link_text: link.textContent?.trim().substring(0, 50) || 'Unknown',
+          link_text: (link.textContent || 'Unknown').trim().substring(0, 50)
         });
       });
     });
@@ -167,20 +203,56 @@
   function trackPerformance() {
     if (!window.performance || !window.performance.getEntriesByType) return;
 
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const nav = performance.getEntriesByType('navigation')[0];
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        var nav = performance.getEntriesByType('navigation')[0];
         if (nav) {
           sendEvent('page_performance', {
             event_category: 'performance',
             dom_load_time: Math.round(nav.domContentLoadedEventEnd - nav.startTime),
             page_load_time: Math.round(nav.loadEventEnd - nav.startTime),
-            page_location: window.location.pathname,
+            page_location: window.location.pathname
           });
         }
       }, 2000);
     });
   }
+
+  // ── 7. Developer Analytics Status & Verification Diagnostic Tool ──
+  window.__analyticsStatus = function() {
+    var ga4Active = typeof window.gtag === 'function';
+    var gtmActive = Array.isArray(window.dataLayer) && window.dataLayer.some(function(item) {
+      return item && item['gtm.start'];
+    });
+    var dataLayerCount = Array.isArray(window.dataLayer) ? window.dataLayer.length : 0;
+    var lastEvents = Array.isArray(window.dataLayer) ? window.dataLayer.slice(-5) : [];
+
+    console.group('%c📊 [Analytics Diagnostic Status]', 'color:#a855f7;font-weight:bold;font-size:14px;');
+    console.log('%cGA4 (gtag.js): %c' + (ga4Active ? '🟢 ACTIVO (G-HD5XWZYCZQ)' : '🔴 INACTIVO'), 'font-weight:bold', ga4Active ? 'color:#10b981' : 'color:#ef4444');
+    console.log('%cGTM Container: %c' + (gtmActive ? '🟢 ACTIVO (GTM-58K8HFNK)' : '🔴 NO DETECTADO EN DATALAYER'), 'font-weight:bold', gtmActive ? 'color:#10b981' : 'color:#ef4444');
+    console.log('%cTotal eventos en dataLayer: %c' + dataLayerCount, 'font-weight:bold', 'color:#38bdf8');
+    console.log('%cÚltimos eventos en dataLayer:', 'font-weight:bold', lastEvents);
+    console.log('%cTip: Ejecuta window.__analyticsTestPing() para enviar un evento de prueba en vivo.', 'color:#94a3b8;font-style:italic;');
+    console.groupEnd();
+
+    return {
+      ga4: ga4Active ? 'Connected (G-HD5XWZYCZQ)' : 'Disconnected',
+      gtm: gtmActive ? 'Connected (GTM-58K8HFNK)' : 'Disconnected',
+      dataLayerCount: dataLayerCount,
+      lastEvents: lastEvents
+    };
+  };
+
+  window.__analyticsTestPing = function(customLabel) {
+    var label = customLabel || 'Manual Test Ping from Console';
+    sendEvent('test_ping', {
+      event_category: 'diagnostic',
+      event_label: label,
+      test_timestamp: new Date().toISOString()
+    });
+    console.log('%c✅ Test ping enviado con éxito a GA4 y GTM dataLayer: "' + label + '"', 'color:#10b981;font-weight:bold;');
+    return true;
+  };
 
   // ── Initialize All Trackers ────────────────────────────────────────
   function initAllTrackers() {
@@ -200,9 +272,8 @@
   }
 
   // Re-init on Astro page transitions
-  document.addEventListener('astro:page-load', () => {
-    // Small delay to let new DOM render
-    setTimeout(initAllTrackers, 500);
+  document.addEventListener('astro:page-load', function() {
+    setTimeout(initAllTrackers, 300);
   });
 })();
 </script>

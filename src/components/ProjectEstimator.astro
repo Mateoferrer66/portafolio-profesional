@@ -1,0 +1,772 @@
+---
+// ProjectEstimator.astro
+// Interactive budget and timeline estimator for potential clients and recruiters
+import Icon from "./Icon.astro";
+---
+
+<section id="project-estimator" class="estimator-section wrapper reveal">
+  <div class="estimator-card">
+    <div class="estimator-header">
+      <div class="badge-tag">
+        <Icon icon="rocket-launch" size="1.1em" />
+        <span>Cotizador Inteligente 2026</span>
+      </div>
+      <h2>Calcula la Inversión de tu Proyecto</h2>
+      <p class="description">
+        Selecciona las características de tu idea tecnológica y obtén un presupuesto estimado y tiempo de entrega en tiempo real.
+      </p>
+    </div>
+
+    <div class="estimator-grid">
+      <!-- Configuration Controls -->
+      <div class="estimator-controls">
+        <!-- 1. Tipo de Proyecto -->
+        <div class="control-group">
+          <label class="group-title">
+            <span class="step-num">1</span>
+            <span>Tipo de Solución</span>
+          </label>
+          <div class="options-grid">
+            <button type="button" class="estimator-btn project-type-btn active" data-type="landing" data-base-usd="350" data-base-cop="1400000" data-days="7">
+              <span class="btn-icon">⚡</span>
+              <span class="btn-text">
+                <strong>Landing Page Elite</strong>
+                <small>Conversión y SEO rápido</small>
+              </span>
+            </button>
+            <button type="button" class="estimator-btn project-type-btn" data-type="saas" data-base-usd="950" data-base-cop="3800000" data-days="21">
+              <span class="btn-icon">🚀</span>
+              <span class="btn-text">
+                <strong>Web App / SaaS</strong>
+                <small>Full-Stack con Dashboard</small>
+              </span>
+            </button>
+            <button type="button" class="estimator-btn project-type-btn" data-type="ecommerce" data-base-usd="800" data-base-cop="3200000" data-days="18">
+              <span class="btn-icon">🛍️</span>
+              <span class="btn-text">
+                <strong>E-Commerce Pro</strong>
+                <small>Catálogo y pagos online</small>
+              </span>
+            </button>
+            <button type="button" class="estimator-btn project-type-btn" data-type="ai" data-base-usd="750" data-base-cop="3000000" data-days="14">
+              <span class="btn-icon">🤖</span>
+              <span class="btn-text">
+                <strong>IA & Automatización</strong>
+                <small>Chatbots y agentes LLM</small>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2. Módulos y Funcionalidades -->
+        <div class="control-group">
+          <label class="group-title">
+            <span class="step-num">2</span>
+            <span>Módulos y Capacidades</span>
+          </label>
+          <div class="features-grid">
+            <label class="feature-chip">
+              <input type="checkbox" class="feature-checkbox" data-name="Autenticación y Roles" data-usd="120" data-cop="480000" data-days="3" />
+              <span class="chip-content">
+                <span class="check-icon">✓</span>
+                <span>Auth & Perfiles</span>
+              </span>
+            </label>
+
+            <label class="feature-chip">
+              <input type="checkbox" class="feature-checkbox" data-name="Pasarela de Pagos (Stripe/Wompi)" data-usd="160" data-cop="640000" data-days="4" />
+              <span class="chip-content">
+                <span class="check-icon">✓</span>
+                <span>Pasarela de Pago</span>
+              </span>
+            </label>
+
+            <label class="feature-chip">
+              <input type="checkbox" class="feature-checkbox" data-name="Panel Administrativo (CMS)" data-usd="180" data-cop="720000" data-days="4" />
+              <span class="chip-content">
+                <span class="check-icon">✓</span>
+                <span>Panel CMS / Admin</span>
+              </span>
+            </label>
+
+            <label class="feature-chip">
+              <input type="checkbox" class="feature-checkbox" data-name="Experiencias 3D / Three.js" data-usd="220" data-cop="880000" data-days="5" />
+              <span class="chip-content">
+                <span class="check-icon">✓</span>
+                <span>Animaciones 3D</span>
+              </span>
+            </label>
+
+            <label class="feature-chip">
+              <input type="checkbox" class="feature-checkbox" data-name="Analítica GTM y GA4 Pro" data-usd="90" data-cop="360000" data-days="2" checked />
+              <span class="chip-content">
+                <span class="check-icon">✓</span>
+                <span>GTM + GA4 + Eventos</span>
+              </span>
+            </label>
+
+            <label class="feature-chip">
+              <input type="checkbox" class="feature-checkbox" data-name="Integración API / Base de Datos" data-usd="150" data-cop="600000" data-days="3" />
+              <span class="chip-content">
+                <span class="check-icon">✓</span>
+                <span>API Rest / PostgreSQL</span>
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 3. Plazo / Prioridad -->
+        <div class="control-group">
+          <label class="group-title">
+            <span class="step-num">3</span>
+            <span>Velocidad de Entrega</span>
+          </label>
+          <div class="timeline-tabs">
+            <button type="button" class="timeline-btn" data-multiplier="0.9" data-label="Estándar (Ritmo flexible)">
+              📅 Estándar
+            </button>
+            <button type="button" class="timeline-btn active" data-multiplier="1.0" data-label="Prioritaria (Recomendada)">
+              ⭐ Prioritaria
+            </button>
+            <button type="button" class="timeline-btn" data-multiplier="1.25" data-label="Express (Sprint intensivo)">
+              ⚡ Express (+25%)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Budget Summary Box -->
+      <div class="estimator-summary">
+        <div class="summary-top">
+          <div class="currency-toggle-wrapper">
+            <span class="currency-label">Moneda:</span>
+            <div class="currency-toggle">
+              <button type="button" class="curr-btn active" data-curr="USD">USD ($)</button>
+              <button type="button" class="curr-btn" data-curr="COP">COP ($)</button>
+            </div>
+          </div>
+          <span class="live-indicator">
+            <span class="pulse-dot"></span>
+            Cálculo en vivo
+          </span>
+        </div>
+
+        <div class="price-display">
+          <span class="price-label">Inversión Estimada:</span>
+          <div class="price-value-row">
+            <span id="est-currency-symbol">$</span>
+            <span id="est-total-price">440</span>
+            <span id="est-currency-code" class="curr-tag">USD</span>
+          </div>
+          <p class="price-disclaimer">*Presupuesto base orientativo sujeto a especificaciones finales.</p>
+        </div>
+
+        <div class="summary-specs">
+          <div class="spec-row">
+            <span class="spec-name">⏱️ Plazo de Entrega:</span>
+            <strong id="est-total-days" class="spec-value">~9 días hábiles</strong>
+          </div>
+          <div class="spec-row">
+            <span class="spec-name">💻 Arquitectura:</span>
+            <span class="spec-value">Astro / React / TypeScript</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-name">🛡️ Garantía & Soporte:</span>
+            <span class="spec-value text-green">30 días pos-lanzamiento</span>
+          </div>
+          <div class="spec-row">
+            <span class="spec-name">📈 Rendimiento:</span>
+            <span class="spec-value text-purple">95+ Lighthouse garantizado</span>
+          </div>
+        </div>
+
+        <div class="summary-actions">
+          <a
+            id="est-whatsapp-btn"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cta-button primary estimator-whatsapp-btn"
+          >
+            <Icon icon="paper-plane-tilt" size="1.2em" />
+            <span>Pedir Esta Propuesta por WhatsApp</span>
+          </a>
+          <a
+            id="est-email-btn"
+            href="/contact/"
+            class="cta-button secondary estimator-email-btn"
+          >
+            <Icon icon="envelope" size="1.2em" />
+            <span>Solicitar Reunión o Propuesta Formal</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+(function() {
+  function initEstimator() {
+    var section = document.getElementById('project-estimator');
+    if (!section) return;
+
+    var currentType = 'landing';
+    var baseUsd = 350;
+    var baseCop = 1400000;
+    var baseDays = 7;
+    var speedMultiplier = 1.0;
+    var currentCurrency = 'USD';
+
+    var priceEl = document.getElementById('est-total-price');
+    var symbolEl = document.getElementById('est-currency-symbol');
+    var codeEl = document.getElementById('est-currency-code');
+    var daysEl = document.getElementById('est-total-days');
+    var waBtn = document.getElementById('est-whatsapp-btn');
+    var emailBtn = document.getElementById('est-email-btn');
+
+    var typeBtns = section.querySelectorAll('.project-type-btn');
+    var featureCheckboxes = section.querySelectorAll('.feature-checkbox');
+    var timelineBtns = section.querySelectorAll('.timeline-btn');
+    var currBtns = section.querySelectorAll('.curr-btn');
+
+    function calculate() {
+      var featuresUsd = 0;
+      var featuresCop = 0;
+      var addedDays = 0;
+      var selectedFeatures = [];
+
+      featureCheckboxes.forEach(function(cb) {
+        if (cb.checked) {
+          featuresUsd += Number(cb.dataset.usd || 0);
+          featuresCop += Number(cb.dataset.cop || 0);
+          addedDays += Number(cb.dataset.days || 0);
+          selectedFeatures.push(cb.dataset.name || 'Módulo');
+        }
+      });
+
+      var totalUsd = Math.round((baseUsd + featuresUsd) * speedMultiplier);
+      var totalCop = Math.round((baseCop + featuresCop) * speedMultiplier);
+      var totalDays = Math.max(5, Math.round((baseDays + addedDays) / (speedMultiplier >= 1.2 ? 1.4 : 1)));
+
+      if (currentCurrency === 'USD') {
+        symbolEl.textContent = '$';
+        codeEl.textContent = 'USD';
+        priceEl.textContent = totalUsd.toLocaleString('en-US');
+      } else {
+        symbolEl.textContent = '$';
+        codeEl.textContent = 'COP';
+        priceEl.textContent = totalCop.toLocaleString('es-CO');
+      }
+
+      daysEl.textContent = '~' + totalDays + ' días hábiles';
+
+      // Build WhatsApp message link
+      var activeTypeBtn = section.querySelector('.project-type-btn.active');
+      var typeTitle = activeTypeBtn ? activeTypeBtn.querySelector('strong').textContent : 'Proyecto Web';
+      var activeSpeed = section.querySelector('.timeline-btn.active');
+      var speedText = activeSpeed ? activeSpeed.dataset.label : 'Estándar';
+
+      var msg = '¡Hola Mateo! Estuve calculando en tu Cotizador Inteligente y me interesa cotizar una solución:\n\n' +
+        '🚀 *Tipo:* ' + typeTitle + '\n' +
+        '📦 *Módulos:* ' + (selectedFeatures.length ? selectedFeatures.join(', ') : 'Base inicial') + '\n' +
+        '⏱️ *Velocidad:* ' + speedText + '\n' +
+        '💰 *Presupuesto Estimado:* ' + (currentCurrency === 'USD' ? '$' + totalUsd + ' USD' : '$' + totalCop.toLocaleString('es-CO') + ' COP') + '\n\n' +
+        '¿Podemos agendar una breve llamada para revisar detalles y ponerlo en marcha?';
+
+      var waUrl = 'https://wa.me/573005059987?text=' + encodeURIComponent(msg);
+      if (waBtn) waBtn.href = waUrl;
+
+      // Update Contact Page link with query param
+      if (emailBtn) {
+        emailBtn.href = '/contact/?source=estimator&type=' + encodeURIComponent(typeTitle) + '&budget=' + totalUsd;
+      }
+    }
+
+    // Type selection
+    typeBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        typeBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentType = btn.dataset.type;
+        baseUsd = Number(btn.dataset.baseUsd);
+        baseCop = Number(btn.dataset.baseCop);
+        baseDays = Number(btn.dataset.days);
+        calculate();
+      });
+    });
+
+    // Feature toggles
+    featureCheckboxes.forEach(function(cb) {
+      cb.addEventListener('change', calculate);
+    });
+
+    // Timeline selection
+    timelineBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        timelineBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        speedMultiplier = Number(btn.dataset.multiplier || 1.0);
+        calculate();
+      });
+    });
+
+    // Currency toggle
+    currBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        currBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentCurrency = btn.dataset.curr;
+        calculate();
+      });
+    });
+
+    calculate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEstimator);
+  } else {
+    initEstimator();
+  }
+  document.addEventListener('astro:page-load', initEstimator);
+})();
+</script>
+
+<style>
+  .estimator-section {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .estimator-card {
+    background: radial-gradient(circle at 10% 20%, rgba(124, 58, 237, 0.12) 0%, rgba(15, 23, 42, 0.7) 90%);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 30px rgba(124, 58, 237, 0.12);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .estimator-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #a855f7, #38bdf8, transparent);
+  }
+
+  .estimator-header {
+    text-align: center;
+    max-width: 44rem;
+    margin: 0 auto 2.5rem auto;
+  }
+
+  .badge-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    border-radius: 9999px;
+    color: #c084fc;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .estimator-header h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 800;
+    color: var(--gray-0, #fff);
+    margin-bottom: 0.75rem;
+  }
+
+  .estimator-header .description {
+    font-size: 1.05rem;
+    color: var(--gray-300, #94a3b8);
+    line-height: 1.6;
+  }
+
+  .estimator-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .estimator-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .estimator-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .group-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--gray-100, #f1f5f9);
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: #7c3aed;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 800;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 580px) {
+    .options-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .estimator-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.85rem;
+    color: var(--gray-200, #e2e8f0);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+  }
+
+  .estimator-btn:hover {
+    background: rgba(168, 85, 247, 0.12);
+    border-color: rgba(168, 85, 247, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .estimator-btn.active {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.25), rgba(56, 189, 248, 0.15));
+    border-color: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.25);
+  }
+
+  .btn-icon {
+    font-size: 1.5rem;
+  }
+
+  .btn-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .btn-text strong {
+    font-size: 0.95rem;
+    color: #fff;
+  }
+
+  .btn-text small {
+    font-size: 0.75rem;
+    color: var(--gray-400, #94a3b8);
+  }
+
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.65rem;
+  }
+
+  @media (max-width: 580px) {
+    .features-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .feature-chip {
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+  }
+
+  .feature-chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip-content {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.65rem 0.85rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 0.65rem;
+    font-size: 0.85rem;
+    color: var(--gray-300, #cbd5e1);
+    transition: all 0.2s ease;
+  }
+
+  .check-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.7rem;
+    color: transparent;
+    transition: all 0.2s ease;
+  }
+
+  .feature-chip input:checked + .chip-content {
+    background: rgba(168, 85, 247, 0.15);
+    border-color: #a855f7;
+    color: #fff;
+  }
+
+  .feature-chip input:checked + .chip-content .check-icon {
+    background: #a855f7;
+    border-color: #a855f7;
+    color: #fff;
+  }
+
+  /* Timeline Tabs */
+  .timeline-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  .timeline-btn {
+    padding: 0.6rem 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.65rem;
+    color: var(--gray-300, #cbd5e1);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .timeline-btn.active {
+    background: #7c3aed;
+    color: #fff;
+    border-color: #a855f7;
+    box-shadow: 0 0 12px rgba(124, 58, 237, 0.35);
+  }
+
+  /* Summary Box */
+  .estimator-summary {
+    background: rgba(10, 10, 20, 0.7);
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: sticky;
+    top: 5rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
+  }
+
+  .summary-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 1rem;
+  }
+
+  .currency-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .currency-label {
+    font-size: 0.8rem;
+    color: var(--gray-400, #94a3b8);
+  }
+
+  .currency-toggle {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    padding: 0.15rem;
+  }
+
+  .curr-btn {
+    padding: 0.25rem 0.55rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+    color: var(--gray-400, #94a3b8);
+    border-radius: 0.35rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .curr-btn.active {
+    background: #a855f7;
+    color: #fff;
+  }
+
+  .live-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: #34d399;
+    font-weight: 600;
+  }
+
+  .pulse-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulseGlow 1.8s infinite;
+  }
+
+  @keyframes pulseGlow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.3); }
+  }
+
+  .price-display {
+    text-align: center;
+    padding: 1rem 0;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.1) 0%, transparent 70%);
+    border-radius: 1rem;
+  }
+
+  .price-label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--gray-400, #94a3b8);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.35rem;
+  }
+
+  .price-value-row {
+    font-size: clamp(2.4rem, 4vw, 3.2rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.2rem;
+  }
+
+  .curr-tag {
+    font-size: 1rem;
+    color: #a855f7;
+    font-weight: 700;
+    margin-left: 0.25rem;
+  }
+
+  .price-disclaimer {
+    font-size: 0.75rem;
+    color: var(--gray-400, #94a3b8);
+    margin-top: 0.5rem;
+  }
+
+  .summary-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1rem 0;
+    font-size: 0.85rem;
+  }
+
+  .spec-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .spec-name {
+    color: var(--gray-400, #94a3b8);
+  }
+
+  .spec-value {
+    color: var(--gray-100, #f1f5f9);
+    font-weight: 600;
+  }
+
+  .text-green {
+    color: #34d399 !important;
+  }
+
+  .text-purple {
+    color: #c084fc !important;
+  }
+
+  .summary-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .estimator-whatsapp-btn {
+    width: 100%;
+    justify-content: center;
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: #34d399 !important;
+    color: #fff !important;
+    font-weight: 700;
+    padding: 0.85rem 1.25rem;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  }
+
+  .estimator-whatsapp-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+  }
+
+  .estimator-email-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.85rem;
+    padding: 0.75rem 1rem;
+  }
+</style>

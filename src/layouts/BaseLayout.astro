@@ -24,6 +24,7 @@ import KonamiEasterEgg from "../components/KonamiEasterEgg.astro";
 import PageMinimap from "../components/PageMinimap.astro";
 import AnalyticsTracker from "../components/AnalyticsTracker.astro";
 import SocialProofBanner from "../components/SocialProofBanner.astro";
+import SoundEffects from "../components/SoundEffects.astro";
 
 interface Props {
 	title?: string | undefined;
@@ -132,6 +133,8 @@ const chatWidgetClass = shouldStack
 		<PageMinimap />
 		<!-- Social Proof Notifications -->
 		<SocialProofBanner />
+		<!-- Web Audio Micro-interactions -->
+		<SoundEffects />
 		<!-- Advanced Analytics Event Tracking -->
 		<AnalyticsTracker />
 		

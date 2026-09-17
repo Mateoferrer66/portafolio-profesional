@@ -72,6 +72,33 @@
         if (btn) btn.click();
         closePalette();
       }},
+      { icon: '🧮', label: 'Cotizador Inteligente', sublabel: 'Calcular presupuesto de proyecto', category: 'Acciones', action: () => {
+        const est = document.getElementById('project-estimator');
+        if (est) {
+          est.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          navigate('/#project-estimator');
+        }
+        closePalette();
+      }},
+      { icon: '💻', label: 'Terminal Interactivo', sublabel: 'Abrir CLI de desarrollador', category: 'Acciones', action: () => {
+        const term = document.getElementById('developer-terminal');
+        if (term) {
+          term.scrollIntoView({ behavior: 'smooth' });
+          const inp = document.getElementById('terminal-input') as HTMLInputElement;
+          if (inp) setTimeout(() => inp.focus(), 500);
+        } else {
+          navigate('/#developer-terminal');
+        }
+        closePalette();
+      }},
+      { icon: '📊', label: 'Diagnóstico GTM / GA4', sublabel: 'Verificar estado de analítica en consola', category: 'Acciones', action: () => {
+        if (typeof (window as any).__analyticsStatus === 'function') {
+          (window as any).__analyticsStatus();
+          alert('Estado de Analítica verificado. Abre la consola (F12) para ver el reporte detallado.');
+        }
+        closePalette();
+      }},
 
       // Projects (quick access to featured)
       { icon: '🏗️', label: 'Nexus Law', sublabel: 'Legal tech platform', category: 'Proyectos', action: () => navigate('/work/nexus-law/') },

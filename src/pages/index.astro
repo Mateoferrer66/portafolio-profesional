@@ -25,6 +25,8 @@ import CertificationsShowcase from "../components/CertificationsShowcase.astro";
 import AvailabilityBadge from "../components/AvailabilityBadge.astro";
 import CoursesShowcase from "../components/CoursesShowcase.astro";
 import NewsletterCTA from "../components/NewsletterCTA.astro";
+import ProjectEstimator from "../components/ProjectEstimator.astro";
+import InteractiveTerminal from "../components/InteractiveTerminal.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -249,6 +251,9 @@ const liveWebsites = [
 			</div>
 		</section>
 
+		<!-- Smart Project Budget & Timeline Estimator -->
+		<ProjectEstimator />
+
 		<!-- Courses & Mentorships Section -->
 		<CoursesShowcase />
 
@@ -377,6 +382,9 @@ const liveWebsites = [
 					</CallToAction>
 				</div>
 			</section>
+
+			<!-- Interactive Developer CLI Terminal -->
+			<InteractiveTerminal />
 
 			<!-- Newsletter Lead Capture -->
 			<NewsletterCTA />

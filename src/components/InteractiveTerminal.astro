@@ -1,0 +1,522 @@
+---
+// InteractiveTerminal.astro
+// Developer CLI Terminal giving recruiters and tech leaders an interactive shell experience
+import Icon from "./Icon.astro";
+---
+
+<section id="developer-terminal" class="terminal-section wrapper reveal">
+  <div class="terminal-wrapper">
+    <div class="terminal-bar">
+      <div class="terminal-dots">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="terminal-title">
+        <Icon icon="terminal-window" size="1em" />
+        <span>mateo@dev-core: ~ (zsh / node v20.x)</span>
+      </div>
+      <div class="terminal-status">
+        <span class="online-pill">ONLINE</span>
+      </div>
+    </div>
+
+    <!-- Quick Command Suggestions Bar -->
+    <div class="quick-commands-bar">
+      <span class="quick-label">⚡ Comandos rápidos:</span>
+      <button type="button" class="quick-cmd-btn" data-cmd="help">help</button>
+      <button type="button" class="quick-cmd-btn" data-cmd="skills">skills</button>
+      <button type="button" class="quick-cmd-btn" data-cmd="projects">projects</button>
+      <button type="button" class="quick-cmd-btn" data-cmd="hire">hire</button>
+      <button type="button" class="quick-cmd-btn" data-cmd="download-cv">download-cv</button>
+      <button type="button" class="quick-cmd-btn" data-cmd="matrix">matrix</button>
+      <button type="button" class="quick-cmd-btn" data-cmd="clear">clear</button>
+    </div>
+
+    <!-- Terminal Screen Output -->
+    <div id="terminal-body" class="terminal-body">
+      <div class="output-line banner">
+        <pre class="ascii-art">
+ __  __       _              _____                           
+|  \/  | __ _| |_ ___  ___  |  ___|__ _ __ _ __ ___ _ __   
+| |\/| |/ _` | __/ _ \/ _ \ | |_ / _ \ '__| '__/ _ \ '__|  
+| |  | | (_| | ||  __/ (_) ||  _|  __/ |  | | |  __/ |     
+|_|  |_|\__,_|\__\___|\___/ |_|  \___|_|  |_|  \___|_|     
+        </pre>
+        <p class="welcome-text">
+          👋 Bienvenido a la CLI interactiva de <strong>Mateo Ferrer</strong>. Escribe <span class="highlight">help</span> o pulsa los botones rápidos para explorar mi experiencia y proyectos.
+        </p>
+      </div>
+
+      <div id="terminal-history" class="terminal-history"></div>
+
+      <!-- Active Prompt Line -->
+      <form id="terminal-form" class="terminal-prompt-line" autocomplete="off">
+        <span class="prompt-user">mateo@portfolio</span>
+        <span class="prompt-separator">:</span>
+        <span class="prompt-path">~</span>
+        <span class="prompt-symbol">$</span>
+        <input
+          type="text"
+          id="terminal-input"
+          class="terminal-input"
+          placeholder="Escribe un comando (ej: help, skills, hire)..."
+          spellcheck="false"
+          autocapitalize="off"
+        />
+      </form>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+(function() {
+  function initTerminal() {
+    var terminal = document.getElementById('developer-terminal');
+    if (!terminal) return;
+
+    var input = document.getElementById('terminal-input');
+    var form = document.getElementById('terminal-form');
+    var history = document.getElementById('terminal-history');
+    var body = document.getElementById('terminal-body');
+    var quickBtns = terminal.querySelectorAll('.quick-cmd-btn');
+
+    var commandHistory = [];
+    var historyIdx = -1;
+
+    var COMMANDS = {
+      help: function() {
+        return [
+          '<span class="text-cyan font-bold">Comandos disponibles en el sistema:</span>',
+          '  • <strong class="text-yellow">bio</strong> / <strong class="text-yellow">about</strong>     - Perfil profesional y trayectoria',
+          '  • <strong class="text-yellow">skills</strong>          - Stack tecnológico (Frontend, Backend, Cloud, IA)',
+          '  • <strong class="text-yellow">projects</strong>        - Proyectos top en producción con enlaces directos',
+          '  • <strong class="text-yellow">certs</strong>           - +220 certificaciones internacionales completadas',
+          '  • <strong class="text-yellow">hire</strong>            - Canales directos para contratación y nuevos proyectos',
+          '  • <strong class="text-yellow">contact</strong>         - WhatsApp, Email, LinkedIn, GitHub',
+          '  • <strong class="text-yellow">download-cv</strong>     - Descarga automática del CV en PDF',
+          '  • <strong class="text-yellow">matrix</strong>          - Activa el modo Matrix en el terminal',
+          '  • <strong class="text-yellow">sudo hire-mateo</strong>  - Proceso de onboarding ultra rápido',
+          '  • <strong class="text-yellow">clear</strong>           - Limpia la pantalla del terminal'
+        ].join('\n');
+      },
+
+      bio: function() {
+        return [
+          '<span class="text-green font-bold">👤 Mateo Ferrer | Master Software Engineer & Tech Innovator</span>',
+          '• Ingeniero de Software con maestría y más de 5 años creando soluciones escalables.',
+          '• Especializado en Arquitecturas Web Modernas (Astro, Next.js, React, Node.js), DevOps y Cloud.',
+          '• Experto en Integración de IA, Chatbots, Automatizaciones y Analítica Avanzada (GTM + GA4).',
+          '• +220 certificaciones en tecnología, diseño y metodologías ágiles.'
+        ].join('\n');
+      },
+      about: function() { return COMMANDS.bio(); },
+
+      skills: function() {
+        return [
+          '<span class="text-purple font-bold">🛠️ STACK TECNOLÓGICO & COMPETENCIAS:</span>',
+          '  <strong class="text-cyan">Frontend:</strong> Astro, React, TypeScript, Next.js, TailwindCSS, Three.js / WebGL',
+          '  <strong class="text-cyan">Backend:</strong> Node.js, Express, Python, REST APIs, GraphQL, Microservicios',
+          '  <strong class="text-cyan">Databases:</strong> PostgreSQL, MongoDB, Supabase, Redis, Firebase',
+          '  <strong class="text-cyan">Cloud & DevOps:</strong> Docker, AWS, Cloudflare Workers, Vercel, CI/CD Actions',
+          '  <strong class="text-cyan">IA & Data:</strong> LangChain, OpenAI/Gemini APIs, RAG, Web Scraping, GTM & GA4'
+        ].join('\n');
+      },
+
+      projects: function() {
+        return [
+          '<span class="text-yellow font-bold">🚀 PROYECTOS DESTACADOS EN PRODUCCIÓN:</span>',
+          '  1. <a href="https://coffee-lemon-seven.vercel.app/" target="_blank" class="term-link">Coffee Lemon</a> - Tienda y experiencia web gastronómica',
+          '  2. <a href="https://esmeralds.vercel.app/" target="_blank" class="term-link">Esmeralds</a> - E-Commerce de alta joyería con catálogo dinámico',
+          '  3. <a href="https://pc-master-chi.vercel.app/" target="_blank" class="term-link">PC Master</a> - Plataforma de hardware y cotizador técnico',
+          '  4. <a href="https://radical-customs.vercel.app/" target="_blank" class="term-link">Radical Customs</a> - Portal automotriz customizado',
+          '  5. <a href="https://catalogo-web-two.vercel.app/" target="_blank" class="term-link">Catálogo Web Pro</a> - Sistema modular para empresas',
+          '  🔗 Ver galería completa en: <a href="/work/" class="term-link">/work</a>'
+        ].join('\n');
+      },
+
+      certs: function() {
+        return [
+          '<span class="text-green font-bold">🎓 CERTIFICACIONES (+220):</span>',
+          '  • Full Stack Developer (Platzi, Coursera, Udemy)',
+          '  • Cloud Computing & DevOps Architecture',
+          '  • AI & Deep Learning Specializations',
+          '  • Google Tag Manager & Google Analytics 4 Certified',
+          '  🔗 Revisa la galería completa en: <a href="/about/#certifications" class="term-link">/about/#certifications</a>'
+        ].join('\n');
+      },
+
+      contact: function() {
+        return [
+          '<span class="text-cyan font-bold">📬 CONTACTO DIRECTO:</span>',
+          '  • 💬 WhatsApp: <a href="https://wa.me/573005059987" target="_blank" class="term-link">+57 300 505 9987</a>',
+          '  • 💼 LinkedIn: <a href="https://www.linkedin.com/in/mateo-ferrer-a679a713a/" target="_blank" class="term-link">mateo-ferrer</a>',
+          '  • 🐙 GitHub: <a href="https://github.com/Mateoferrer66" target="_blank" class="term-link">github.com/Mateoferrer66</a>',
+          '  • ✉️ Correo: <a href="mailto:mateoferrer66@gmail.com" class="term-link">mateoferrer66@gmail.com</a>'
+        ].join('\n');
+      },
+
+      hire: function() {
+        return [
+          '<span class="text-green font-bold">🤝 DISPONIBILIDAD INMEDIATA:</span>',
+          '  Estoy disponible para proyectos freelance de alto impacto, roles Full-Stack senior o consultoría técnica.',
+          '  👉 <a href="https://wa.me/573005059987?text=%C2%A1Hola%20Mateo!%20Te%20contacto%20desde%20tu%20terminal%20porque%20me%20gustar%C3%ADa%20conversar%20sobre%20una%20oportunidad/proyecto." target="_blank" class="term-link font-bold">[CLIC AQUÍ PARA CONTACTARME POR WHATSAPP]</a>',
+          '  O visita el cotizador en la sección superior para calcular el presupuesto de tu proyecto.'
+        ].join('\n');
+      },
+
+      'download-cv': function() {
+        var link = document.createElement('a');
+        link.href = '/assets/HV_MATEOFERRER_2026-05.pdf';
+        link.download = 'HV_MATEOFERRER_2026-05.pdf';
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return '<span class="text-green">✅ Descarga del CV iniciada: HV_MATEOFERRER_2026-05.pdf</span>';
+      },
+
+      matrix: function() {
+        body.classList.add('matrix-mode');
+        setTimeout(function() {
+          body.classList.remove('matrix-mode');
+        }, 5000);
+        return '<span class="text-green font-bold">⚡ [MATRIX MODE ON]: Sistema sobrecargado con código verde durante 5 segundos...</span>';
+      },
+
+      'sudo hire-mateo': function() {
+        return [
+          '<span class="text-green font-bold">🎉 PERMISO CONCEDIDO COMO ROOT!</span>',
+          '  [✓] Verificando aptitudes técnicas... 100% EXCELENTE',
+          '  [✓] Comprobando velocidad y código limpio... APROBADO',
+          '  [✓] Conectando con Mateo por WhatsApp...',
+          '  👉 <a href="https://wa.me/573005059987?text=%C2%A1Sudo%20Hire%20Aprobado!%20Queremos%20trabajar%20contigo%20Mateo." target="_blank" class="term-link font-bold">Hacer clic para formalizar la contratación</a>'
+        ].join('\n');
+      },
+
+      clear: function() {
+        history.innerHTML = '';
+        return null;
+      }
+    };
+
+    function runCommand(rawCmd) {
+      var cmd = rawCmd.trim().toLowerCase();
+      if (!cmd) return;
+
+      commandHistory.push(rawCmd);
+      historyIdx = commandHistory.length;
+
+      // Create command echo element
+      var cmdRow = document.createElement('div');
+      cmdRow.className = 'history-command';
+      cmdRow.innerHTML = '<span class="prompt-user">mateo@portfolio</span><span class="prompt-separator">:</span><span class="prompt-path">~</span><span class="prompt-symbol">$</span> <span class="cmd-text">' + escapeHtml(rawCmd) + '</span>';
+      history.appendChild(cmdRow);
+
+      // Execute command or fallback
+      var responseText = '';
+      if (COMMANDS[cmd]) {
+        responseText = COMMANDS[cmd]();
+      } else if (cmd.startsWith('sudo')) {
+        responseText = '<span class="text-red font-bold">⚠️ Error: Usuario no está en el archivo sudoers, excepto para: sudo hire-mateo</span>';
+      } else {
+        responseText = '<span class="text-red">Comando no reconocido: "' + escapeHtml(cmd) + '". Escribe <strong class="text-yellow">help</strong> para ver la lista.</span>';
+      }
+
+      if (responseText !== null) {
+        var respRow = document.createElement('div');
+        respRow.className = 'history-response';
+        respRow.innerHTML = responseText;
+        history.appendChild(respRow);
+      }
+
+      // Auto-scroll to bottom
+      body.scrollTop = body.scrollHeight;
+
+      // Track interaction in GA4/GTM
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'terminal_command', {
+          command_name: cmd,
+          page_location: window.location.pathname
+        });
+      }
+      if (Array.isArray(window.dataLayer)) {
+        window.dataLayer.push({
+          event: 'terminal_command',
+          command_name: cmd
+        });
+      }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>'"]/g, function(tag) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag);
+      });
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var val = input.value;
+      input.value = '';
+      runCommand(val);
+    });
+
+    // Arrow keys for command history
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (historyIdx > 0) {
+          historyIdx--;
+          input.value = commandHistory[historyIdx] || '';
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIdx < commandHistory.length - 1) {
+          historyIdx++;
+          input.value = commandHistory[historyIdx] || '';
+        } else {
+          historyIdx = commandHistory.length;
+          input.value = '';
+        }
+      }
+    });
+
+    // Quick Command Buttons
+    quickBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var cmd = btn.dataset.cmd;
+        if (cmd) {
+          input.value = '';
+          runCommand(cmd);
+          input.focus();
+        }
+      });
+    });
+
+    // Click anywhere on terminal body focuses the input
+    body.addEventListener('click', function(e) {
+      if (!e.target.closest('a')) {
+        input.focus();
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTerminal);
+  } else {
+    initTerminal();
+  }
+  document.addEventListener('astro:page-load', initTerminal);
+})();
+</script>
+
+<style>
+  .terminal-section {
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .terminal-wrapper {
+    background: #090d16;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 1rem;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 25px rgba(124, 58, 237, 0.15);
+    overflow: hidden;
+    font-family: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+
+  .terminal-bar {
+    background: #111726;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0.75rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .terminal-dots {
+    display: flex;
+    gap: 0.45rem;
+  }
+
+  .dot {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+  }
+
+  .dot.red { background: #ef4444; }
+  .dot.yellow { background: #eab308; }
+  .dot.green { background: #10b981; }
+
+  .terminal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+
+  .terminal-status .online-pill {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 0.15rem 0.55rem;
+    border-radius: 9999px;
+  }
+
+  .quick-commands-bar {
+    background: #0d121f;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 0.6rem 1.2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .quick-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    margin-right: 0.3rem;
+  }
+
+  .quick-cmd-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #38bdf8;
+    font-family: inherit;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .quick-cmd-btn:hover {
+    background: rgba(56, 189, 248, 0.15);
+    border-color: #38bdf8;
+    color: #fff;
+    transform: translateY(-1px);
+  }
+
+  .terminal-body {
+    padding: 1.25rem 1.5rem;
+    min-height: 320px;
+    max-height: 480px;
+    overflow-y: auto;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    transition: all 0.3s ease;
+  }
+
+  .terminal-body.matrix-mode {
+    background: #001100 !important;
+    color: #00ff66 !important;
+    text-shadow: 0 0 8px #00ff66;
+  }
+
+  .banner .ascii-art {
+    color: #a855f7;
+    font-size: clamp(0.55rem, 1.2vw, 0.78rem);
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+    overflow-x: auto;
+  }
+
+  .welcome-text {
+    color: #94a3b8;
+    margin-bottom: 1rem;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.75rem;
+  }
+
+  .welcome-text .highlight {
+    color: #38bdf8;
+    font-weight: bold;
+  }
+
+  .terminal-history {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .history-command {
+    color: #f1f5f9;
+    font-weight: 600;
+  }
+
+  .history-response {
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: #cbd5e1;
+    padding-left: 0.5rem;
+    border-left: 2px solid rgba(168, 85, 247, 0.4);
+    margin-bottom: 0.4rem;
+  }
+
+  .terminal-prompt-line {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .prompt-user {
+    color: #a855f7;
+    font-weight: 700;
+  }
+
+  .prompt-separator {
+    color: #64748b;
+  }
+
+  .prompt-path {
+    color: #38bdf8;
+    font-weight: 600;
+  }
+
+  .prompt-symbol {
+    color: #10b981;
+    font-weight: 800;
+  }
+
+  .terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.88rem;
+    caret-color: #38bdf8;
+  }
+
+  .terminal-input::placeholder {
+    color: #475569;
+  }
+
+  :global(.text-cyan) { color: #38bdf8 !important; }
+  :global(.text-yellow) { color: #facc15 !important; }
+  :global(.text-green) { color: #34d399 !important; }
+  :global(.text-purple) { color: #c084fc !important; }
+  :global(.text-red) { color: #f87171 !important; }
+  :global(.font-bold) { font-weight: 700 !important; }
+
+  :global(.term-link) {
+    color: #38bdf8 !important;
+    text-decoration: underline !important;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+  }
+
+  :global(.term-link:hover) {
+    color: #a855f7 !important;
+  }
+</style>

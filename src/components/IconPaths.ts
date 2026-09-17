@@ -39,5 +39,5 @@ export const iconPaths = {
 	'shopping-cart': `<path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" d="M32 48h21l24.4 126.9a26 26 0 0 0 25.6 21.1h91a26 26 0 0 0 25.6-21.1L236 96H78"/><circle cx="109" cy="223" r="13" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="199" cy="223" r="13" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/>`,
 	'chat-centered-text': `<path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" d="M88 112h80m-80 32h56M40 216V64a24 24 0 0 1 24-24h128a24 24 0 0 1 24 24v112a24 24 0 0 1-24 24H77.3L40 234.6Z"/>`,
 	'x': `<path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" d="M200 56 56 200m144 0L56 56"/>`,
-
+	envelope: `<rect width="192" height="144" x="32" y="56" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" rx="8"/><path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" d="m224 56-96 88-96-88"/>`,
 };
