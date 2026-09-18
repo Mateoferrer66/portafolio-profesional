@@ -25,6 +25,8 @@ import Icon from "./Icon.astro";
     <div class="quick-commands-bar">
       <span class="quick-label">⚡ Comandos rápidos:</span>
       <button type="button" class="quick-cmd-btn" data-cmd="help">help</button>
+      <button type="button" class="quick-cmd-btn" data-cmd="audit">audit</button>
+      <button type="button" class="quick-cmd-btn" data-cmd="roi">roi</button>
       <button type="button" class="quick-cmd-btn" data-cmd="skills">skills</button>
       <button type="button" class="quick-cmd-btn" data-cmd="projects">projects</button>
       <button type="button" class="quick-cmd-btn" data-cmd="hire">hire</button>
@@ -88,6 +90,8 @@ import Icon from "./Icon.astro";
       help: function() {
         return [
           '<span class="text-cyan font-bold">Comandos disponibles en el sistema:</span>',
+          '  • <strong class="text-yellow">audit</strong>          - Diagnóstico Web & Plan de Crecimiento con IA para Clientes',
+          '  • <strong class="text-yellow">roi</strong>            - Simulador de Retorno de Inversión y Multiplicador de Ventas',
           '  • <strong class="text-yellow">bio</strong> / <strong class="text-yellow">about</strong>     - Perfil profesional y trayectoria',
           '  • <strong class="text-yellow">skills</strong>          - Stack tecnológico (Frontend, Backend, Cloud, IA)',
           '  • <strong class="text-yellow">projects</strong>        - Proyectos top en producción con enlaces directos',
@@ -99,6 +103,18 @@ import Icon from "./Icon.astro";
           '  • <strong class="text-yellow">sudo hire-mateo</strong>  - Proceso de onboarding ultra rápido',
           '  • <strong class="text-yellow">clear</strong>           - Limpia la pantalla del terminal'
         ].join('\n');
+      },
+
+      audit: function() {
+        var el = document.getElementById('client-audit-engine');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        return '<span class="text-green font-bold">🚀 [AUDIT ENGINE]: Desplazando al Motor de Auditoría Web y Plan de Crecimiento con IA...</span>';
+      },
+
+      roi: function() {
+        var el = document.getElementById('roi-simulator');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+        return '<span class="text-green font-bold">📈 [ROI SIMULATOR]: Desplazando al Simulador de Retorno de Inversión...</span>';
       },
 
       bio: function() {

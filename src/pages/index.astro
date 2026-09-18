@@ -27,6 +27,8 @@ import CoursesShowcase from "../components/CoursesShowcase.astro";
 import NewsletterCTA from "../components/NewsletterCTA.astro";
 import ProjectEstimator from "../components/ProjectEstimator.astro";
 import InteractiveTerminal from "../components/InteractiveTerminal.astro";
+import ClientAuditEngine from "../components/ClientAuditEngine.astro";
+import ROISimulator from "../components/ROISimulator.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -254,6 +256,9 @@ const liveWebsites = [
 		<!-- Smart Project Budget & Timeline Estimator -->
 		<ProjectEstimator />
 
+		<!-- Client ROI & Web Performance Benchmarking Simulator -->
+		<ROISimulator />
+
 		<!-- Courses & Mentorships Section -->
 		<CoursesShowcase />
 
@@ -382,6 +387,9 @@ const liveWebsites = [
 					</CallToAction>
 				</div>
 			</section>
+
+			<!-- Exclusive AI Client Audit & Growth Engine -->
+			<ClientAuditEngine />
 
 			<!-- Interactive Developer CLI Terminal -->
 			<InteractiveTerminal />

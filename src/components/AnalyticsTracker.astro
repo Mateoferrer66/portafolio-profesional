@@ -62,7 +62,10 @@
       { selector: '.estimator-whatsapp-btn', label: 'Estimator WhatsApp Contact', category: 'conversion' },
       { selector: '.project-filter-btn', label: 'Project Filter Selected', category: 'portfolio' },
       { selector: '.sound-toggle-btn', label: 'Sound FX Toggled', category: 'ui_interaction' },
-      { selector: '#open-terminal-btn', label: 'Terminal Opened', category: 'engagement' }
+      { selector: '#open-terminal-btn', label: 'Terminal Opened', category: 'engagement' },
+      { selector: '#audit-submit-btn', label: 'Run AI Audit', category: 'lead_generation' },
+      { selector: '.audit-wa-btn', label: 'Audit WhatsApp Consultation', category: 'conversion' },
+      { selector: '.roi-cta-btn', label: 'ROI Simulator Contact', category: 'conversion' }
     ];
 
     ctaSelectors.forEach(function(item) {
@@ -123,7 +126,7 @@
   // ── 3. Section Impression Tracking ─────────────────────────────────
   function trackSectionImpressions() {
     var sections = document.querySelectorAll(
-      'section[class*="section"], .hero, .stats-section, .services-section, .testimonials-section, .certifications-section, .courses-section, .newsletter-section, .estimator-section, .terminal-section'
+      'section[class*="section"], .hero, .stats-section, .services-section, .testimonials-section, .certifications-section, .courses-section, .newsletter-section, .estimator-section, .terminal-section, .audit-section, .roi-section'
     );
     
     if (!sections.length || !('IntersectionObserver' in window)) return;

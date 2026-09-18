@@ -1,0 +1,696 @@
+---
+// ClientAuditEngine.astro
+// Exclusive AI-powered interactive client audit and business growth engine to attract and convert high-ticket clients
+import Icon from "./Icon.astro";
+---
+
+<section id="client-audit-engine" class="audit-section wrapper reveal">
+  <div class="audit-card">
+    <!-- Header -->
+    <div class="audit-header">
+      <div class="audit-badge">
+        <Icon icon="rocket-launch" size="1.1em" />
+        <span>Herramienta Exclusiva 2026</span>
+      </div>
+      <h2>Diagnóstico Web & Plan de Crecimiento con IA</h2>
+      <p class="audit-tagline">
+        Descubre al instante dónde está perdiendo clientes tu negocio y cómo una arquitectura web de alto rendimiento e IA puede disparar tus ventas.
+      </p>
+    </div>
+
+    <!-- Interactive Audit Form -->
+    <div id="audit-form-container" class="audit-form-container">
+      <form id="audit-form" class="audit-form" autocomplete="off">
+        <div class="input-grid">
+          <div class="form-field">
+            <label for="audit-business-name">
+              <span class="field-icon">🌐</span> Tu Sitio Web o Nombre de Negocio
+            </label>
+            <input
+              type="text"
+              id="audit-business-name"
+              placeholder="ej: misitio.com o Empresa SAS"
+              required
+            />
+          </div>
+
+          <div class="form-field">
+            <label for="audit-business-type">
+              <span class="field-icon">🏢</span> Sector o Modelo de Negocio
+            </label>
+            <select id="audit-business-type" required>
+              <option value="ecommerce">E-Commerce & Tienda Online</option>
+              <option value="services">Servicios Profesionales / Consultoría</option>
+              <option value="saas">Startup / Plataforma SaaS</option>
+              <option value="local">Negocio Local / Pyme</option>
+              <option value="agency">Agencia / Marca Personal</option>
+            </select>
+          </div>
+
+          <div class="form-field full-width">
+            <label for="audit-primary-goal">
+              <span class="field-icon">🎯</span> Tu Mayor Desafío u Objetivo Actual
+            </label>
+            <select id="audit-primary-goal" required>
+              <option value="conversions">Aumentar ventas y convertir visitantes en clientes</option>
+              <option value="speed">Cargar al instante (menos de 1 segundo) y dominar Google SEO</option>
+              <option value="ai">Automatizar atención y ventas con Inteligencia Artificial</option>
+              <option value="redesign">Renovar diseño anticuado por una experiencia moderna que genere autoridad</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="audit-submit-btn" class="cta-button primary audit-submit-btn">
+          <Icon icon="rocket-launch" size="1.2em" />
+          <span>Generar Auditoría & Plan de Acción Gratis</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Scanning State (Hidden by default) -->
+    <div id="audit-scanning" class="audit-scanning" style="display: none;">
+      <div class="scanner-visual">
+        <div class="scan-radar"></div>
+        <div class="scan-rings"></div>
+        <span class="scan-icon">⚡</span>
+      </div>
+      <h3 id="scan-status-text">Iniciando auditoría de arquitectura...</h3>
+      <div class="scan-progress-bar">
+        <div id="scan-progress-fill" class="scan-progress-fill"></div>
+      </div>
+      <p class="scan-subtext">Analizando Core Web Vitals, velocidad de carga, embudo de conversión y oportunidades de IA...</p>
+    </div>
+
+    <!-- Results Report Container (Hidden by default) -->
+    <div id="audit-results" class="audit-results" style="display: none;">
+      <div class="results-header">
+        <div class="health-score-box">
+          <span class="score-label">Salud Digital Detectada:</span>
+          <div class="score-number-row">
+            <span id="res-score" class="score-val">58</span>
+            <span class="score-max">/100</span>
+          </div>
+          <span class="score-tag warning" id="res-score-tag">⚠️ Oportunidad Crítica de Crecimiento</span>
+        </div>
+        <div class="target-biz-info">
+          <h3 id="res-biz-name">tu-negocio.com</h3>
+          <p id="res-biz-summary">Hemos identificado 3 áreas críticas donde estás dejando dinero sobre la mesa.</p>
+        </div>
+      </div>
+
+      <!-- 3 Diagnostic Cards -->
+      <div class="diagnostic-grid">
+        <div class="diag-card speed-card">
+          <div class="diag-icon">⚡</div>
+          <h4>Velocidad & Retención</h4>
+          <p id="diag-speed-text">Tu web actual puede tardar más de 3.8s en móviles. Cada segundo extra de carga causa un 20% de abandono de clientes.</p>
+          <div class="diag-metric text-amber">
+            <span>Riesgo de Rebote: </span><strong>Alto (~45%)</strong>
+          </div>
+        </div>
+
+        <div class="diag-card conv-card">
+          <div class="diag-icon">📈</div>
+          <h4>Fricción en Conversión</h4>
+          <p id="diag-conv-text">Los llamados a la acción y la navegación móvil carecen de flujo directo a WhatsApp o pasarela optimizada.</p>
+          <div class="diag-metric text-purple">
+            <span>Potencial de Mejora: </span><strong>+150% en Leads</strong>
+          </div>
+        </div>
+
+        <div class="diag-card ai-card">
+          <div class="diag-icon">🤖</div>
+          <h4>Oportunidad de IA</h4>
+          <p id="diag-ai-text">Atención manual repetitiva. Un asistente de IA 24/7 y cotizador dinámico pueden cerrar clientes mientras duermes.</p>
+          <div class="diag-metric text-green">
+            <span>Ahorro Operativo: </span><strong>15+ horas/semana</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mateo's Action Plan Proposal Box -->
+      <div class="action-plan-box">
+        <div class="plan-header">
+          <span class="plan-badge">SOLUCIÓN A MEDIDA</span>
+          <h3>Plan de Acción Propuesto por Mateo Ferrer</h3>
+          <p>Cómo transformaremos tu plataforma en una máquina de captación y ventas:</p>
+        </div>
+        <ul class="plan-steps">
+          <li>
+            <span class="step-check">✓</span>
+            <strong>Migración a Arquitectura Astro + React:</strong> Carga instantánea (&lt; 0.8s) y 98+ en Google Lighthouse.
+          </li>
+          <li>
+            <span class="step-check">✓</span>
+            <strong>Embudo de Conversión Directo:</strong> Botones y cotizadores inteligentes conectados a tu WhatsApp o CRM sin fricción.
+          </li>
+          <li>
+            <span class="step-check">✓</span>
+            <strong>Agente de IA o Automatización Integrada:</strong> Calificación automática de prospectos 24 horas al día.
+          </li>
+          <li>
+            <span class="step-check">✓</span>
+            <strong>GTM & GA4 Profesional:</strong> Medición en tiempo real de cada clic, lead y venta generada.
+          </li>
+        </ul>
+
+        <!-- Direct Action Buttons -->
+        <div class="plan-actions">
+          <a
+            id="audit-whatsapp-btn"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cta-button primary audit-wa-btn"
+          >
+            <Icon icon="paper-plane-tilt" size="1.2em" />
+            <span>Implementar este Plan con Mateo por WhatsApp</span>
+          </a>
+          <button type="button" id="audit-recalc-btn" class="cta-button secondary">
+            <span>Auditar Otro Negocio</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+(function() {
+  function initAuditEngine() {
+    var form = document.getElementById('audit-form');
+    var formContainer = document.getElementById('audit-form-container');
+    var scanning = document.getElementById('audit-scanning');
+    var results = document.getElementById('audit-results');
+    var statusText = document.getElementById('scan-status-text');
+    var progressFill = document.getElementById('scan-progress-fill');
+    var recalcBtn = document.getElementById('audit-recalc-btn');
+
+    if (!form || !formContainer || !scanning || !results) return;
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var bizName = document.getElementById('audit-business-name').value.trim() || 'Tu Negocio';
+      var bizType = document.getElementById('audit-business-type').value;
+      var primaryGoal = document.getElementById('audit-primary-goal').value;
+
+      formContainer.style.display = 'none';
+      results.style.display = 'none';
+      scanning.style.display = 'flex';
+
+      var steps = [
+        { text: 'Conectando con ' + bizName + '...', progress: 20 },
+        { text: 'Auditando Core Web Vitals y velocidad móvil...', progress: 45 },
+        { text: 'Detectando fugas en el embudo de conversión...', progress: 70 },
+        { text: 'Calculando oportunidades de IA y automatización...', progress: 90 },
+        { text: 'Generando informe ejecutivo final...', progress: 100 }
+      ];
+
+      var stepIdx = 0;
+      function runScanStep() {
+        if (stepIdx < steps.length) {
+          statusText.textContent = steps[stepIdx].text;
+          progressFill.style.width = steps[stepIdx].progress + '%';
+          stepIdx++;
+          setTimeout(runScanStep, 650);
+        } else {
+          setTimeout(showResults, 400);
+        }
+      }
+      runScanStep();
+
+      function showResults() {
+        scanning.style.display = 'none';
+        results.style.display = 'block';
+
+        document.getElementById('res-biz-name').textContent = bizName;
+
+        // Custom recommendations based on business type & goal
+        var speedText = document.getElementById('diag-speed-text');
+        var convText = document.getElementById('diag-conv-text');
+        var aiText = document.getElementById('diag-ai-text');
+
+        if (bizType === 'ecommerce') {
+          speedText.textContent = 'En tiendas online, 1s de retraso reduce ventas un 7%. Tu tienda necesita arquitectura estática con hidratación selectiva.';
+          convText.textContent = 'El checkout y catálogo requieren filtros instantáneos y botón directo de compra por WhatsApp.';
+          aiText.textContent = 'Recomendado: Chatbot asesor de compras que recomienda productos y cierra ventas 24/7.';
+        } else if (bizType === 'services') {
+          speedText.textContent = 'Los clientes que buscan consultoría en móvil rebotan si el sitio tarda más de 2 segundos en responder.';
+          convText.textContent = 'Necesitas un cotizador dinámico que filtre clientes calificados antes de agendar llamada.';
+          aiText.textContent = 'Recomendado: Agente de IA para responder preguntas frecuentes y agendar en tu calendario automáticamente.';
+        } else {
+          speedText.textContent = 'Tu plataforma debe ofrecer una experiencia de aplicación nativa (PWA / SPA ultra-fluida).';
+          convText.textContent = 'Optimización del funnel de registro con autenticación sin fricción y dashboard visual.';
+          aiText.textContent = 'Recomendado: Integración de APIs de lenguaje o automatizaciones en segundo plano.';
+        }
+
+        // WhatsApp message generation
+        var waMsg = '¡Hola Mateo! Acabo de hacer la auditoría en tu web para mi negocio: *' + bizName + '*\n\n' +
+          '📊 *Objetivo Principal:* ' + primaryGoal + '\n' +
+          '🏢 *Sector:* ' + bizType + '\n' +
+          '💡 *Puntos clave que quiero mejorar:* Velocidad, conversión y automatización con IA.\n\n' +
+          '¿Podemos agendar una llamada breve para revisar este plan de acción y cotizar la solución?';
+
+        var waUrl = 'https://wa.me/573005059987?text=' + encodeURIComponent(waMsg);
+        var waBtn = document.getElementById('audit-whatsapp-btn');
+        if (waBtn) waBtn.href = waUrl;
+
+        // Analytics tracking
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'lead_audit_completed', {
+            business_name: bizName,
+            business_type: bizType,
+            goal: primaryGoal
+          });
+        }
+        if (Array.isArray(window.dataLayer)) {
+          window.dataLayer.push({
+            event: 'lead_audit_completed',
+            business_name: bizName,
+            business_type: bizType,
+            goal: primaryGoal
+          });
+        }
+
+        results.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    if (recalcBtn) {
+      recalcBtn.addEventListener('click', function() {
+        results.style.display = 'none';
+        scanning.style.display = 'none';
+        formContainer.style.display = 'block';
+        formContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAuditEngine);
+  } else {
+    initAuditEngine();
+  }
+  document.addEventListener('astro:page-load', initAuditEngine);
+})();
+</script>
+
+<style>
+  .audit-section {
+    margin-top: 3.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .audit-card {
+    background: radial-gradient(circle at 85% 15%, rgba(56, 189, 248, 0.12) 0%, rgba(15, 23, 42, 0.8) 85%);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 1.5rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 35px rgba(56, 189, 248, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .audit-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #38bdf8, #a855f7, #34d399);
+  }
+
+  .audit-header {
+    text-align: center;
+    max-width: 46rem;
+    margin: 0 auto 2.5rem auto;
+  }
+
+  .audit-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    border-radius: 9999px;
+    color: #38bdf8;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .audit-header h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+
+  .audit-tagline {
+    font-size: 1.05rem;
+    color: var(--gray-300, #94a3b8);
+    line-height: 1.6;
+  }
+
+  /* Form */
+  .audit-form-container {
+    max-width: 42rem;
+    margin: 0 auto;
+  }
+
+  .input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .input-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-field.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .form-field label {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .form-field input,
+  .form-field select {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .form-field input:focus,
+  .form-field select:focus {
+    border-color: #38bdf8;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+  }
+
+  .audit-submit-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 1rem;
+    background: linear-gradient(135deg, #38bdf8, #7c3aed) !important;
+    box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
+  }
+
+  /* Scanning animation */
+  .audit-scanning {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3.5rem 1rem;
+    text-align: center;
+    gap: 1.25rem;
+  }
+
+  .scanner-visual {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scan-radar {
+    position: absolute;
+    inset: 0;
+    border: 2px solid rgba(56, 189, 248, 0.4);
+    border-radius: 50%;
+    animation: radarPulse 2s infinite ease-out;
+  }
+
+  .scan-icon {
+    font-size: 2.2rem;
+    z-index: 2;
+  }
+
+  @keyframes radarPulse {
+    0% { transform: scale(0.6); opacity: 1; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+
+  .scan-progress-bar {
+    width: 100%;
+    max-width: 24rem;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+
+  .scan-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #38bdf8, #a855f7);
+    transition: width 0.4s ease;
+  }
+
+  .scan-subtext {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  /* Results */
+  .audit-results {
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  .results-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .results-header {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .health-score-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(234, 179, 8, 0.1);
+    border: 1px solid rgba(234, 179, 8, 0.35);
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    min-width: 11rem;
+  }
+
+  .score-label {
+    font-size: 0.75rem;
+    color: #fbbf24;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+
+  .score-number-row {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+  }
+
+  .score-val {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #fbbf24;
+  }
+
+  .score-max {
+    font-size: 1rem;
+    color: #94a3b8;
+  }
+
+  .score-tag.warning {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #facc15;
+    background: rgba(234, 179, 8, 0.15);
+    padding: 0.2rem 0.5rem;
+    border-radius: 9999px;
+  }
+
+  .target-biz-info h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin-bottom: 0.35rem;
+  }
+
+  .target-biz-info p {
+    font-size: 0.95rem;
+    color: #94a3b8;
+  }
+
+  /* Diagnostic Cards */
+  .diagnostic-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (max-width: 860px) {
+    .diagnostic-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .diag-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .diag-icon {
+    font-size: 1.8rem;
+  }
+
+  .diag-card h4 {
+    font-size: 1.1rem;
+    color: #fff;
+  }
+
+  .diag-card p {
+    font-size: 0.88rem;
+    color: #94a3b8;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .diag-metric {
+    font-size: 0.85rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.6rem;
+  }
+
+  .text-amber { color: #f59e0b; }
+  .text-purple { color: #c084fc; }
+  .text-green { color: #34d399; }
+
+  /* Action Plan Box */
+  .action-plan-box {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(56, 189, 248, 0.1));
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: 1.25rem;
+    padding: 2rem;
+  }
+
+  .plan-badge {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #c084fc;
+    background: rgba(168, 85, 247, 0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    letter-spacing: 0.05em;
+  }
+
+  .plan-header h3 {
+    font-size: 1.5rem;
+    color: #fff;
+    margin: 0.5rem 0 0.35rem 0;
+  }
+
+  .plan-header p {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    margin-bottom: 1.25rem;
+  }
+
+  .plan-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .plan-steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: #e2e8f0;
+    line-height: 1.5;
+  }
+
+  .step-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 50%;
+    background: #10b981;
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+
+  .plan-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .audit-wa-btn {
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    border-color: #34d399 !important;
+    color: #fff !important;
+    font-weight: 700;
+    padding: 0.9rem 1.6rem;
+  }
+
+  .audit-wa-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(16, 185, 129, 0.45);
+  }
+</style>

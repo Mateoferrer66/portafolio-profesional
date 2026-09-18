@@ -81,6 +81,24 @@
         }
         closePalette();
       }},
+      { icon: '🚀', label: 'Auditoría Web & IA', sublabel: 'Diagnóstico de crecimiento para clientes', category: 'Acciones', action: () => {
+        const aud = document.getElementById('client-audit-engine');
+        if (aud) {
+          aud.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          navigate('/#client-audit-engine');
+        }
+        closePalette();
+      }},
+      { icon: '📈', label: 'Simulador de ROI', sublabel: 'Calcular retorno financiero de tu web', category: 'Acciones', action: () => {
+        const roi = document.getElementById('roi-simulator');
+        if (roi) {
+          roi.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          navigate('/#roi-simulator');
+        }
+        closePalette();
+      }},
       { icon: '💻', label: 'Terminal Interactivo', sublabel: 'Abrir CLI de desarrollador', category: 'Acciones', action: () => {
         const term = document.getElementById('developer-terminal');
         if (term) {

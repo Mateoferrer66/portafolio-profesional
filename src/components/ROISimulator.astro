@@ -1,0 +1,532 @@
+---
+// ROISimulator.astro
+// Interactive business tool calculating client ROI and revenue growth from high-performance web engineering
+import Icon from "./Icon.astro";
+---
+
+<section id="roi-simulator" class="roi-section wrapper reveal">
+  <div class="roi-card">
+    <div class="roi-header">
+      <div class="roi-badge">
+        <Icon icon="trophy" size="1.1em" />
+        <span>Impacto Financiero Comprobado</span>
+      </div>
+      <h2>Simulador de Retorno de Inversión (ROI)</h2>
+      <p class="roi-tagline">
+        Según estudios de Google y Amazon, cada segundo de mejora en velocidad aumenta conversiones entre un 12% y 20%. Calcula cuánto dinero extra generará tu negocio.
+      </p>
+    </div>
+
+    <div class="roi-grid">
+      <!-- Sliders Box -->
+      <div class="roi-controls">
+        <!-- Slider 1: Tráfico -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="roi-traffic">Visitas Mensuales a tu Web</label>
+            <span id="traffic-display" class="slider-val">15,000</span>
+          </div>
+          <input
+            type="range"
+            id="roi-traffic"
+            min="1000"
+            max="100000"
+            step="1000"
+            value="15000"
+            class="roi-slider"
+          />
+          <div class="slider-ticks">
+            <span>1K</span>
+            <span>25K</span>
+            <span>50K</span>
+            <span>100K+</span>
+          </div>
+        </div>
+
+        <!-- Slider 2: Ticket Promedio -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="roi-aov">Ticket Promedio / Venta (<span class="currency-tag">USD</span>)</label>
+            <span id="aov-display" class="slider-val">$120</span>
+          </div>
+          <input
+            type="range"
+            id="roi-aov"
+            min="20"
+            max="1500"
+            step="10"
+            value="120"
+            class="roi-slider"
+          />
+          <div class="slider-ticks">
+            <span>$20</span>
+            <span>$500</span>
+            <span>$1000</span>
+            <span>$1500+</span>
+          </div>
+        </div>
+
+        <!-- Slider 3: Tasa de Conversión Actual -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <label for="roi-cr">Tasa de Conversión Actual</label>
+            <span id="cr-display" class="slider-val">1.5%</span>
+          </div>
+          <input
+            type="range"
+            id="roi-cr"
+            min="0.5"
+            max="5.0"
+            step="0.1"
+            value="1.5"
+            class="roi-slider"
+          />
+          <div class="slider-ticks">
+            <span>0.5% (Baja)</span>
+            <span>1.5% (Promedio)</span>
+            <span>3.5% (Buena)</span>
+            <span>5.0%</span>
+          </div>
+        </div>
+
+        <!-- Currency switch -->
+        <div class="roi-currency-row">
+          <span>Moneda de cálculo:</span>
+          <div class="curr-pill-box">
+            <button type="button" class="curr-pill active" data-curr="USD">USD ($)</button>
+            <button type="button" class="curr-pill" data-curr="COP">COP ($)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projection Results Box -->
+      <div class="roi-results-box">
+        <div class="results-top">
+          <span class="boost-tag">+18.5% Conversiones Proyectadas</span>
+          <span class="speed-comp">Carga: 4.2s ➔ <strong>0.6s (Astro)</strong></span>
+        </div>
+
+        <div class="roi-stat-main">
+          <span class="stat-label">Ingresos Mensuales Adicionales Estimados:</span>
+          <div class="stat-num-row">
+            <span id="roi-extra-currency" class="stat-symbol">$</span>
+            <span id="roi-extra-revenue" class="stat-big">4,995</span>
+            <span id="roi-extra-code" class="stat-code">USD / mes</span>
+          </div>
+          <p class="stat-anual">
+            Equivalente a <strong id="roi-annual-rev">+$59,940 USD</strong> al año en ventas recuperadas.
+          </p>
+        </div>
+
+        <div class="roi-breakdown">
+          <div class="breakdown-item">
+            <span>Nuevos Clientes / Mes:</span>
+            <strong id="roi-new-clients">+42 clientes</strong>
+          </div>
+          <div class="breakdown-item">
+            <span>Retorno de Inversión (ROI):</span>
+            <strong class="text-green" id="roi-multiple">~8.5x en 90 días</strong>
+          </div>
+          <div class="breakdown-item">
+            <span>Puntuación Lighthouse:</span>
+            <strong class="text-purple">98 - 100 / 100</strong>
+          </div>
+        </div>
+
+        <a
+          id="roi-whatsapp-btn"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="cta-button primary roi-cta-btn"
+        >
+          <Icon icon="paper-plane-tilt" size="1.2em" />
+          <span>Multiplicar Mis Ventas con Mateo</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+(function() {
+  function initROISimulator() {
+    var section = document.getElementById('roi-simulator');
+    if (!section) return;
+
+    var trafficInput = document.getElementById('roi-traffic');
+    var aovInput = document.getElementById('roi-aov');
+    var crInput = document.getElementById('roi-cr');
+
+    var trafficDisplay = document.getElementById('traffic-display');
+    var aovDisplay = document.getElementById('aov-display');
+    var crDisplay = document.getElementById('cr-display');
+
+    var extraRevEl = document.getElementById('roi-extra-revenue');
+    var extraSymbol = document.getElementById('roi-extra-currency');
+    var extraCode = document.getElementById('roi-extra-code');
+    var annualRevEl = document.getElementById('roi-annual-rev');
+    var newClientsEl = document.getElementById('roi-new-clients');
+    var multipleEl = document.getElementById('roi-multiple');
+    var waBtn = document.getElementById('roi-whatsapp-btn');
+
+    var currBtns = section.querySelectorAll('.curr-pill');
+    var currency = 'USD';
+    var copRate = 4000;
+
+    function recalculate() {
+      var traffic = Number(trafficInput.value);
+      var aov = Number(aovInput.value);
+      var cr = Number(crInput.value) / 100;
+
+      trafficDisplay.textContent = traffic.toLocaleString('en-US');
+      crDisplay.textContent = (cr * 100).toFixed(1) + '%';
+
+      if (currency === 'USD') {
+        aovDisplay.textContent = '$' + aov.toLocaleString('en-US');
+      } else {
+        aovDisplay.textContent = '$' + (aov * copRate).toLocaleString('es-CO');
+      }
+
+      // 18.5% conversion lift from speed + modern UX optimization
+      var liftPercent = 0.185;
+      var currentOrders = traffic * cr;
+      var newOrders = traffic * (cr * (1 + liftPercent));
+      var extraOrders = Math.round(newOrders - currentOrders);
+
+      var extraMonthlyUsd = Math.round(extraOrders * aov);
+      var extraAnnualUsd = extraMonthlyUsd * 12;
+
+      // Estimated project cost ~ $600 USD average
+      var roiRatio = Math.max(2.5, (extraMonthlyUsd * 3) / 600).toFixed(1);
+
+      if (currency === 'USD') {
+        extraSymbol.textContent = '$';
+        extraCode.textContent = 'USD / mes';
+        extraRevEl.textContent = extraMonthlyUsd.toLocaleString('en-US');
+        annualRevEl.textContent = '+$' + extraAnnualUsd.toLocaleString('en-US') + ' USD';
+      } else {
+        var extraMonthlyCop = extraMonthlyUsd * copRate;
+        var extraAnnualCop = extraAnnualUsd * copRate;
+        extraSymbol.textContent = '$';
+        extraCode.textContent = 'COP / mes';
+        extraRevEl.textContent = extraMonthlyCop.toLocaleString('es-CO');
+        annualRevEl.textContent = '+$' + extraAnnualCop.toLocaleString('es-CO') + ' COP';
+      }
+
+      newClientsEl.textContent = '+' + extraOrders + ' ventas / mes';
+      multipleEl.textContent = '~' + roiRatio + 'x en 90 días';
+
+      // WhatsApp message
+      var msg = '¡Hola Mateo! Estuve calculando en tu Simulador de ROI con los datos de mi negocio:\n\n' +
+        '📈 *Visitas Mensuales:* ' + traffic.toLocaleString() + '\n' +
+        '💰 *Ticket Promedio:* ' + (currency === 'USD' ? '$' + aov + ' USD' : '$' + (aov * copRate).toLocaleString('es-CO') + ' COP') + '\n' +
+        '🎯 *Tasa Conversión Actual:* ' + (cr * 100).toFixed(1) + '%\n' +
+        '🚀 *Crecimiento Proyectado:* +' + extraOrders + ' ventas adicionales/mes (' + (currency === 'USD' ? '$' + extraMonthlyUsd.toLocaleString() + ' USD' : '$' + (extraMonthlyUsd * copRate).toLocaleString('es-CO') + ' COP') + '/mes)\n\n' +
+        'Me gustaría conversar contigo para modernizar mi plataforma y alcanzar estas métricas.';
+
+      if (waBtn) {
+        waBtn.href = 'https://wa.me/573005059987?text=' + encodeURIComponent(msg);
+      }
+    }
+
+    [trafficInput, aovInput, crInput].forEach(function(inp) {
+      inp.addEventListener('input', recalculate);
+    });
+
+    currBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        currBtns.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currency = btn.dataset.curr;
+        section.querySelector('.currency-tag').textContent = currency;
+        recalculate();
+      });
+    });
+
+    recalculate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initROISimulator);
+  } else {
+    initROISimulator();
+  }
+  document.addEventListener('astro:page-load', initROISimulator);
+})();
+</script>
+
+<style>
+  .roi-section {
+    margin-top: 3.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .roi-card {
+    background: radial-gradient(circle at 15% 15%, rgba(124, 58, 237, 0.15) 0%, rgba(15, 23, 42, 0.85) 90%);
+    border: 1px solid rgba(168, 85, 247, 0.35);
+    border-radius: 1.5rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 35px rgba(124, 58, 237, 0.12);
+  }
+
+  .roi-header {
+    text-align: center;
+    max-width: 44rem;
+    margin: 0 auto 2.5rem auto;
+  }
+
+  .roi-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.4);
+    border-radius: 9999px;
+    color: #c084fc;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .roi-header h2 {
+    font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+
+  .roi-tagline {
+    font-size: 1.05rem;
+    color: var(--gray-300, #94a3b8);
+    line-height: 1.6;
+  }
+
+  .roi-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .roi-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .roi-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .slider-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #e2e8f0;
+  }
+
+  .slider-val {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #38bdf8;
+  }
+
+  .roi-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.15);
+    outline: none;
+    cursor: pointer;
+  }
+
+  .roi-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #a855f7;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.6);
+    transition: transform 0.15s ease;
+  }
+
+  .roi-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+
+  .slider-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+
+  .roi-currency-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    font-size: 0.88rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+  }
+
+  .curr-pill-box {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.5rem;
+    padding: 0.2rem;
+  }
+
+  .curr-pill {
+    padding: 0.25rem 0.65rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .curr-pill.active {
+    background: #7c3aed;
+    color: #fff;
+  }
+
+  /* Results Box */
+  .roi-results-box {
+    background: rgba(10, 15, 30, 0.8);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 1.25rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  }
+
+  .results-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 1rem;
+  }
+
+  .boost-tag {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+  }
+
+  .speed-comp {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+
+  .speed-comp strong {
+    color: #38bdf8;
+  }
+
+  .roi-stat-main {
+    text-align: center;
+    padding: 0.75rem 0;
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .stat-num-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 0.3rem;
+    margin: 0.4rem 0;
+  }
+
+  .stat-symbol {
+    font-size: 2rem;
+    color: #10b981;
+    font-weight: 800;
+  }
+
+  .stat-big {
+    font-size: clamp(2.6rem, 5vw, 3.4rem);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .stat-code {
+    font-size: 0.95rem;
+    color: #10b981;
+    font-weight: 700;
+  }
+
+  .stat-anual {
+    font-size: 0.85rem;
+    color: #94a3b8;
+  }
+
+  .stat-anual strong {
+    color: #38bdf8;
+  }
+
+  .roi-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #cbd5e1;
+  }
+
+  .text-green { color: #34d399 !important; }
+  .text-purple { color: #c084fc !important; }
+
+  .roi-cta-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0.95rem;
+    background: linear-gradient(135deg, #10b981, #059669) !important;
+    box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
+  }
+</style>

@@ -246,6 +246,12 @@
       searchHighlights: [],
       // Voice Language (Default to Colombian Spanish, persistent)
       voiceLang: localStorage.getItem('portfolio_voice_lang') || 'es-CO',
+      // Advanced Gesture Stability & Consensus Buffer (anti-glitch)
+      gestureBuffer: [],
+      confirmedGesture: 'none',
+      gestureHoldStart: 0,
+      gestureExecuted: false,
+      swipeHistory: []
     };
   }
   var S = window._globalAIState;
@@ -1127,67 +1133,146 @@
     return Math.sqrt(dx*dx + dy*dy + dz*dz);
   }
 
-  function detectGesture(lm) {
-    var thumbTip = lm[4], indexTip = lm[8], middleTip = lm[12], ringTip = lm[16], pinkyTip = lm[20];
-    var thumbIp = lm[3], indexPip = lm[6], middlePip = lm[10], ringPip = lm[14], pinkyPip = lm[18];
+  function isExtendedFinger(wrist, mcp, pip, tip) {
+    var dTip = dist3d(wrist, tip);
+    var dPip = dist3d(wrist, pip);
+    var dMcp = dist3d(wrist, mcp);
+    return dTip > dPip * 1.14 && dTip > dMcp * 1.30;
+  }
+
+  function detectRawGesture(lm) {
     var wrist = lm[0];
+    var thumbTip = lm[4], thumbIp = lm[3], thumbMcp = lm[2];
+    var indexTip = lm[8], indexPip = lm[6], indexMcp = lm[5];
+    var middleTip = lm[12], middlePip = lm[10], middleMcp = lm[9];
+    var ringTip = lm[16], ringPip = lm[14], ringMcp = lm[13];
+    var pinkyTip = lm[20], pinkyPip = lm[18], pinkyMcp = lm[17];
 
-    var pinchDist = dist3d(thumbTip, indexTip);
-    var indexUp = indexTip.y < indexPip.y;
-    var middleUp = middleTip.y < middlePip.y;
-    var ringUp = ringTip.y < ringPip.y;
-    var pinkyUp = pinkyTip.y < pinkyPip.y;
-    var thumbUp = Math.abs(thumbTip.x - wrist.x) > Math.abs(thumbIp.x - wrist.x);
-    var fingersUp = (indexUp?1:0) + (middleUp?1:0) + (ringUp?1:0) + (pinkyUp?1:0) + (thumbUp?1:0);
+    // Scale of hand: distance between wrist and middle finger MCP
+    var palmScale = dist3d(wrist, middleMcp);
+    if (palmScale < 0.03) palmScale = 0.08;
 
-    if (pinchDist < 0.08) return 'pinch';
+    // Rotation-invariant finger extension
+    var indexExt = isExtendedFinger(wrist, indexMcp, indexPip, indexTip);
+    var middleExt = isExtendedFinger(wrist, middleMcp, middlePip, middleTip);
+    var ringExt = isExtendedFinger(wrist, ringMcp, ringPip, ringTip);
+    var pinkyExt = isExtendedFinger(wrist, pinkyMcp, pinkyPip, pinkyTip);
 
-    // Thumbs Up: only thumb extended upward, others closed
-    var thumbPointingUp = thumbTip.y < wrist.y - 0.1;
-    if (thumbUp && thumbPointingUp && !indexUp && !middleUp && !ringUp && !pinkyUp) return 'thumbsup';
+    // Thumb extension relative to palm scale
+    var thumbExt = dist3d(wrist, thumbTip) > dist3d(wrist, thumbIp) * 1.10 && dist3d(thumbTip, indexMcp) > palmScale * 0.45;
 
-    // Peace/Victory: index + middle up, ring + pinky down
-    if (indexUp && middleUp && !ringUp && !pinkyUp) return 'peace';
+    // Scale-invariant pinch (works at any webcam distance)
+    var pinchDistNormalized = dist3d(thumbTip, indexTip) / palmScale;
+    if (pinchDistNormalized < 0.35) return 'pinch';
 
-    // Rock/ILoveYou: thumb + index + pinky up, middle + ring down
-    if (thumbUp && indexUp && pinkyUp && !middleUp && !ringUp) return 'rock';
+    // Thumbs Up: only thumb extended pointing upward, all 4 other fingers closed
+    var thumbPointingUp = thumbTip.y < wrist.y - (palmScale * 0.3);
+    if (thumbExt && thumbPointingUp && !indexExt && !middleExt && !ringExt && !pinkyExt) {
+      return 'thumbsup';
+    }
 
-    // Point Up: only index up
-    if (indexUp && !middleUp && !ringUp && !pinkyUp && !thumbUp) return 'pointup';
+    // Peace/Victory: index + middle extended, ring + pinky strictly closed
+    if (indexExt && middleExt && !ringExt && !pinkyExt) {
+      return 'peace';
+    }
 
-    if (fingersUp >= 3) return 'open';
-    if (fingersUp <= 1 && !indexUp) return 'fist';
-    return 'none';
+    // Rock / Metal: index + pinky extended, middle + ring closed
+    if (indexExt && pinkyExt && !middleExt && !ringExt) {
+      return 'rock';
+    }
+
+    // Point Up: only index extended, middle, ring, pinky closed
+    if (indexExt && !middleExt && !ringExt && !pinkyExt && !thumbExt) {
+      return 'pointup';
+    }
+
+    // Open Palm (all 5 extended)
+    if (indexExt && middleExt && ringExt && pinkyExt && thumbExt) {
+      return 'open';
+    }
+
+    // Closed Fist (all 4 main fingers curled tight)
+    if (!indexExt && !middleExt && !ringExt && !pinkyExt) {
+      return 'fist';
+    }
+
+    // Neutral Pointer / Hover (default - no unwanted scrolling or actions)
+    return 'pointer';
+  }
+
+  function detectGesture(lm) {
+    var raw = detectRawGesture(lm);
+
+    // Temporal Hysteresis: buffer last 5 frames to eliminate jitter and false positives
+    S.gestureBuffer.push(raw);
+    if (S.gestureBuffer.length > 5) S.gestureBuffer.shift();
+
+    // Frequency voting
+    var counts = {};
+    var maxCount = 0;
+    var consensus = 'pointer';
+    for (var i = 0; i < S.gestureBuffer.length; i++) {
+      var g = S.gestureBuffer[i];
+      counts[g] = (counts[g] || 0) + 1;
+      if (counts[g] > maxCount) {
+        maxCount = counts[g];
+        consensus = g;
+      }
+    }
+
+    // Require at least 4 out of 5 frames agreement for discrete commands
+    if (maxCount >= 4) {
+      if (S.confirmedGesture !== consensus) {
+        S.confirmedGesture = consensus;
+        S.gestureHoldStart = Date.now();
+        S.gestureExecuted = false;
+      }
+    }
+
+    return S.confirmedGesture || 'pointer';
   }
 
   function detectSwipe(lm) {
     var wrist = lm[0];
-    var currentWristX = wrist.x;
-    if (S.prevWristX !== null && !S.swipeCooldown) {
-      var deltaX = currentWristX - S.prevWristX;
-      if (Math.abs(deltaX) > 0.12) {
+    var now = Date.now();
+    
+    S.swipeHistory.push({ x: wrist.x, t: now });
+    if (S.swipeHistory.length > 6) S.swipeHistory.shift();
+
+    if (S.swipeCooldown || S.swipeHistory.length < 5) return;
+
+    var first = S.swipeHistory[0];
+    var last = S.swipeHistory[S.swipeHistory.length - 1];
+    var dt = last.t - first.t;
+
+    // Must happen between 100ms and 450ms, with continuous open palm
+    if (dt > 100 && dt < 450 && S.confirmedGesture === 'open') {
+      var dx = last.x - first.x;
+      if (Math.abs(dx) > 0.22) {
         S.swipeCooldown = true;
-        if (deltaX > 0) {
+        S.swipeHistory = [];
+        if (dx > 0) {
           setGestureBadge('👋← Página anterior');
           showToast('Página anterior', '⬅️', 1500);
-          setTimeout(function() { window.history.back(); }, 300);
+          setTimeout(function() { window.history.back(); }, 250);
         } else {
           setGestureBadge('👋→ Siguiente');
           showToast('Siguiente página', '➡️', 1500);
-          setTimeout(function() { window.history.forward(); }, 300);
+          setTimeout(function() { window.history.forward(); }, 250);
         }
-        setTimeout(function() { S.swipeCooldown = false; }, 1500);
+        setTimeout(function() { S.swipeCooldown = false; }, 1800);
       }
     }
-    S.prevWristX = currentWristX;
   }
 
   function executeGesture(gesture, cursor) {
+    var now = Date.now();
+    var holdDuration = now - S.gestureHoldStart;
+
     switch (gesture) {
       case 'pinch':
         setGestureBadge('🤏 Clic');
-        var now = Date.now();
-        if (!S.pinchCooldown) {
+        if (!S.pinchCooldown && holdDuration >= 100) {
           S.pinchCooldown = true;
           if (now - S.lastPinchTime < 800 && !S.doublePinchCooldown) {
             S.doublePinchCooldown = true;
@@ -1195,35 +1280,46 @@
             setTimeout(function() { S.doublePinchCooldown = false; }, 1500);
           } else {
             cursor.style.transform = 'translate(-50%, -50%) scale(0.7)';
-            setTimeout(function() { cursor.style.transform = 'translate(-50%, -50%)'; }, 250);
+            setTimeout(function() { cursor.style.transform = 'translate(-50%, -50%)'; }, 220);
             performClick(S.cursorX, S.cursorY);
           }
           S.lastPinchTime = now;
-          setTimeout(function() { S.pinchCooldown = false; }, 600);
+          setTimeout(function() { S.pinchCooldown = false; }, 550);
         }
         break;
 
       case 'open':
-        setGestureBadge('✋ Subiendo...');
-        if (!S.scrollCooldown) {
-          S.scrollCooldown = true;
-          window.scrollBy({ top: -90, behavior: 'auto' });
-          setTimeout(function() { S.scrollCooldown = false; }, 80);
+        // Only scroll if held for more than 200ms intentionally
+        if (holdDuration > 200) {
+          setGestureBadge('✋ Subiendo');
+          if (!S.scrollCooldown) {
+            S.scrollCooldown = true;
+            window.scrollBy({ top: -55, behavior: 'smooth' });
+            setTimeout(function() { S.scrollCooldown = false; }, 90);
+          }
+        } else {
+          setGestureBadge('🖐️ Puntero Libre');
         }
         break;
 
       case 'fist':
-        setGestureBadge('✊ Bajando...');
-        if (!S.scrollCooldown) {
-          S.scrollCooldown = true;
-          window.scrollBy({ top: 90, behavior: 'auto' });
-          setTimeout(function() { S.scrollCooldown = false; }, 80);
+        // Only scroll if held for more than 200ms intentionally
+        if (holdDuration > 200) {
+          setGestureBadge('✊ Bajando');
+          if (!S.scrollCooldown) {
+            S.scrollCooldown = true;
+            window.scrollBy({ top: 55, behavior: 'smooth' });
+            setTimeout(function() { S.scrollCooldown = false; }, 90);
+          }
+        } else {
+          setGestureBadge('🖐️ Puntero Libre');
         }
         break;
 
       case 'peace':
-        setGestureBadge('✌️ Zoom');
-        if (!S.scrollCooldown) {
+        setGestureBadge('✌️ Zoom (mantén)');
+        if (holdDuration >= 350 && !S.gestureExecuted && !S.scrollCooldown) {
+          S.gestureExecuted = true;
           S.scrollCooldown = true;
           if (!S.zoomActive) toggleZoom(true);
           setTimeout(function() { S.scrollCooldown = false; }, 1500);
@@ -1231,36 +1327,40 @@
         break;
 
       case 'rock':
-        setGestureBadge('🤟 Inicio');
-        if (!S.scrollCooldown) {
+        setGestureBadge('🤟 Ir a Inicio (mantén)');
+        if (holdDuration >= 400 && !S.gestureExecuted && !S.scrollCooldown) {
+          S.gestureExecuted = true;
           S.scrollCooldown = true;
           showToast('Navegando al inicio...', '🏠', 2000);
-          setTimeout(function() { navigateSmooth('/'); }, 200);
+          setTimeout(function() { navigateSmooth('/'); }, 150);
           setTimeout(function() { S.scrollCooldown = false; }, 2000);
         }
         break;
 
       case 'pointup':
-        setGestureBadge('👆 Ir arriba');
-        if (!S.scrollCooldown) {
+        setGestureBadge('👆 Ir Arriba (mantén)');
+        if (holdDuration >= 350 && !S.gestureExecuted && !S.scrollCooldown) {
+          S.gestureExecuted = true;
           S.scrollCooldown = true;
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          showToast('Ir al inicio de la página', '⬆️', 1500);
+          showToast('Arriba de la página', '⬆️', 1500);
           setTimeout(function() { S.scrollCooldown = false; }, 1500);
         }
         break;
 
       case 'thumbsup':
-        setGestureBadge('👍 Compartir');
-        if (!S.scrollCooldown) {
+        setGestureBadge('👍 Compartir (mantén)');
+        if (holdDuration >= 400 && !S.gestureExecuted && !S.scrollCooldown) {
+          S.gestureExecuted = true;
           S.scrollCooldown = true;
           copyPageLink();
           setTimeout(function() { S.scrollCooldown = false; }, 2000);
         }
         break;
 
+      case 'pointer':
       default:
-        setGestureBadge('🖐️ Mano activa');
+        setGestureBadge('🎯 Puntero Activo');
         break;
     }
   }
