@@ -1,0 +1,482 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// ── Certificate data — sorted from most to least market-relevant ─────────────
+const certificates = [
+  // Tier 1: Enterprise & Cloud
+  { file: "Enterprise_Design_Thinking_Practitioner_Badge20230204-30-1hhbquw.pdf", title: "IBM Enterprise Design Thinking Practitioner", category: "enterprise", tier: 1, issuer: "IBM", icon: "🏆", color: "#0f62fe" },
+  { file: "Enterprise_Design_Thinking___Team_Essentials_for_AI_Badge20230204-30-1q99xrl.pdf", title: "IBM Team Essentials for AI", category: "enterprise", tier: 1, issuer: "IBM", icon: "🤖", color: "#0f62fe" },
+  { file: "diploma-uipath.pdf", title: "UiPath — RPA & Automatización", category: "enterprise", tier: 1, issuer: "Platzi", icon: "⚙️", color: "#f97316" },
+  { file: "diploma-ia-seo.pdf", title: "SEO con Inteligencia Artificial", category: "enterprise", tier: 1, issuer: "Platzi", icon: "🔍", color: "#10b981" },
+  { file: "diploma-web-chatgpt.pdf", title: "Desarrollo Web con ChatGPT & IA", category: "enterprise", tier: 1, issuer: "Platzi", icon: "🤖", color: "#10b981" },
+  { file: "diploma-satelite.pdf", title: "Tecnología Satelital & Telecomunicaciones", category: "enterprise", tier: 1, issuer: "Platzi", icon: "🛰️", color: "#6366f1" },
+  // Tier 2: Software Engineering
+  { file: "diploma-ingenieria.pdf", title: "Ingeniería de Software", category: "engineering", tier: 2, issuer: "Platzi", icon: "⚙️", color: "#7c3aed" },
+  { file: "diploma-scrum-master.pdf", title: "Scrum Master Certificado", category: "engineering", tier: 2, issuer: "Platzi", icon: "🎯", color: "#ec4899" },
+  { file: "diploma-product-owner.pdf", title: "Product Owner", category: "engineering", tier: 2, issuer: "Platzi", icon: "📋", color: "#ec4899" },
+  { file: "diploma-scrum.pdf", title: "Scrum Foundation", category: "engineering", tier: 2, issuer: "Platzi", icon: "🏃", color: "#ec4899" },
+  { file: "diploma-pruebas-software.pdf", title: "Testing & Pruebas de Software", category: "engineering", tier: 2, issuer: "Platzi", icon: "🧪", color: "#7c3aed" },
+  { file: "diploma-mvp-sin-codigo.pdf", title: "MVP sin Código (No-Code)", category: "engineering", tier: 2, issuer: "Platzi", icon: "🚀", color: "#7c3aed" },
+  { file: "diploma-prototipos-testing.pdf", title: "Prototipos & Testing de Producto", category: "engineering", tier: 2, issuer: "Platzi", icon: "🔬", color: "#7c3aed" },
+  { file: "diploma-solucion-problemas.pdf", title: "Solución de Problemas", category: "engineering", tier: 2, issuer: "Platzi", icon: "💡", color: "#7c3aed" },
+  // Tier 3: Frontend & Web
+  { file: "diploma-react.pdf", title: "React.js — Framework Frontend", category: "frontend", tier: 3, issuer: "Platzi", icon: "⚛️", color: "#38bdf8" },
+  { file: "diploma-frameworks-javascript.pdf", title: "Frameworks JavaScript Modernos", category: "frontend", tier: 3, issuer: "Platzi", icon: "🏗️", color: "#38bdf8" },
+  { file: "diploma-frontend-developer-practico.pdf", title: "Frontend Developer Práctico", category: "frontend", tier: 3, issuer: "Platzi", icon: "💻", color: "#38bdf8" },
+  { file: "diploma-web-frontend.pdf", title: "Desarrollo Web Frontend", category: "frontend", tier: 3, issuer: "Platzi", icon: "🌐", color: "#38bdf8" },
+  { file: "diploma-web-proyectos.pdf", title: "Proyectos Web Profesionales", category: "frontend", tier: 3, issuer: "Platzi", icon: "📁", color: "#38bdf8" },
+  { file: "diploma-web-fundamentos.pdf", title: "Fundamentos del Desarrollo Web", category: "frontend", tier: 3, issuer: "Platzi", icon: "🌍", color: "#38bdf8" },
+  { file: "diploma-paginas-web.pdf", title: "Creación de Páginas Web", category: "frontend", tier: 3, issuer: "Platzi", icon: "📄", color: "#38bdf8" },
+  { file: "diploma-introweb.pdf", title: "Introducción al Desarrollo Web", category: "frontend", tier: 3, issuer: "Platzi", icon: "🔰", color: "#38bdf8" },
+  { file: "diploma-tailwind.pdf", title: "Tailwind CSS", category: "frontend", tier: 3, issuer: "Platzi", icon: "🎨", color: "#38bdf8" },
+  { file: "diploma-practico-css.pdf", title: "CSS Práctico", category: "frontend", tier: 3, issuer: "Platzi", icon: "🎨", color: "#38bdf8" },
+  { file: "diploma-preprocesadores.pdf", title: "Preprocesadores CSS (Sass/Less)", category: "frontend", tier: 3, issuer: "Platzi", icon: "🔧", color: "#38bdf8" },
+  { file: "diploma-html-css.pdf", title: "HTML & CSS Fundamentos", category: "frontend", tier: 3, issuer: "Platzi", icon: "📝", color: "#38bdf8" },
+  { file: "diploma-sistemas-diseno.pdf", title: "Sistemas de Diseño Web", category: "frontend", tier: 3, issuer: "Platzi", icon: "🎭", color: "#38bdf8" },
+  // Tier 4: JavaScript
+  { file: "diploma-javascript-practico.pdf", title: "JavaScript Práctico", category: "javascript", tier: 4, issuer: "Platzi", icon: "⚡", color: "#facc15" },
+  { file: "diploma-javascript-closures-scope.pdf", title: "JavaScript: Closures y Scope", category: "javascript", tier: 4, issuer: "Platzi", icon: "🔄", color: "#facc15" },
+  { file: "diploma-expresiones-regulares.pdf", title: "Expresiones Regulares", category: "javascript", tier: 4, issuer: "Platzi", icon: "🔡", color: "#facc15" },
+  { file: "diploma-npm.pdf", title: "NPM — Gestión de Dependencias", category: "javascript", tier: 4, issuer: "Platzi", icon: "📦", color: "#facc15" },
+  { file: "diploma-webpack.pdf", title: "Webpack & Bundling", category: "javascript", tier: 4, issuer: "Platzi", icon: "📦", color: "#facc15" },
+  // Tier 5: Backend & DB
+  { file: "diploma-fundamentos-net.pdf", title: ".NET Framework Fundamentos", category: "backend", tier: 5, issuer: "Platzi", icon: "🔷", color: "#a855f7" },
+  { file: "diploma-python-cs.pdf", title: "Python para Ciencia de Datos", category: "backend", tier: 5, issuer: "Platzi", icon: "🐍", color: "#a855f7" },
+  { file: "diploma-oop.pdf", title: "Programación Orientada a Objetos", category: "backend", tier: 5, issuer: "Platzi", icon: "🏛️", color: "#a855f7" },
+  { file: "diploma-sql-mysql.pdf", title: "SQL & MySQL", category: "backend", tier: 5, issuer: "Platzi", icon: "🗄️", color: "#a855f7" },
+  { file: "diploma-practico-sql.pdf", title: "SQL Práctico", category: "backend", tier: 5, issuer: "Platzi", icon: "📊", color: "#a855f7" },
+  { file: "diploma-optimizacion-sql-server.pdf", title: "Optimización SQL Server", category: "backend", tier: 5, issuer: "Platzi", icon: "⚡", color: "#a855f7" },
+  { file: "diploma-programacion-estructurada.pdf", title: "Programación Estructurada", category: "backend", tier: 5, issuer: "Platzi", icon: "🏗️", color: "#a855f7" },
+  { file: "diploma-pensamiento-logico.pdf", title: "Pensamiento Lógico", category: "backend", tier: 5, issuer: "Platzi", icon: "🧠", color: "#a855f7" },
+  { file: "diploma-pensamiento-logico-estructuras.pdf", title: "Pensamiento Lógico — Estructuras", category: "backend", tier: 5, issuer: "Platzi", icon: "🧩", color: "#a855f7" },
+  { file: "diploma-pensamiento-logico-lenguajes.pdf", title: "Pensamiento Lógico — Lenguajes", category: "backend", tier: 5, issuer: "Platzi", icon: "🔤", color: "#a855f7" },
+  { file: "diploma-ordenamiento.pdf", title: "Algoritmos de Ordenamiento", category: "backend", tier: 5, issuer: "Platzi", icon: "📶", color: "#a855f7" },
+  // Tier 6: C Language
+  { file: "diploma-lenguaje-c.pdf", title: "Lenguaje C", category: "backend", tier: 6, issuer: "Platzi", icon: "©️", color: "#6b7280" },
+  { file: "diploma-lenguaje-c-2019.pdf", title: "Lenguaje C (2019)", category: "backend", tier: 6, issuer: "Platzi", icon: "©️", color: "#6b7280" },
+  { file: "diploma-funciones-c.pdf", title: "Funciones en C", category: "backend", tier: 6, issuer: "Platzi", icon: "🔢", color: "#6b7280" },
+  { file: "diploma-flujo-c.pdf", title: "Flujo de Control en C", category: "backend", tier: 6, issuer: "Platzi", icon: "🔀", color: "#6b7280" },
+  { file: "diploma-programacion-basica.pdf", title: "Programación Básica", category: "backend", tier: 6, issuer: "Platzi", icon: "📟", color: "#6b7280" },
+  { file: "diploma-programacion-basica (1).pdf", title: "Programación Básica (II)", category: "backend", tier: 6, issuer: "Platzi", icon: "📟", color: "#6b7280" },
+  { file: "diploma-prework-2019.pdf", title: "Prework Platzi (2019)", category: "backend", tier: 6, issuer: "Platzi", icon: "🌱", color: "#6b7280" },
+  { file: "diploma-prework-windows.pdf", title: "Prework Platzi — Windows", category: "backend", tier: 6, issuer: "Platzi", icon: "🖥️", color: "#6b7280" },
+  // Tier 7: DevTools & CLI
+  { file: "diploma-git-github.pdf", title: "Git & GitHub Profesional", category: "devtools", tier: 7, issuer: "Platzi", icon: "🐙", color: "#34d399" },
+  { file: "diploma-terminal.pdf", title: "Terminal Linux & CLI", category: "devtools", tier: 7, issuer: "Platzi", icon: "⌨️", color: "#34d399" },
+  { file: "diploma-slack.pdf", title: "Slack — Colaboración de Equipos", category: "devtools", tier: 7, issuer: "Platzi", icon: "💬", color: "#34d399" },
+  // Tier 8: CMS & E-Commerce
+  { file: "diploma-woocommerce.pdf", title: "WooCommerce E-Commerce", category: "marketing", tier: 8, issuer: "Platzi", icon: "🛒", color: "#f472b6" },
+  { file: "diploma-wordpress-blog.pdf", title: "WordPress — Creación de Blog", category: "marketing", tier: 8, issuer: "Platzi", icon: "📝", color: "#f472b6" },
+  // Tier 9: Design & UI/UX
+  { file: "diploma-figma-basico.pdf", title: "Figma Básico", category: "design", tier: 9, issuer: "Platzi", icon: "🎨", color: "#fb923c" },
+  { file: "diploma-figma-sistemas-diseno.pdf", title: "Figma — Sistemas de Diseño", category: "design", tier: 9, issuer: "Platzi", icon: "🖌️", color: "#fb923c" },
+  { file: "diploma-introduccion-diseno.pdf", title: "Introducción al Diseño", category: "design", tier: 9, issuer: "Platzi", icon: "✏️", color: "#fb923c" },
+  { file: "diploma-logos.pdf", title: "Diseño de Logos e Identidad", category: "design", tier: 9, issuer: "Platzi", icon: "🏷️", color: "#fb923c" },
+  // Tier 10: Marketing & Analytics
+  { file: "diploma-google-analytics.pdf", title: "Google Analytics", category: "marketing", tier: 10, issuer: "Platzi", icon: "📈", color: "#22d3ee" },
+  { file: "diploma-google-display.pdf", title: "Google Display Ads", category: "marketing", tier: 10, issuer: "Platzi", icon: "📢", color: "#22d3ee" },
+  { file: "diploma-investigacion-mercados.pdf", title: "Investigación de Mercados", category: "marketing", tier: 10, issuer: "Platzi", icon: "🔭", color: "#22d3ee" },
+  { file: "diploma-marca-personal.pdf", title: "Marca Personal", category: "marketing", tier: 10, issuer: "Platzi", icon: "⭐", color: "#22d3ee" },
+  { file: "diploma-marca-developers.pdf", title: "Marca Personal para Developers", category: "marketing", tier: 10, issuer: "Platzi", icon: "👨‍💻", color: "#22d3ee" },
+  { file: "diploma-roles-freelance.pdf", title: "Roles en el Mundo Freelance", category: "marketing", tier: 10, issuer: "Platzi", icon: "💼", color: "#22d3ee" },
+  { file: "diploma-gestion.pdf", title: "Gestión de Proyectos Digitales", category: "marketing", tier: 10, issuer: "Platzi", icon: "📊", color: "#22d3ee" },
+  // Tier 11: Productivity
+  { file: "diploma-excel-avanzado-macros.pdf", title: "Excel Avanzado con Macros", category: "productivity", tier: 11, issuer: "Platzi", icon: "📊", color: "#84cc16" },
+  { file: "diploma-excel-intermedio.pdf", title: "Excel Intermedio", category: "productivity", tier: 11, issuer: "Platzi", icon: "📊", color: "#84cc16" },
+  { file: "diploma-excel-basico.pdf", title: "Excel Básico", category: "productivity", tier: 11, issuer: "Platzi", icon: "📊", color: "#84cc16" },
+  { file: "diploma-excel-intro.pdf", title: "Excel Introducción", category: "productivity", tier: 11, issuer: "Platzi", icon: "📊", color: "#84cc16" },
+  // Tier 12: English
+  { file: "diploma-ingles-1.pdf", title: "Inglés Nivel 1", category: "english", tier: 12, issuer: "Platzi", icon: "🇬🇧", color: "#60a5fa" },
+  { file: "diploma-ingles-2.pdf", title: "Inglés Nivel 2", category: "english", tier: 12, issuer: "Platzi", icon: "🇬🇧", color: "#60a5fa" },
+  { file: "diploma-ingles-basico.pdf", title: "Inglés Básico", category: "english", tier: 12, issuer: "Platzi", icon: "🇬🇧", color: "#60a5fa" },
+  { file: "diploma-ingles-conversacion.pdf", title: "Inglés Conversacional", category: "english", tier: 12, issuer: "Platzi", icon: "💬", color: "#60a5fa" },
+  { file: "diploma-ingles-practico-pronuncia.pdf", title: "Inglés Práctico: Pronunciación", category: "english", tier: 12, issuer: "Platzi", icon: "🗣️", color: "#60a5fa" },
+  { file: "diploma-ingles-gramatica.pdf", title: "Gramática Inglés", category: "english", tier: 12, issuer: "Platzi", icon: "📚", color: "#60a5fa" },
+  { file: "diploma-ingles-principiantes.pdf", title: "Inglés para Principiantes", category: "english", tier: 12, issuer: "Platzi", icon: "🔰", color: "#60a5fa" },
+  { file: "diploma-ingles-a1-principiantes.pdf", title: "Inglés A1 Principiantes", category: "english", tier: 12, issuer: "Platzi", icon: "🔰", color: "#60a5fa" },
+  { file: "diploma-ingles-basico-escritura.pdf", title: "Inglés Básico: Escritura", category: "english", tier: 12, issuer: "Platzi", icon: "✍️", color: "#60a5fa" },
+  { file: "diploma-ingles-basico-descripciones-comparativos.pdf", title: "Inglés: Descripciones y Comparativos", category: "english", tier: 12, issuer: "Platzi", icon: "📝", color: "#60a5fa" },
+  { file: "diploma-ingles-facil-speaking.pdf", title: "Inglés Fácil: Speaking", category: "english", tier: 12, issuer: "Platzi", icon: "🎙️", color: "#60a5fa" },
+  { file: "diploma-ingles-viajes.pdf", title: "Inglés para Viajes", category: "english", tier: 12, issuer: "Platzi", icon: "✈️", color: "#60a5fa" },
+  { file: "diploma-pronunciacion-ingles.pdf", title: "Pronunciación Inglés", category: "english", tier: 12, issuer: "Platzi", icon: "🔊", color: "#60a5fa" },
+  { file: "diploma-parts-speech.pdf", title: "Parts of Speech", category: "english", tier: 12, issuer: "Platzi", icon: "📖", color: "#60a5fa" },
+  { file: "diploma-infinitivos.pdf", title: "Infinitivos en Inglés", category: "english", tier: 12, issuer: "Platzi", icon: "📖", color: "#60a5fa" },
+  { file: "diploma-presente-simple-vocabulario-comun.pdf", title: "Presente Simple y Vocabulario", category: "english", tier: 12, issuer: "Platzi", icon: "📖", color: "#60a5fa" },
+  { file: "diploma-verbo-tobe.pdf", title: "Verbo To Be", category: "english", tier: 12, issuer: "Platzi", icon: "📖", color: "#60a5fa" },
+  { file: "diploma-verbos-comunes.pdf", title: "Verbos Comunes en Inglés", category: "english", tier: 12, issuer: "Platzi", icon: "📖", color: "#60a5fa" },
+  { file: "diploma-uso-preposiciones.pdf", title: "Uso de Preposiciones", category: "english", tier: 12, issuer: "Platzi", icon: "📖", color: "#60a5fa" },
+  { file: "diploma-experiencias-pasadas.pdf", title: "Experiencias Pasadas en Inglés", category: "english", tier: 12, issuer: "Platzi", icon: "📖", color: "#60a5fa" },
+  { file: "diploma-taller-principiantes.pdf", title: "Taller Inglés Principiantes", category: "english", tier: 12, issuer: "Platzi", icon: "🏫", color: "#60a5fa" },
+  { file: "diploma-taller-elementos-trabajo.pdf", title: "Taller: Elementos del Trabajo", category: "english", tier: 12, issuer: "Platzi", icon: "🏫", color: "#60a5fa" },
+  { file: "diploma-taller-partes-cuerpo.pdf", title: "Taller: Partes del Cuerpo", category: "english", tier: 12, issuer: "Platzi", icon: "🏫", color: "#60a5fa" },
+  { file: "diploma-taller-practica-cocina.pdf", title: "Taller: Práctica en Cocina", category: "english", tier: 12, issuer: "Platzi", icon: "🏫", color: "#60a5fa" },
+  { file: "diploma-viajes-turismo.pdf", title: "Inglés: Viajes y Turismo", category: "english", tier: 12, issuer: "Platzi", icon: "🌏", color: "#60a5fa" },
+  // Tier 13: Soft Skills
+  { file: "diploma-inteligencia-emocional.pdf", title: "Inteligencia Emocional", category: "softskills", tier: 13, issuer: "Platzi", icon: "❤️", color: "#f43f5e" },
+  { file: "diploma-primeros-auxilios-psicologicos.pdf", title: "Primeros Auxilios Psicológicos", category: "softskills", tier: 13, issuer: "Platzi", icon: "🧠", color: "#f43f5e" },
+  { file: "diploma-frustracion.pdf", title: "Manejo de la Frustración", category: "softskills", tier: 13, issuer: "Platzi", icon: "💪", color: "#f43f5e" },
+];
+
+const categories = [
+  { id: "all",         label: "Todos",          icon: "🌐", count: certificates.length },
+  { id: "enterprise",  label: "IA & Enterprise", icon: "🏆", count: certificates.filter(c => c.category === "enterprise").length },
+  { id: "engineering", label: "Ingeniería",      icon: "⚙️", count: certificates.filter(c => c.category === "engineering").length },
+  { id: "frontend",    label: "Frontend & Web",  icon: "💻", count: certificates.filter(c => c.category === "frontend").length },
+  { id: "javascript",  label: "JavaScript",      icon: "⚡", count: certificates.filter(c => c.category === "javascript").length },
+  { id: "backend",     label: "Backend & DB",    icon: "🗄️", count: certificates.filter(c => c.category === "backend").length },
+  { id: "devtools",    label: "DevTools",        icon: "🔧", count: certificates.filter(c => c.category === "devtools").length },
+  { id: "design",      label: "Diseño UI/UX",   icon: "🎨", count: certificates.filter(c => c.category === "design").length },
+  { id: "marketing",   label: "Marketing",       icon: "📈", count: certificates.filter(c => c.category === "marketing").length },
+  { id: "productivity",label: "Productividad",   icon: "📊", count: certificates.filter(c => c.category === "productivity").length },
+  { id: "english",     label: "Inglés",          icon: "🇬🇧", count: certificates.filter(c => c.category === "english").length },
+  { id: "softskills",  label: "Soft Skills",     icon: "❤️", count: certificates.filter(c => c.category === "softskills").length },
+];
+---
+
+<BaseLayout
+  title="Menciones & Certificaciones | Mateo Ferrer — +163 Diplomas Verificados"
+  description="Más de 163 certificados y diplomas verificados de Platzi, IBM y más en desarrollo web, software, IA, diseño y marketing. Descarga cada diploma directamente."
+  keywords="certificados mateo ferrer, diplomas platzi, IBM design thinking, react certificado, scrum master diploma, javascript, portfolio certificaciones colombia"
+>
+  <!-- HERO -->
+  <section class="mhero">
+    <div class="mhero-glow"></div>
+    <div class="mhero-particles" id="mhero-particles"></div>
+    <div class="mhero-content">
+      <div class="mhero-badge">
+        <span class="mbadge-dot"></span>
+        <span>Verificado &amp; Autenticado</span>
+      </div>
+      <h1 class="mhero-title">
+        <span class="mhighlight">Menciones</span> &amp; <span class="mhighlight">Certificaciones</span>
+      </h1>
+      <p class="mhero-sub">
+        Más de <strong id="mcert-counter">0</strong> diplomas y certificaciones verificadas
+        en tecnología, diseño y negocios digitales.
+      </p>
+      <div class="mhero-stats">
+        <div class="mstat-pill"><span class="mstat-num">163</span><span class="mstat-label">Certificados</span></div>
+        <div class="mstat-pill"><span class="mstat-num">3</span><span class="mstat-label">Instituciones</span></div>
+        <div class="mstat-pill"><span class="mstat-num">12</span><span class="mstat-label">Áreas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STICKY CONTROLS -->
+  <div class="mcontrols-bar">
+    <div class="mcontrols-inner">
+      <div class="msearch-box">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="mcert-search" placeholder="Buscar certificado..." autocomplete="off" />
+        <button id="mclear-search" class="mclear-btn" style="display:none" aria-label="Limpiar">✕</button>
+      </div>
+      <div class="mcontrols-right">
+        <span class="mresults-count" id="mresults-count">{certificates.length} certificados</span>
+        <button class="mview-toggle active" id="mview-grid" title="Grilla" aria-label="Vista grilla">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        </button>
+        <button class="mview-toggle" id="mview-list" title="Lista" aria-label="Vista lista">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="2"/><rect x="3" y="11" width="18" height="2"/><rect x="3" y="18" width="18" height="2"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY FILTERS -->
+  <div class="mfilters-wrap wrapper">
+    <div class="mfilters-scroll" id="mfilters-scroll">
+      {categories.map(cat => (
+        <button
+          class={`mcat-btn${cat.id === "all" ? " active" : ""}`}
+          data-filter={cat.id}
+        >
+          <span class="mcat-icon">{cat.icon}</span>
+          <span class="mcat-label">{cat.label}</span>
+          <span class="mcat-count">{cat.count}</span>
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <main class="mcerts-main wrapper">
+    <div class="mcerts-grid" id="mcerts-grid">
+      {certificates.map((cert, idx) => (
+        <div
+          class="mcert-card"
+          data-category={cert.category}
+          data-title={cert.title.toLowerCase()}
+          style={`--cc:${cert.color};--cd:${Math.min(idx*25,600)}ms`}
+        >
+          {cert.tier === 1 && <div class="mtier-badge gold">🏆 Top</div>}
+          {cert.tier === 2 && <div class="mtier-badge purple">⭐ Clave</div>}
+
+          <div class="mcert-icon-wrap">
+            <span class="mcert-emoji">{cert.icon}</span>
+            <div class="mcert-glow"></div>
+          </div>
+
+          <div class="mcert-info">
+            <h3 class="mcert-title">{cert.title}</h3>
+            <span class="mcert-issuer">{cert.issuer}</span>
+          </div>
+
+          <div class="mcert-actions">
+            <a
+              href={`/assets/certificates/${encodeURIComponent(cert.file)}`}
+              download={cert.file}
+              class="mbtn-dl"
+              aria-label={`Descargar ${cert.title}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Descargar</span>
+            </a>
+            <a
+              href={`/assets/certificates/${encodeURIComponent(cert.file)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mbtn-view"
+              aria-label={`Ver ${cert.title}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span>Ver</span>
+            </a>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="mempty-state" id="mempty-state" style="display:none">
+      <div style="font-size:3rem">🔍</div>
+      <h3>Sin resultados</h3>
+      <p>Prueba con otro término o cambia el filtro.</p>
+      <button class="mbtn-reset" id="mbtn-reset">Mostrar todos</button>
+    </div>
+  </main>
+
+  <!-- DOWNLOAD BANNER -->
+  <section class="mdab wrapper">
+    <div class="mdab-inner">
+      <div class="mdab-text">
+        <h3>¿Quieres el paquete completo?</h3>
+        <p>Descarga el CV completo o contáctame para validar cualquier certificado en minutos.</p>
+      </div>
+      <div class="mdab-actions">
+        <a href="/assets/HV_MATEOFERRER_2026-05.pdf" download="HV_MATEOFERRER_2026.pdf" class="mdab-btn primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Descargar CV Completo
+        </a>
+        <a href="https://wa.me/573005059987?text=Hola%20Mateo,%20quiero%20validar%20tus%20certificados" target="_blank" rel="noopener noreferrer" class="mdab-btn secondary">
+          💬 WhatsApp Directo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <script is:inline>
+  (function(){
+    // Counter
+    var el = document.getElementById('mcert-counter');
+    if(el){ var s=null,t=163,d=1800; function anim(ts){if(!s)s=ts;var p=Math.min((ts-s)/d,1),e=1-Math.pow(1-p,3);el.textContent=Math.floor(e*t);if(p<1)requestAnimationFrame(anim);} requestAnimationFrame(anim); }
+
+    // Particles
+    var pc=document.getElementById('mhero-particles');
+    if(pc){for(var i=0;i<28;i++){var p=document.createElement('div');p.className='mparticle';p.style.cssText='left:'+Math.random()*100+'%;top:'+Math.random()*100+'%;width:'+(Math.random()*4+2)+'px;height:'+(Math.random()*4+2)+'px;animation-delay:'+Math.random()*4+'s;animation-duration:'+(Math.random()*6+4)+'s;opacity:'+(Math.random()*0.5+0.2)+';';pc.appendChild(p);}}
+
+    // Filter & Search
+    var cards=Array.from(document.querySelectorAll('.mcert-card'));
+    var searchInput=document.getElementById('mcert-search');
+    var clearBtn=document.getElementById('mclear-search');
+    var filterBtns=document.querySelectorAll('.mcat-btn');
+    var countEl=document.getElementById('mresults-count');
+    var emptyEl=document.getElementById('mempty-state');
+    var gridEl=document.getElementById('mcerts-grid');
+    var cf='all', cs='';
+
+    function applyFilters(){
+      var v=0;
+      cards.forEach(function(c){
+        var cat=c.dataset.category||'';
+        var ttl=c.dataset.title||'';
+        var mf=cf==='all'||cat===cf;
+        var ms=!cs||ttl.includes(cs.toLowerCase());
+        if(mf&&ms){c.style.display='';c.classList.add('min-view');v++;}
+        else{c.style.display='none';c.classList.remove('min-view');}
+      });
+      if(countEl)countEl.textContent=v+' certificado'+(v!==1?'s':'');
+      if(emptyEl)emptyEl.style.display=v===0?'flex':'none';
+      if(gridEl)gridEl.style.display=v===0?'none':'';
+    }
+
+    filterBtns.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        filterBtns.forEach(function(b){b.classList.remove('active');});
+        btn.classList.add('active');
+        cf=btn.dataset.filter||'all';
+        applyFilters();
+      });
+    });
+
+    if(searchInput){
+      searchInput.addEventListener('input',function(){
+        cs=searchInput.value.trim();
+        if(clearBtn)clearBtn.style.display=cs?'':'none';
+        applyFilters();
+      });
+    }
+    if(clearBtn){
+      clearBtn.addEventListener('click',function(){
+        if(searchInput){searchInput.value='';cs='';}
+        clearBtn.style.display='none';
+        applyFilters();
+      });
+    }
+
+    // View toggle
+    var gBtn=document.getElementById('mview-grid');
+    var lBtn=document.getElementById('mview-list');
+    if(gBtn&&lBtn&&gridEl){
+      gBtn.addEventListener('click',function(){gBtn.classList.add('active');lBtn.classList.remove('active');gridEl.classList.remove('mlist-view');});
+      lBtn.addEventListener('click',function(){lBtn.classList.add('active');gBtn.classList.remove('active');gridEl.classList.add('mlist-view');});
+    }
+
+    // Reset
+    var resetBtn=document.getElementById('mbtn-reset');
+    if(resetBtn){
+      resetBtn.addEventListener('click',function(){
+        filterBtns.forEach(function(b){b.classList.toggle('active',b.dataset.filter==='all');});
+        cf='all';cs='';
+        if(searchInput)searchInput.value='';
+        if(clearBtn)clearBtn.style.display='none';
+        applyFilters();
+      });
+    }
+
+    // Intersection reveal
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('min-view');obs.unobserve(e.target);}});
+    },{threshold:0.04});
+    cards.forEach(function(c){obs.observe(c);});
+
+    // Download flash
+    document.querySelectorAll('.mbtn-dl').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        btn.classList.add('mdl-done');
+        var span=btn.querySelector('span');
+        var orig=span.textContent;
+        span.textContent='✓ Listo';
+        setTimeout(function(){btn.classList.remove('mdl-done');span.textContent=orig;},2000);
+      });
+    });
+  })();
+  </script>
+</BaseLayout>
+
+<style>
+/* ═══ HERO ═══════════════════════════════════════════════════════════════════ */
+.mhero{position:relative;min-height:48vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:6rem 2rem 4rem;}
+.mhero-glow{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(124,58,237,.38) 0%,rgba(16,185,129,.08) 60%,transparent 100%);pointer-events:none;}
+.mhero-particles{position:absolute;inset:0;pointer-events:none;}
+:global(.mparticle){position:absolute;border-radius:50%;background:linear-gradient(135deg,#a855f7,#10b981);animation:mfloat linear infinite;}
+@keyframes mfloat{0%{transform:translateY(0) scale(1);opacity:.5}50%{transform:translateY(-28px) scale(1.2);opacity:.9}100%{transform:translateY(0) scale(1);opacity:.5}}
+.mhero-content{position:relative;z-index:1;max-width:700px;}
+.mhero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(16,185,129,.14);border:1px solid rgba(16,185,129,.4);padding:6px 16px;border-radius:100px;font-size:.76rem;color:#10b981;font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.5rem;}
+.mbadge-dot{width:7px;height:7px;border-radius:50%;background:#10b981;animation:mpulse 2s infinite;flex-shrink:0;}
+@keyframes mpulse{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,.7)}50%{box-shadow:0 0 0 6px rgba(16,185,129,0)}}
+.mhero-title{font-size:clamp(2rem,5.5vw,4rem);font-weight:900;line-height:1.05;color:#fff;margin-bottom:1rem;}
+.mhighlight{background:linear-gradient(135deg,#a855f7 0%,#10b981 60%,#38bdf8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.mhero-sub{font-size:1rem;color:rgba(255,255,255,.6);margin-bottom:2rem;}
+.mhero-sub strong{color:#a855f7;font-size:1.2rem;}
+.mhero-stats{display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;}
+.mstat-pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:.7rem 1.2rem;text-align:center;backdrop-filter:blur(12px);transition:transform .3s,border-color .3s;}
+.mstat-pill:hover{transform:translateY(-3px);border-color:rgba(168,85,247,.5);}
+.mstat-num{display:block;font-size:1.6rem;font-weight:900;background:linear-gradient(135deg,#a855f7,#10b981);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.mstat-label{font-size:.7rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.08em;}
+/* ═══ CONTROLS ═══════════════════════════════════════════════════════════════ */
+.mcontrols-bar{background:rgba(9,11,17,.88);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.07);padding:.7rem 1.5rem;position:sticky;top:0;z-index:100;}
+.mcontrols-inner{max-width:83rem;margin:0 auto;display:flex;align-items:center;gap:1rem;}
+.msearch-box{flex:1;display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:.5rem 1rem;transition:border-color .3s;}
+.msearch-box:focus-within{border-color:rgba(168,85,247,.6);box-shadow:0 0 0 3px rgba(168,85,247,.1);}
+.msearch-box svg{color:rgba(255,255,255,.4);flex-shrink:0;}
+#mcert-search{flex:1;background:none;border:none;color:#fff;font-size:.88rem;outline:none;}
+#mcert-search::placeholder{color:rgba(255,255,255,.3);}
+.mclear-btn{background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:.85rem;padding:2px 4px;border-radius:4px;transition:color .2s;}
+.mclear-btn:hover{color:#fff;}
+.mcontrols-right{display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
+.mresults-count{font-size:.78rem;color:rgba(255,255,255,.4);white-space:nowrap;}
+.mview-toggle{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:rgba(255,255,255,.4);cursor:pointer;padding:6px 8px;display:flex;align-items:center;transition:all .2s;}
+.mview-toggle.active,.mview-toggle:hover{background:rgba(168,85,247,.2);border-color:rgba(168,85,247,.5);color:#a855f7;}
+/* ═══ FILTERS ════════════════════════════════════════════════════════════════ */
+.mfilters-wrap{padding:1rem 1.5rem;}
+.mfilters-scroll{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.mfilters-scroll::-webkit-scrollbar{display:none;}
+.mcat-btn{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:5px 13px;color:rgba(255,255,255,.6);font-size:.8rem;font-weight:500;cursor:pointer;white-space:nowrap;transition:all .25s;flex-shrink:0;}
+.mcat-btn:hover{background:rgba(168,85,247,.1);border-color:rgba(168,85,247,.4);color:#d8b4fe;}
+.mcat-btn.active{background:linear-gradient(135deg,rgba(124,58,237,.4),rgba(16,185,129,.25));border-color:rgba(168,85,247,.7);color:#fff;box-shadow:0 2px 12px rgba(124,58,237,.3);}
+.mcat-icon{font-size:.95em;}
+.mcat-count{background:rgba(255,255,255,.15);border-radius:100px;padding:1px 6px;font-size:.68rem;font-weight:600;}
+.mcat-btn.active .mcat-count{background:rgba(255,255,255,.25);}
+/* ═══ GRID ═══════════════════════════════════════════════════════════════════ */
+.mcerts-main{padding-bottom:4rem;}
+.mcerts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.1rem;padding:1rem 0;}
+.mcert-card{position:relative;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:1.3rem 1.1rem .9rem;display:flex;flex-direction:column;gap:.75rem;opacity:0;transform:translateY(22px);transition:opacity .5s ease var(--cd,0ms),transform .5s ease var(--cd,0ms),border-color .3s,box-shadow .3s,background .3s;overflow:hidden;}
+.mcert-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--cc,#7c3aed) 0%,transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none;border-radius:inherit;}
+.mcert-card.min-view{opacity:1;transform:translateY(0);}
+.mcert-card:hover{border-color:var(--cc,#7c3aed);box-shadow:0 8px 28px rgba(0,0,0,.3),0 0 0 1px var(--cc,#7c3aed);background:rgba(255,255,255,.07);}
+.mcert-card:hover::before{opacity:.07;}
+.mtier-badge{position:absolute;top:10px;right:10px;font-size:.63rem;font-weight:700;padding:2px 7px;border-radius:100px;text-transform:uppercase;letter-spacing:.05em;}
+.mtier-badge.gold{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1a1200;}
+.mtier-badge.purple{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;}
+.mcert-icon-wrap{position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;border-radius:13px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);}
+.mcert-emoji{font-size:1.5rem;line-height:1;position:relative;z-index:1;}
+.mcert-glow{position:absolute;inset:-4px;background:radial-gradient(circle,var(--cc,#7c3aed) 0%,transparent 70%);opacity:0;border-radius:inherit;transition:opacity .3s;filter:blur(6px);}
+.mcert-card:hover .mcert-glow{opacity:.28;}
+.mcert-info{flex:1;}
+.mcert-title{font-size:.83rem;font-weight:600;color:rgba(255,255,255,.92);line-height:1.35;margin-bottom:3px;}
+.mcert-issuer{font-size:.7rem;color:rgba(255,255,255,.38);font-weight:500;text-transform:uppercase;letter-spacing:.06em;}
+.mcert-actions{display:flex;gap:5px;margin-top:3px;}
+.mbtn-dl,.mbtn-view{display:flex;align-items:center;gap:5px;border-radius:8px;font-size:.73rem;font-weight:600;cursor:pointer;text-decoration:none;transition:all .25s;border:none;padding:5px 9px;white-space:nowrap;}
+.mbtn-dl{flex:1;background:linear-gradient(135deg,var(--cc,#7c3aed),rgba(255,255,255,.08));color:#fff;justify-content:center;}
+.mbtn-dl.mdl-done{background:linear-gradient(135deg,#10b981,#059669)!important;}
+.mbtn-dl:hover{filter:brightness(1.18);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.28);}
+.mbtn-view{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.7);}
+.mbtn-view:hover{background:rgba(255,255,255,.14);color:#fff;transform:translateY(-1px);}
+/* List view */
+.mcerts-grid.mlist-view{grid-template-columns:1fr;gap:.45rem;}
+.mcerts-grid.mlist-view .mcert-card{flex-direction:row;align-items:center;padding:.85rem 1.1rem;gap:.9rem;}
+.mcerts-grid.mlist-view .mcert-icon-wrap{flex-shrink:0;width:42px;height:42px;}
+.mcerts-grid.mlist-view .mcert-info{flex:1;min-width:0;}
+.mcerts-grid.mlist-view .mcert-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.85rem;}
+.mcerts-grid.mlist-view .mcert-actions{margin-top:0;flex-shrink:0;}
+/* Empty */
+.mempty-state{flex-direction:column;align-items:center;justify-content:center;gap:.8rem;padding:5rem 2rem;text-align:center;}
+.mempty-state h3{font-size:1.1rem;color:rgba(255,255,255,.7);}
+.mempty-state p{color:rgba(255,255,255,.4);font-size:.88rem;}
+.mbtn-reset{background:linear-gradient(135deg,#7c3aed,#10b981);border:none;border-radius:10px;color:#fff;font-size:.88rem;font-weight:600;padding:.65rem 1.4rem;cursor:pointer;transition:filter .2s,transform .2s;}
+.mbtn-reset:hover{filter:brightness(1.15);transform:translateY(-2px);}
+/* ═══ DOWNLOAD BANNER ════════════════════════════════════════════════════════ */
+.mdab{margin:0 auto 4rem;}
+.mdab-inner{background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(16,185,129,.12));border:1px solid rgba(168,85,247,.35);border-radius:20px;padding:2.2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;}
+.mdab-text h3{font-size:1.3rem;color:#fff;margin-bottom:.4rem;}
+.mdab-text p{color:rgba(255,255,255,.5);font-size:.88rem;max-width:480px;}
+.mdab-actions{display:flex;gap:.8rem;flex-wrap:wrap;flex-shrink:0;}
+.mdab-btn{display:flex;align-items:center;gap:7px;padding:.75rem 1.4rem;border-radius:11px;font-size:.88rem;font-weight:600;text-decoration:none;transition:all .25s;white-space:nowrap;}
+.mdab-btn.primary{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;box-shadow:0 4px 18px rgba(124,58,237,.4);}
+.mdab-btn.primary:hover{filter:brightness(1.15);transform:translateY(-2px);box-shadow:0 8px 24px rgba(124,58,237,.5);}
+.mdab-btn.secondary{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.85);}
+.mdab-btn.secondary:hover{background:rgba(255,255,255,.14);color:#fff;transform:translateY(-2px);}
+/* Responsive */
+@media(max-width:768px){
+  .mcerts-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:.7rem;}
+  .mhero-stats{gap:.5rem;}
+  .mstat-pill{padding:.6rem .9rem;}
+  .mstat-num{font-size:1.3rem;}
+  .mdab-inner{flex-direction:column;text-align:center;}
+  .mdab-actions{justify-content:center;}
+  .mresults-count{display:none;}
+}
+@media(max-width:480px){
+  .mcerts-grid{grid-template-columns:1fr 1fr;}
+  .mcert-title{font-size:.73rem;}
+}
+</style>
