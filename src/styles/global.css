@@ -114,17 +114,18 @@
 		0px 16px 16px rgba(9, 11, 17, 0.1), 0px 4px 9px rgba(9, 11, 17, 0.12);
 }
 
-html,
-body {
+html {
 	min-height: 100%;
-	overflow-x: hidden;
-	scroll-behavior: smooth;
+	overflow-x: clip;
 	background-color: #05010a !important;
 	background: radial-gradient(ellipse 80% 80% at 50% -20%, rgba(124, 58, 237, 0.28) 0%, rgba(46, 10, 79, 0.2) 40%, rgba(5, 1, 10, 1) 85%), #05010a !important;
 	background-attachment: fixed !important;
 }
 
 body {
+	min-height: 100%;
+	overflow-x: clip;
+	overflow-y: visible;
 	color: var(--gray-200);
 	font-family: var(--font-body);
 	-webkit-font-smoothing: antialiased;
@@ -331,11 +332,10 @@ h5 {
 /* RESPONSIVE: Small Mobile Fixes */
 /* ============================== */
 
-/* Prevent horizontal overflow globally */
+/* Prevent horizontal overflow globally without breaking touchpad scrolling */
 html, body {
-	overflow-x: hidden;
-	max-width: 100vw;
-	overscroll-behavior-y: none;
+	overflow-x: clip;
+	max-width: 100%;
 }
 
 /* Accessible touch targets & tap comfort on mobile */
