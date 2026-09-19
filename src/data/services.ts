@@ -11,92 +11,56 @@ export interface Service {
 export const services: Service[] = [
     {
         id: 1,
-        name: "Software a la Medida",
-        price: "Cotizar",
+        name: "Landing Pages de Alta Conversión",
+        price: "Desde $199 USD",
         category: "development",
-        image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop&q=80",
-        tags: ["software", "development"],
-        description: "Desarrollo de software personalizado adaptado a las necesidades específicas de tu empresa o negocio."
+        image: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&h=600&fit=crop&q=80",
+        tags: ["web", "conversion", "sales", "landing"],
+        description: "Páginas web ultrarrápidas (carga < 1s), optimizadas para campañas publicitarias (Google/Meta Ads) con embudo directo a tu WhatsApp para captar clientes en automático."
     },
     {
         id: 2,
-        name: "Páginas Web Robustas",
-        price: "Cotizar",
+        name: "Tiendas Online & Catálogos WhatsApp",
+        price: "Desde $399 USD",
         category: "development",
-        image: "https://images.unsplash.com/photo-1547658719-da2b51169166?w=800&h=600&fit=crop&q=80",
-        tags: ["web", "development"],
-        description: "Creación de sitios web profesionales, rápidos, escalables y optimizados para buscadores (SEO)."
+        image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80",
+        tags: ["ecommerce", "ventas", "web", "tienda"],
+        description: "E-Commerce moderno de alto rendimiento con pasarelas de pago (Wompi, MercadoPago, Stripe) o catálogo interactivo con pedidos directos a WhatsApp para aumentar tus ventas."
     },
     {
         id: 3,
-        name: "Sistemas de Facturación Electrónica",
-        price: "Cotizar",
+        name: "Software a la Medida & Facturación Electrónica",
+        price: "Desde $799 USD",
         category: "development",
         image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&h=600&fit=crop&q=80",
-        tags: ["software", "business"],
-        description: "Sistemas integrados completos para gestión de ventas, inventario y facturación electrónica."
+        tags: ["software", "facturacion", "saas", "gestion"],
+        description: "Sistemas web centralizados para control de inventarios, gestión de clientes (CRM), administración de ventas y emisión de facturación electrónica."
     },
     {
         id: 4,
-        name: "E-Commerce",
-        price: "Cotizar",
-        category: "development",
-        image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=800&h=600&fit=crop&q=80",
-        tags: ["web", "ecommerce"],
-        description: "Tiendas online completas con pasarelas de pago y gestión de productos."
+        name: "Agentes de IA & Automatización de Negocios",
+        price: "Desde $299 USD",
+        category: "tech",
+        image: "https://images.unsplash.com/photo-1677442136019-21780efad99a?w=800&h=600&fit=crop&q=80",
+        tags: ["ia", "automation", "chatbots", "eficiencia"],
+        description: "Asistentes virtuales con IA integrados en tu web o WhatsApp para calificar prospectos 24/7 y flujos automatizados para ahorrar más de 15 horas operativas a la semana."
     },
     {
         id: 5,
-        name: "Diseño Gráfico",
-        price: "Cotizar",
-        category: "design",
-        image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=600&fit=crop&q=80",
-        tags: ["design", "branding"],
-        description: "Diseño de identidad visual, logotipos, banners y material publicitario."
+        name: "Auditoría Web & Optimización Core Web Vitals",
+        price: "Desde $149 USD",
+        category: "consulting",
+        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&q=80",
+        tags: ["seo", "speed", "audit", "rendimiento"],
+        description: "Diagnóstico exhaustivo y optimización técnica para que tu sitio web alcance puntuaciones de 95+ en Google Lighthouse, mejore su posicionamiento SEO y retenga más visitantes."
     },
     {
         id: 6,
-        name: "Flyers y Publicidad",
-        price: "Cotizar",
+        name: "Diseño UI/UX & Branding Digital",
+        price: "Desde $180 USD",
         category: "design",
-        image: "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=800&h=600&fit=crop&q=80",
-        tags: ["design", "marketing"],
-        description: "Diseño de flyers, afiches y piezas gráficas impactantes para redes sociales y medios impresos."
-    },
-    {
-        id: 7,
-        name: "Impresión 3D",
-        price: "Cotizar",
-        category: "tech",
-        image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=800&h=600&fit=crop&q=80",
-        tags: ["3d", "tech"],
-        description: "Servicio de modelado e impresión 3D para prototipos, maquetas y piezas personalizadas."
-    },
-    {
-        id: 8,
-        name: "Asesorías Tecnológicas",
-        price: "Cotizar",
-        category: "consulting",
-        image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop&q=80",
-        tags: ["consulting", "tech"],
-        description: "Consultoría especializada para optimizar los recursos tecnológicos de tu negocio o proyecto."
-    },
-    {
-        id: 9,
-        name: "Tesis y Proyectos Universitarios",
-        price: "Cotizar",
-        category: "education",
-        image: "https://images.unsplash.com/photo-1523050854058-8df90110c476?w=800&h=600&fit=crop&q=80",
-        tags: ["education", "academic"],
-        description: "Asesoría y desarrollo de software para tesis, proyectos universitarios y trabajos de colegio."
-    },
-    {
-        id: 10,
-        name: "Ropa",
-        price: "Cotizar",
-        category: "clothing",
-        image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=800&h=600&fit=crop&q=80",
-        tags: ["clothing", "custom"],
-        description: "Ropa con estilos únicos o con el branding de tu empresa/marca."
+        image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?w=800&h=600&fit=crop&q=80",
+        tags: ["design", "branding", "ui-ux", "prototipos"],
+        description: "Identidad visual corporativa, prototipos interactivos en Figma y diseño de interfaces que transmiten autoridad, confianza y elevan la percepción de valor de tu marca."
     }
 ];
