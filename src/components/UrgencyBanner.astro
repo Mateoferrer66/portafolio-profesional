@@ -1,0 +1,319 @@
+---
+// UrgencyBanner.astro
+// Urgency & Scarcity Engine – drives immediate conversions with countdown + limited spots
+---
+
+<div id="urgency-banner" class="urgency-banner" style="display:none;">
+  <div class="urgency-inner">
+    <div class="urgency-left">
+      <span class="urgency-fire">🔥</span>
+      <div class="urgency-text">
+        <span class="urgency-label">OFERTA EXCLUSIVA</span>
+        <span class="urgency-desc"><strong>20% OFF</strong> en tu primer proyecto web — Código: <code>FIRST20</code></span>
+      </div>
+    </div>
+    <div class="urgency-center">
+      <div class="urgency-countdown">
+        <div class="countdown-unit">
+          <span id="uc-hours" class="countdown-num">00</span>
+          <span class="countdown-label">Hrs</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit">
+          <span id="uc-minutes" class="countdown-num">00</span>
+          <span class="countdown-label">Min</span>
+        </div>
+        <span class="countdown-sep">:</span>
+        <div class="countdown-unit">
+          <span id="uc-seconds" class="countdown-num">00</span>
+          <span class="countdown-label">Seg</span>
+        </div>
+      </div>
+      <span class="urgency-spots">⚡ Solo <strong id="uc-spots">3</strong> cupos este mes</span>
+    </div>
+    <div class="urgency-right">
+      <a
+        href="https://wa.me/573005059987?text=Hola%20Mateo%2C%20vi%20la%20oferta%20FIRST20%20en%20tu%20web%20y%20quiero%20cotizar%20mi%20proyecto%20con%20el%2020%25%20de%20descuento"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="urgency-cta"
+      >
+        Reclamar Ahora →
+      </a>
+      <button id="urgency-close" class="urgency-close" aria-label="Cerrar banner">✕</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initUrgencyBanner() {
+    const banner = document.getElementById('urgency-banner');
+    const closeBtn = document.getElementById('urgency-close');
+    if (!banner || !closeBtn) return;
+
+    // Check if dismissed this session
+    const dismissed = sessionStorage.getItem('urgency-dismissed');
+    if (dismissed) return;
+
+    banner.style.display = '';
+    banner.classList.add('urgency-visible');
+
+    // Countdown: 6 hours from first visit (persisted)
+    let endTime = localStorage.getItem('urgency-end');
+    if (!endTime) {
+      const end = Date.now() + 6 * 60 * 60 * 1000;
+      localStorage.setItem('urgency-end', String(end));
+      endTime = String(end);
+    }
+
+    const target = parseInt(endTime, 10);
+
+    function updateCountdown() {
+      const now = Date.now();
+      const diff = Math.max(0, target - now);
+      const hrs = Math.floor(diff / 3600000);
+      const mins = Math.floor((diff % 3600000) / 60000);
+      const secs = Math.floor((diff % 60000) / 1000);
+      const h = document.getElementById('uc-hours');
+      const m = document.getElementById('uc-minutes');
+      const s = document.getElementById('uc-seconds');
+      if (h) h.textContent = String(hrs).padStart(2, '0');
+      if (m) m.textContent = String(mins).padStart(2, '0');
+      if (s) s.textContent = String(secs).padStart(2, '0');
+      if (diff <= 0) {
+        localStorage.removeItem('urgency-end');
+        if (banner) banner.style.display = 'none';
+      }
+    }
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    closeBtn.addEventListener('click', () => {
+      banner.classList.remove('urgency-visible');
+      banner.classList.add('urgency-hiding');
+      sessionStorage.setItem('urgency-dismissed', '1');
+      setTimeout(() => { banner.style.display = 'none'; }, 400);
+      clearInterval(interval);
+    });
+  }
+  document.addEventListener('astro:page-load', initUrgencyBanner);
+</script>
+
+<style>
+  .urgency-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10001;
+    background: linear-gradient(90deg, #7c3aed, #a855f7, #d946ef);
+    background-size: 200% 100%;
+    animation: urgencyGradient 4s ease infinite;
+    padding: 0;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+    transform: translateY(-100%);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .urgency-banner.urgency-visible {
+    transform: translateY(0);
+  }
+
+  .urgency-banner.urgency-hiding {
+    transform: translateY(-100%);
+    transition: transform 0.4s ease-in;
+  }
+
+  @keyframes urgencyGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .urgency-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .urgency-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .urgency-fire {
+    font-size: 1.3rem;
+    animation: fireShake 1s ease-in-out infinite;
+  }
+
+  @keyframes fireShake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-5deg) scale(1.1); }
+    75% { transform: rotate(5deg) scale(1.1); }
+  }
+
+  .urgency-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .urgency-label {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+  }
+
+  .urgency-desc {
+    font-size: 0.85rem;
+    color: white;
+    font-weight: 500;
+  }
+
+  .urgency-desc code {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  .urgency-center {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .urgency-countdown {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    padding: 4px 8px;
+    min-width: 40px;
+  }
+
+  .countdown-num {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: white;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .countdown-label {
+    font-size: 0.55rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .countdown-sep {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: bold;
+    margin-top: -8px;
+  }
+
+  .urgency-spots {
+    font-size: 0.8rem;
+    color: white;
+    white-space: nowrap;
+  }
+
+  .urgency-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .urgency-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0.5rem 1.1rem;
+    background: white;
+    color: #7c3aed;
+    font-weight: 700;
+    font-size: 0.85rem;
+    border-radius: 99rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+  }
+
+  .urgency-cta:hover {
+    background: #fef3c7;
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  }
+
+  .urgency-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .urgency-close:hover {
+    color: white;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .urgency-inner {
+      flex-direction: column;
+      text-align: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .urgency-left {
+      justify-content: center;
+    }
+
+    .urgency-center {
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .urgency-right {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .urgency-text {
+      align-items: center;
+    }
+
+    .urgency-close {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+    }
+
+    .urgency-banner {
+      position: relative;
+    }
+  }
+</style>

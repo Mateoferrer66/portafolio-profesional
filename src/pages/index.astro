@@ -29,6 +29,10 @@ import ProjectEstimator from "../components/ProjectEstimator.astro";
 import InteractiveTerminal from "../components/InteractiveTerminal.astro";
 import ClientAuditEngine from "../components/ClientAuditEngine.astro";
 import ROISimulator from "../components/ROISimulator.astro";
+import UrgencyBanner from "../components/UrgencyBanner.astro";
+import CaseStudies from "../components/CaseStudies.astro";
+import PricingTable from "../components/PricingTable.astro";
+import BookingCTA from "../components/BookingCTA.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -60,6 +64,8 @@ const liveWebsites = [
 ---
 
 <BaseLayout>
+	<!-- Urgency & Scarcity Banner -->
+	<UrgencyBanner />
 	<script type="application/ld+json" slot="head">
 		{
 			"@context": "https://schema.org",
@@ -252,6 +258,12 @@ const liveWebsites = [
 		<!-- Client ROI & Web Performance Benchmarking Simulator -->
 		<ROISimulator />
 
+		<!-- Client Success Stories -->
+		<CaseStudies />
+
+		<!-- Pricing Table with Plans -->
+		<PricingTable />
+
 		<!-- Courses & Mentorships Section -->
 		<CoursesShowcase />
 
@@ -386,6 +398,9 @@ const liveWebsites = [
 
 			<!-- Interactive Developer CLI Terminal -->
 			<InteractiveTerminal />
+
+			<!-- Booking Calendar CTA -->
+			<BookingCTA />
 
 			<!-- Newsletter Lead Capture -->
 			<NewsletterCTA />

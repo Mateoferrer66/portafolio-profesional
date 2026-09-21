@@ -1,0 +1,425 @@
+---
+// ExitIntentPopup.astro
+// Smart lead magnet popup that appears on exit-intent to capture emails
+---
+
+<div id="exit-popup-overlay" class="exit-overlay" style="display:none;">
+  <div class="exit-popup">
+    <button id="exit-popup-close" class="exit-close" aria-label="Cerrar popup">✕</button>
+
+    <!-- Success State (hidden by default) -->
+    <div id="exit-success" class="exit-success" style="display:none;">
+      <div class="success-confetti" id="confetti-container"></div>
+      <div class="success-icon">🎉</div>
+      <h3>¡Listo! Revisa tu WhatsApp</h3>
+      <p>Te enviaremos el checklist y consejos exclusivos para tu negocio.</p>
+    </div>
+
+    <!-- Form State -->
+    <div id="exit-form-state" class="exit-content">
+      <div class="exit-badge">🎁 RECURSO GRATUITO</div>
+      <h2>¡Espera! Antes de irte...</h2>
+      <p class="exit-subtitle">
+        Llévate gratis mi <strong>Checklist de 30 Puntos</strong> para optimizar tu sitio web y multiplicar tus ventas online.
+      </p>
+
+      <div class="exit-benefits">
+        <div class="benefit-item">
+          <span class="benefit-icon">⚡</span>
+          <span>Velocidad y rendimiento web</span>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">📈</span>
+          <span>Optimización SEO completa</span>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">💰</span>
+          <span>Estrategias de conversión probadas</span>
+        </div>
+      </div>
+
+      <form id="exit-form" class="exit-form">
+        <div class="exit-inputs">
+          <input type="text" id="exit-name" placeholder="Tu nombre" required class="exit-input" />
+          <input type="email" id="exit-email" placeholder="tu@email.com" required class="exit-input" />
+        </div>
+        <button type="submit" class="exit-submit">
+          <span>Descargar Checklist Gratis</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+        </button>
+      </form>
+
+      <p class="exit-privacy">🔒 Tu información está segura. No spam, nunca.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initExitIntent() {
+    const overlay = document.getElementById('exit-popup-overlay');
+    const closeBtn = document.getElementById('exit-popup-close');
+    const form = document.getElementById('exit-form') as HTMLFormElement;
+    const formState = document.getElementById('exit-form-state');
+    const successState = document.getElementById('exit-success');
+
+    if (!overlay || !closeBtn) return;
+
+    // Don't show if already captured
+    if (localStorage.getItem('exit-popup-captured')) return;
+
+    let shown = false;
+    let canShow = false;
+
+    // Wait 10s before enabling
+    setTimeout(() => { canShow = true; }, 10000);
+
+    // Exit intent detection (desktop: mouse leaves viewport top)
+    document.addEventListener('mouseout', (e: MouseEvent) => {
+      if (shown || !canShow) return;
+      if (e.clientY <= 5 && e.relatedTarget === null) {
+        showPopup();
+      }
+    });
+
+    // Mobile: show after 45s of engagement
+    let mobileTimer: ReturnType<typeof setTimeout> | null = null;
+    if ('ontouchstart' in window) {
+      mobileTimer = setTimeout(() => {
+        if (!shown && canShow) showPopup();
+      }, 45000);
+    }
+
+    function showPopup() {
+      if (shown) return;
+      shown = true;
+      overlay!.style.display = 'flex';
+      requestAnimationFrame(() => {
+        overlay!.classList.add('exit-visible');
+      });
+    }
+
+    function hidePopup() {
+      overlay!.classList.remove('exit-visible');
+      overlay!.classList.add('exit-hiding');
+      setTimeout(() => {
+        overlay!.style.display = 'none';
+        overlay!.classList.remove('exit-hiding');
+      }, 400);
+    }
+
+    closeBtn.addEventListener('click', hidePopup);
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) hidePopup();
+    });
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('exit-name') as HTMLInputElement;
+      const emailInput = document.getElementById('exit-email') as HTMLInputElement;
+      const name = nameInput?.value || '';
+      const email = emailInput?.value || '';
+
+      if (!name || !email) return;
+
+      // Save as captured
+      localStorage.setItem('exit-popup-captured', '1');
+
+      // Open WhatsApp with lead info
+      const msg = `Hola Mateo, soy ${name} (${email}). Quiero recibir el Checklist de 30 Puntos para optimizar mi sitio web. ¡Gracias!`;
+      window.open(`https://wa.me/573005059987?text=${encodeURIComponent(msg)}`, '_blank');
+
+      // Show success state
+      if (formState) formState.style.display = 'none';
+      if (successState) successState.style.display = 'flex';
+
+      // Auto-close after 4s
+      setTimeout(hidePopup, 4000);
+    });
+
+    // Cleanup
+    return () => {
+      if (mobileTimer) clearTimeout(mobileTimer);
+    };
+  }
+
+  document.addEventListener('astro:page-load', initExitIntent);
+</script>
+
+<style>
+  .exit-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 12000;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .exit-overlay.exit-visible {
+    opacity: 1;
+  }
+
+  .exit-overlay.exit-hiding {
+    opacity: 0;
+  }
+
+  .exit-popup {
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+    background: linear-gradient(145deg, rgba(15, 12, 41, 0.95), rgba(36, 22, 84, 0.95));
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    box-shadow:
+      0 25px 80px rgba(124, 58, 237, 0.3),
+      0 0 60px rgba(168, 85, 247, 0.15) inset;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+
+  .exit-overlay.exit-visible .exit-popup {
+    transform: scale(1) translateY(0);
+  }
+
+  .exit-popup::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(168, 85, 247, 0.1), transparent 30%);
+    animation: exitRotate 6s linear infinite;
+    pointer-events: none;
+  }
+
+  @keyframes exitRotate {
+    to { transform: rotate(360deg); }
+  }
+
+  .exit-close {
+    position: absolute;
+    top: 12px;
+    right: 14px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.1rem;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+  }
+
+  .exit-close:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+  }
+
+  .exit-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .exit-badge {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    background: linear-gradient(90deg, #f59e0b, #ef4444);
+    color: white;
+    border-radius: 99rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    margin-bottom: 1rem;
+    animation: badgePulse 2s ease-in-out infinite;
+  }
+
+  @keyframes badgePulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(245, 158, 11, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.5); }
+  }
+
+  .exit-content h2 {
+    font-size: 1.6rem;
+    color: white;
+    margin: 0 0 0.5rem;
+    line-height: 1.2;
+  }
+
+  .exit-subtitle {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.95rem;
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  .exit-subtitle strong {
+    color: #a78bfa;
+  }
+
+  .exit-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 0.55rem 0.85rem;
+    transition: background 0.2s;
+  }
+
+  .benefit-item:hover {
+    background: rgba(168, 85, 247, 0.08);
+  }
+
+  .benefit-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .exit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .exit-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .exit-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    transition: all 0.3s;
+  }
+
+  .exit-input:focus {
+    border-color: #a855f7;
+    background: rgba(168, 85, 247, 0.08);
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.12);
+  }
+
+  .exit-input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .exit-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0.85rem 1.5rem;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+  }
+
+  .exit-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.5);
+  }
+
+  .exit-privacy {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.35);
+    margin-top: 0.75rem;
+  }
+
+  /* Success State */
+  .exit-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 1rem;
+    padding: 2rem 0;
+    position: relative;
+    z-index: 2;
+    animation: successScale 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes successScale {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .success-icon {
+    font-size: 3.5rem;
+    animation: bounceIn 0.6s ease;
+  }
+
+  @keyframes bounceIn {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+  }
+
+  .exit-success h3 {
+    color: white;
+    font-size: 1.4rem;
+    margin: 0;
+  }
+
+  .exit-success p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 500px) {
+    .exit-popup {
+      padding: 2rem 1.25rem;
+      border-radius: 20px;
+    }
+
+    .exit-content h2 {
+      font-size: 1.3rem;
+    }
+
+    .exit-inputs {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

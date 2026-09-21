@@ -25,6 +25,7 @@ import PageMinimap from "../components/PageMinimap.astro";
 import AnalyticsTracker from "../components/AnalyticsTracker.astro";
 import SocialProofBanner from "../components/SocialProofBanner.astro";
 import SoundEffects from "../components/SoundEffects.astro";
+import ExitIntentPopup from "../components/ExitIntentPopup.astro";
 
 interface Props {
 	title?: string | undefined;
@@ -137,6 +138,8 @@ const chatWidgetClass = shouldStack
 		<SoundEffects />
 		<!-- Advanced Analytics Event Tracking -->
 		<AnalyticsTracker />
+		<!-- Exit-Intent Lead Capture Popup -->
+		<ExitIntentPopup />
 		
 		<!-- Gesture Control Bridge: listens for postMessage commands from the gesture controller -->
 		<Fragment set:html={`<script src="/gesture-bridge.js"></script>`} />

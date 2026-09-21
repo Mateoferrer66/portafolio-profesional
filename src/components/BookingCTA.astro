@@ -1,0 +1,549 @@
+---
+// BookingCTA.astro
+// Premium booking widget for scheduling free consultations via WhatsApp
+import Icon from "./Icon.astro";
+---
+
+<section id="booking" class="booking-section wrapper reveal">
+  <div class="booking-card">
+    <div class="booking-glow"></div>
+    <div class="booking-particles">
+      <span></span><span></span><span></span><span></span><span></span>
+    </div>
+
+    <div class="booking-grid">
+      <!-- Left: Info -->
+      <div class="booking-info">
+        <div class="booking-badge">
+          <span class="badge-dot"></span>
+          <span>Disponible esta semana</span>
+        </div>
+        <h2>Agenda tu Consulta <span class="text-gradient">Gratuita</span></h2>
+        <p class="booking-desc">
+          30 minutos donde analizaremos las necesidades de tu negocio y te daré recomendaciones personalizadas para crecer digitalmente.
+        </p>
+
+        <div class="booking-benefits">
+          <div class="benefit">
+            <span class="b-icon">🎯</span>
+            <div>
+              <strong>Análisis personalizado</strong>
+              <span>Evaluaré tu situación digital actual</span>
+            </div>
+          </div>
+          <div class="benefit">
+            <span class="b-icon">📋</span>
+            <div>
+              <strong>Plan de acción claro</strong>
+              <span>Te llevas un roadmap con próximos pasos</span>
+            </div>
+          </div>
+          <div class="benefit">
+            <span class="b-icon">💰</span>
+            <div>
+              <strong>Cotización transparente</strong>
+              <span>Sin sorpresas, sin compromiso</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-response">
+          <Icon icon="paper-plane-tilt" size="1em" />
+          <span>Respuesta garantizada en <strong>&lt;2 horas</strong></span>
+        </div>
+      </div>
+
+      <!-- Right: Calendar -->
+      <div class="booking-calendar-wrap">
+        <div class="cal-header">
+          <button id="cal-prev" class="cal-nav" aria-label="Mes anterior">←</button>
+          <span id="cal-month" class="cal-month">Septiembre 2026</span>
+          <button id="cal-next" class="cal-nav" aria-label="Mes siguiente">→</button>
+        </div>
+        <div class="cal-weekdays">
+          <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+        </div>
+        <div id="cal-days" class="cal-days"></div>
+
+        <div id="time-slots" class="time-slots" style="display:none;">
+          <p class="slots-label">Horarios disponibles:</p>
+          <div class="slots-grid">
+            <button class="slot-btn" data-time="09:00">09:00 AM</button>
+            <button class="slot-btn" data-time="10:00">10:00 AM</button>
+            <button class="slot-btn" data-time="11:00">11:00 AM</button>
+            <button class="slot-btn" data-time="14:00">02:00 PM</button>
+            <button class="slot-btn" data-time="15:00">03:00 PM</button>
+            <button class="slot-btn" data-time="16:00">04:00 PM</button>
+          </div>
+        </div>
+
+        <a
+          id="booking-cta-btn"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="booking-submit"
+          style="display:none;"
+        >
+          <Icon icon="paper-plane-tilt" size="1.1em" />
+          <span>Confirmar por WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function initBooking() {
+    const calDays = document.getElementById('cal-days');
+    const calMonth = document.getElementById('cal-month');
+    const prevBtn = document.getElementById('cal-prev');
+    const nextBtn = document.getElementById('cal-next');
+    const timeSlotsDiv = document.getElementById('time-slots');
+    const bookingBtn = document.getElementById('booking-cta-btn') as HTMLAnchorElement;
+
+    if (!calDays || !calMonth || !prevBtn || !nextBtn) return;
+
+    const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const now = new Date();
+    let currentMonth = now.getMonth();
+    let currentYear = now.getFullYear();
+    let selectedDate = '';
+    let selectedTime = '';
+
+    function renderCalendar() {
+      calMonth!.textContent = `${months[currentMonth]} ${currentYear}`;
+      calDays!.innerHTML = '';
+
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const startOffset = (firstDay === 0 ? 6 : firstDay - 1);
+
+      // Blank cells
+      for (let i = 0; i < startOffset; i++) {
+        const blank = document.createElement('span');
+        blank.className = 'cal-blank';
+        calDays!.appendChild(blank);
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let d = 1; d <= daysInMonth; d++) {
+        const btn = document.createElement('button');
+        btn.className = 'cal-day';
+        btn.textContent = String(d);
+
+        const thisDate = new Date(currentYear, currentMonth, d);
+        const dayOfWeek = thisDate.getDay();
+
+        // Disable past dates and Sundays
+        if (thisDate < today || dayOfWeek === 0) {
+          btn.disabled = true;
+          btn.classList.add('cal-disabled');
+        } else {
+          btn.addEventListener('click', () => {
+            document.querySelectorAll('.cal-day.cal-selected').forEach(el => el.classList.remove('cal-selected'));
+            btn.classList.add('cal-selected');
+            selectedDate = `${d} de ${months[currentMonth]} ${currentYear}`;
+            selectedTime = '';
+            if (timeSlotsDiv) timeSlotsDiv.style.display = 'block';
+            if (bookingBtn) bookingBtn.style.display = 'none';
+            document.querySelectorAll('.slot-btn').forEach(s => s.classList.remove('slot-active'));
+          });
+        }
+
+        // Highlight today
+        if (thisDate.getTime() === today.getTime()) {
+          btn.classList.add('cal-today');
+        }
+
+        calDays!.appendChild(btn);
+      }
+    }
+
+    prevBtn.addEventListener('click', () => {
+      currentMonth--;
+      if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+      renderCalendar();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      currentMonth++;
+      if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+      renderCalendar();
+    });
+
+    // Time slot selection
+    document.querySelectorAll('.slot-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.slot-btn').forEach(s => s.classList.remove('slot-active'));
+        btn.classList.add('slot-active');
+        selectedTime = btn.getAttribute('data-time') || '';
+
+        if (selectedDate && selectedTime && bookingBtn) {
+          const msg = `Hola Mateo, quiero agendar una consulta gratuita para el ${selectedDate} a las ${selectedTime}. ¿Está disponible?`;
+          bookingBtn.href = `https://wa.me/573005059987?text=${encodeURIComponent(msg)}`;
+          bookingBtn.style.display = 'flex';
+        }
+      });
+    });
+
+    renderCalendar();
+  }
+
+  document.addEventListener('astro:page-load', initBooking);
+</script>
+
+<style>
+  .booking-section {
+    padding: 4rem 0;
+  }
+
+  .booking-card {
+    position: relative;
+    background: rgba(15, 12, 41, 0.7);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 28px;
+    padding: 2.5rem;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .booking-glow {
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.15), transparent 70%);
+    pointer-events: none;
+  }
+
+  .booking-particles span {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(168, 85, 247, 0.3);
+    border-radius: 50%;
+    animation: floatParticle 8s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .booking-particles span:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+  .booking-particles span:nth-child(2) { top: 60%; left: 85%; animation-delay: 2s; }
+  .booking-particles span:nth-child(3) { top: 80%; left: 30%; animation-delay: 4s; }
+  .booking-particles span:nth-child(4) { top: 25%; left: 70%; animation-delay: 1s; }
+  .booking-particles span:nth-child(5) { top: 50%; left: 50%; animation-delay: 3s; }
+
+  @keyframes floatParticle {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    50% { transform: translate(20px, -20px) scale(1.5); opacity: 0.7; }
+  }
+
+  .booking-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .booking-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.4rem 1rem;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 99rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #4ade80;
+    margin-bottom: 1.25rem;
+  }
+
+  .badge-dot {
+    width: 8px;
+    height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes dotPulse {
+    0%, 100% { box-shadow: 0 0 4px rgba(74, 222, 128, 0.4); }
+    50% { box-shadow: 0 0 14px rgba(74, 222, 128, 0.8); }
+  }
+
+  .booking-info h2 {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    color: white;
+    margin: 0 0 0.75rem;
+    line-height: 1.2;
+  }
+
+  .text-gradient {
+    background: linear-gradient(135deg, #a855f7, #d946ef);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .booking-desc {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 1.5rem;
+  }
+
+  .booking-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .benefit {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .b-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .benefit div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .benefit strong {
+    color: white;
+    font-size: 0.9rem;
+  }
+
+  .benefit span {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.78rem;
+  }
+
+  .booking-response {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.7rem 1rem;
+    background: rgba(124, 58, 237, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.15);
+    border-radius: 12px;
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Calendar */
+  .booking-calendar-wrap {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+
+  .cal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .cal-month {
+    font-weight: 700;
+    color: white;
+    font-size: 1rem;
+  }
+
+  .cal-nav {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+
+  .cal-nav:hover {
+    background: rgba(168, 85, 247, 0.15);
+    border-color: rgba(168, 85, 247, 0.3);
+    color: white;
+  }
+
+  .cal-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .cal-weekdays span {
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.35);
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 4px 0;
+  }
+
+  .cal-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-blank {
+    aspect-ratio: 1;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .cal-day:hover:not(:disabled) {
+    background: rgba(168, 85, 247, 0.12);
+    border-color: rgba(168, 85, 247, 0.25);
+    color: white;
+  }
+
+  .cal-day.cal-today {
+    border-color: rgba(168, 85, 247, 0.4);
+    color: #a855f7;
+    font-weight: 700;
+  }
+
+  .cal-day.cal-selected {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white;
+    border-color: transparent;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  }
+
+  .cal-day.cal-disabled {
+    color: rgba(255, 255, 255, 0.15);
+    cursor: not-allowed;
+  }
+
+  /* Time slots */
+  .time-slots {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    animation: slotsFade 0.3s ease;
+  }
+
+  @keyframes slotsFade {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .slots-label {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 0.6rem;
+  }
+
+  .slots-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .slot-btn {
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(168, 85, 247, 0.12);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+
+  .slot-btn:hover {
+    background: rgba(168, 85, 247, 0.1);
+    border-color: rgba(168, 85, 247, 0.3);
+    color: white;
+  }
+
+  .slot-btn.slot-active {
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 3px 10px rgba(124, 58, 237, 0.3);
+  }
+
+  .booking-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 1rem;
+    padding: 0.85rem 1.5rem;
+    background: linear-gradient(135deg, #059669, #10b981);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s;
+    animation: submitAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  @keyframes submitAppear {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  .booking-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .booking-card {
+      padding: 1.5rem;
+    }
+
+    .booking-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .slots-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
