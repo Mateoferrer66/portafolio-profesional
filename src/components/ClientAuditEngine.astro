@@ -12,9 +12,9 @@ import Icon from "./Icon.astro";
         <Icon icon="rocket-launch" size="1.1em" />
         <span>Herramienta Exclusiva 2026</span>
       </div>
-      <h2>Diagnóstico Web & Plan de Crecimiento con IA</h2>
+      <h2>Diagnóstico Web & Plan de Crecimiento Digital</h2>
       <p class="audit-tagline">
-        Descubre al instante dónde está perdiendo clientes tu negocio y cómo una arquitectura web de alto rendimiento e IA puede disparar tus ventas.
+        Descubre al instante dónde está perdiendo clientes tu negocio y cómo una arquitectura web de alto rendimiento puede disparar tus ventas.
       </p>
     </div>
 
@@ -54,7 +54,7 @@ import Icon from "./Icon.astro";
             <select id="audit-primary-goal" required>
               <option value="conversions">Aumentar ventas y convertir visitantes en clientes</option>
               <option value="speed">Cargar al instante (menos de 1 segundo) y dominar Google SEO</option>
-              <option value="ai">Automatizar atención y ventas con Inteligencia Artificial</option>
+              <option value="ai">Automatizar atención y ventas con tecnología avanzada</option>
               <option value="redesign">Renovar diseño anticuado por una experiencia moderna que genere autoridad</option>
             </select>
           </div>
@@ -78,7 +78,7 @@ import Icon from "./Icon.astro";
       <div class="scan-progress-bar">
         <div id="scan-progress-fill" class="scan-progress-fill"></div>
       </div>
-      <p class="scan-subtext">Analizando Core Web Vitals, velocidad de carga, embudo de conversión y oportunidades de IA...</p>
+      <p class="scan-subtext">Analizando Core Web Vitals, velocidad de carga, embudo de conversión y oportunidades de automatización...</p>
     </div>
 
     <!-- Results Report Container (Hidden by default) -->
@@ -120,8 +120,8 @@ import Icon from "./Icon.astro";
 
         <div class="diag-card ai-card">
           <div class="diag-icon">🤖</div>
-          <h4>Oportunidad de IA</h4>
-          <p id="diag-ai-text">Atención manual repetitiva. Un asistente de IA 24/7 y cotizador dinámico pueden cerrar clientes mientras duermes.</p>
+          <h4>Oportunidad de Automatización</h4>
+          <p id="diag-ai-text">Atención manual repetitiva. Un asistente virtual 24/7 y cotizador dinámico pueden cerrar clientes mientras duermes.</p>
           <div class="diag-metric text-green">
             <span>Ahorro Operativo: </span><strong>15+ horas/semana</strong>
           </div>
@@ -146,7 +146,7 @@ import Icon from "./Icon.astro";
           </li>
           <li>
             <span class="step-check">✓</span>
-            <strong>Agente de IA o Automatización Integrada:</strong> Calificación automática de prospectos 24 horas al día.
+            <strong>Automatización Integrada:</strong> Calificación automática de prospectos 24 horas al día.
           </li>
           <li>
             <span class="step-check">✓</span>
@@ -203,7 +203,7 @@ import Icon from "./Icon.astro";
         { text: 'Conectando con ' + bizName + '...', progress: 20 },
         { text: 'Auditando Core Web Vitals y velocidad móvil...', progress: 45 },
         { text: 'Detectando fugas en el embudo de conversión...', progress: 70 },
-        { text: 'Calculando oportunidades de IA y automatización...', progress: 90 },
+        { text: 'Calculando oportunidades de automatización...', progress: 90 },
         { text: 'Generando informe ejecutivo final...', progress: 100 }
       ];
 
@@ -238,7 +238,7 @@ import Icon from "./Icon.astro";
         } else if (bizType === 'services') {
           speedText.textContent = 'Los clientes que buscan consultoría en móvil rebotan si el sitio tarda más de 2 segundos en responder.';
           convText.textContent = 'Necesitas un cotizador dinámico que filtre clientes calificados antes de agendar llamada.';
-          aiText.textContent = 'Recomendado: Agente de IA para responder preguntas frecuentes y agendar en tu calendario automáticamente.';
+          aiText.textContent = 'Recomendado: Asistente virtual para responder preguntas frecuentes y agendar en tu calendario automáticamente.';
         } else {
           speedText.textContent = 'Tu plataforma debe ofrecer una experiencia de aplicación nativa (PWA / SPA ultra-fluida).';
           convText.textContent = 'Optimización del funnel de registro con autenticación sin fricción y dashboard visual.';
@@ -249,7 +249,7 @@ import Icon from "./Icon.astro";
         var waMsg = '¡Hola Mateo! Acabo de hacer la auditoría en tu web para mi negocio: *' + bizName + '*\n\n' +
           '📊 *Objetivo Principal:* ' + primaryGoal + '\n' +
           '🏢 *Sector:* ' + bizType + '\n' +
-          '💡 *Puntos clave que quiero mejorar:* Velocidad, conversión y automatización con IA.\n\n' +
+          '💡 *Puntos clave que quiero mejorar:* Velocidad, conversión y automatización.\n\n' +
           '¿Podemos agendar una llamada breve para revisar este plan de acción y cotizar la solución?';
 
         var waUrl = 'https://wa.me/573005059987?text=' + encodeURIComponent(waMsg);

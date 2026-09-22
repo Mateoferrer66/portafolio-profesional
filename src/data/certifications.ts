@@ -32,7 +32,7 @@ export const certifications: Certification[] = [
   { name: 'Angular Framework', platform: 'platzi', platformName: 'Platzi', icon: '🅰️', url: 'https://platzi.com/p/mateoferrer66/' },
   { name: 'Git y GitHub Profesional', platform: 'platzi', platformName: 'Platzi', icon: '🔀', url: 'https://platzi.com/p/mateoferrer66/' },
   { name: 'Marketing Digital', platform: 'platzi', platformName: 'Platzi', icon: '📈', url: 'https://platzi.com/p/mateoferrer66/' },
-  { name: 'Inteligencia Artificial', platform: 'platzi', platformName: 'Platzi', icon: '🤖', url: 'https://platzi.com/p/mateoferrer66/' },
+  { name: 'Tecnología & Automatización', platform: 'platzi', platformName: 'Platzi', icon: '⚡', url: 'https://platzi.com/p/mateoferrer66/' },
   { name: 'Docker y Kubernetes', platform: 'platzi', platformName: 'Platzi', icon: '🐳', url: 'https://platzi.com/p/mateoferrer66/' },
   { name: 'Inglés para Developers', platform: 'platzi', platformName: 'Platzi', icon: '🇺🇸', url: 'https://platzi.com/p/mateoferrer66/' },
 

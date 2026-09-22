@@ -33,6 +33,8 @@ import UrgencyBanner from "../components/UrgencyBanner.astro";
 import CaseStudies from "../components/CaseStudies.astro";
 import PricingTable from "../components/PricingTable.astro";
 import BookingCTA from "../components/BookingCTA.astro";
+import ProductSavingsCalculator from "../components/ProductSavingsCalculator.astro";
+import QuickLeadAdvisor from "../components/QuickLeadAdvisor.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -87,7 +89,7 @@ const liveWebsites = [
 			<header class="hero">
 				<Hero
 					title="Ingeniería de Software & Desarrollo Web de Alto Rendimiento"
-					tagline="Desarrollo sitios web ultrarrápidos, tiendas online y sistemas con Inteligencia Artificial diseñados para multiplicar las ventas y clientes de tu negocio."
+					tagline="Desarrollo sitios web ultrarrápidos, tiendas online y sistemas de software avanzado diseñados para multiplicar las ventas y clientes de tu negocio."
 					align="center"
 				>
 					<AvailabilityBadge variant="hero" />
@@ -99,7 +101,7 @@ const liveWebsites = [
 							><Icon icon="code" size="1.33em" /> Software a la Medida</Pill
 						>
 						<Pill
-							><Icon icon="trophy" size="1.33em" /> Automatización & IA</Pill
+							><Icon icon="trophy" size="1.33em" /> Automatización & Tecnología</Pill
 						>
 					</div>
 					<div class="cta-buttons">
@@ -235,7 +237,7 @@ const liveWebsites = [
 					description="Sistemas web para control de inventarios, gestión de clientes (CRM) y facturación electrónica a medida."
 				/>
 				<ServiceCard
-					title="Agentes de IA & Automatización"
+					title="Chatbots & Automatización"
 					icon="trophy"
 					description="Chatbots inteligentes y automatizaciones de procesos que ahorran más de 15 horas de trabajo a la semana."
 				/>
@@ -251,6 +253,9 @@ const liveWebsites = [
 				/>
 			</div>
 		</section>
+
+		<!-- Interactive Project & Solution Advisor -->
+		<QuickLeadAdvisor />
 
 		<!-- Smart Project Budget & Timeline Estimator -->
 		<ProjectEstimator />
@@ -393,7 +398,10 @@ const liveWebsites = [
 				</div>
 			</section>
 
-			<!-- Exclusive AI Client Audit & Growth Engine -->
+			<!-- Product Savings Calculator for Software & Apps -->
+			<ProductSavingsCalculator />
+
+			<!-- Exclusive Client Audit & Growth Engine -->
 			<ClientAuditEngine />
 
 			<!-- Interactive Developer CLI Terminal -->

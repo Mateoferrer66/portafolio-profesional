@@ -4,6 +4,7 @@ import { Image } from "astro:assets";
 
 // Combined product data for easier filtering
 import { products } from "../data/products";
+import ProductSavingsCalculator from "../components/ProductSavingsCalculator.astro";
 
 const testimonials = [
     {
@@ -239,6 +240,9 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
     >
         No encontramos lo que buscas. ¿Intenta con otra categoría?
     </p>
+
+    <!-- Product Savings Calculator for Software & Apps -->
+    <ProductSavingsCalculator />
 
     <!-- Features Banner -->
     <section class="features-banner glass-panel">

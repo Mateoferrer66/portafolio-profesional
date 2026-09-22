@@ -7,8 +7,8 @@ const certificates = [
   { file: "Enterprise_Design_Thinking_Practitioner_Badge20230204-30-1hhbquw.pdf", title: "IBM Enterprise Design Thinking Practitioner", category: "enterprise", tier: 1, issuer: "IBM", icon: "🏆", color: "#0f62fe" },
   { file: "Enterprise_Design_Thinking___Team_Essentials_for_AI_Badge20230204-30-1q99xrl.pdf", title: "IBM Team Essentials for AI", category: "enterprise", tier: 1, issuer: "IBM", icon: "🤖", color: "#0f62fe" },
   { file: "diploma-uipath.pdf", title: "UiPath — RPA & Automatización", category: "enterprise", tier: 1, issuer: "Platzi", icon: "⚙️", color: "#f97316" },
-  { file: "diploma-ia-seo.pdf", title: "SEO con Inteligencia Artificial", category: "enterprise", tier: 1, issuer: "Platzi", icon: "🔍", color: "#10b981" },
-  { file: "diploma-web-chatgpt.pdf", title: "Desarrollo Web con ChatGPT & IA", category: "enterprise", tier: 1, issuer: "Platzi", icon: "🤖", color: "#10b981" },
+  { file: "diploma-ia-seo.pdf", title: "SEO con Tecnología Avanzada", category: "enterprise", tier: 1, issuer: "Platzi", icon: "🔍", color: "#10b981" },
+  { file: "diploma-web-chatgpt.pdf", title: "Desarrollo Web con ChatGPT", category: "enterprise", tier: 1, issuer: "Platzi", icon: "🤖", color: "#10b981" },
   { file: "diploma-satelite.pdf", title: "Tecnología Satelital & Telecomunicaciones", category: "enterprise", tier: 1, issuer: "Platzi", icon: "🛰️", color: "#6366f1" },
   // Tier 2: Software Engineering
   { file: "diploma-ingenieria.pdf", title: "Ingeniería de Software", category: "engineering", tier: 2, issuer: "Platzi", icon: "⚙️", color: "#7c3aed" },
@@ -119,7 +119,7 @@ const certificates = [
 
 const categories = [
   { id: "all",         label: "Todos",          icon: "🌐", count: certificates.length },
-  { id: "enterprise",  label: "IA & Enterprise", icon: "🏆", count: certificates.filter(c => c.category === "enterprise").length },
+  { id: "enterprise",  label: "Enterprise & Avanzado", icon: "🏆", count: certificates.filter(c => c.category === "enterprise").length },
   { id: "engineering", label: "Ingeniería",      icon: "⚙️", count: certificates.filter(c => c.category === "engineering").length },
   { id: "frontend",    label: "Frontend & Web",  icon: "💻", count: certificates.filter(c => c.category === "frontend").length },
   { id: "javascript",  label: "JavaScript",      icon: "⚡", count: certificates.filter(c => c.category === "javascript").length },
@@ -135,7 +135,7 @@ const categories = [
 
 <BaseLayout
   title="Menciones & Certificaciones | Mateo Ferrer — +163 Diplomas Verificados"
-  description="Más de 163 certificados y diplomas verificados de Platzi, IBM y más en desarrollo web, software, IA, diseño y marketing. Descarga cada diploma directamente."
+  description="Más de 163 certificados y diplomas verificados de Platzi, IBM y más en desarrollo web, software, diseño y marketing. Descarga cada diploma directamente."
   keywords="certificados mateo ferrer, diplomas platzi, IBM design thinking, react certificado, scrum master diploma, javascript, portfolio certificaciones colombia"
 >
   <!-- HERO -->

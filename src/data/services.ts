@@ -38,12 +38,12 @@ export const services: Service[] = [
     },
     {
         id: 4,
-        name: "Agentes de IA & Automatización de Negocios",
+        name: "Chatbots & Automatización de Negocios",
         price: "Desde $299 USD",
         category: "tech",
         image: "https://images.unsplash.com/photo-1677442136019-21780efad99a?w=800&h=600&fit=crop&q=80",
         tags: ["ia", "automation", "chatbots", "eficiencia"],
-        description: "Asistentes virtuales con IA integrados en tu web o WhatsApp para calificar prospectos 24/7 y flujos automatizados para ahorrar más de 15 horas operativas a la semana."
+        description: "Asistentes virtuales inteligentes integrados en tu web o WhatsApp para calificar prospectos 24/7 y flujos automatizados para ahorrar más de 15 horas operativas a la semana."
     },
     {
         id: 5,

@@ -106,7 +106,7 @@ Desde su lanzamiento beta, MilMexico ha logrado:
 - [ ] Programa de verificación de negocios
 
 **Fase 3 - Q2 2025**
-- [ ] IA para recomendaciones personalizadas
+- [ ] Algoritmos para recomendaciones personalizadas
 - [ ] Video calls integradas
 - [ ] Sistema de créditos y gamificación
 - [ ] Expansión a otros países de LATAM

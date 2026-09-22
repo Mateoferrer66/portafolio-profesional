@@ -1,0 +1,685 @@
+---
+// QuickLeadAdvisor.astro
+// Interactive 3-step Solution & Project Advisor for attracting and converting high-ticket clients
+import Icon from "./Icon.astro";
+---
+
+<section id="solution-advisor" class="advisor-section wrapper reveal">
+  <div class="advisor-card">
+    <div class="advisor-header">
+      <div class="advisor-badge">
+        <Icon icon="strategy" size="1.1em" />
+        <span>Asesor Interactivo de Crecimiento</span>
+      </div>
+      <h2>Encuentra la Solución Perfecta para tu Negocio</h2>
+      <p class="advisor-tagline">
+        Responde 3 preguntas rápidas en menos de 30 segundos y descubre el tipo de solución tecnológica que multiplicará las ventas y eficiencia de tu proyecto.
+      </p>
+    </div>
+
+    <!-- Step Wizard Container -->
+    <div class="wizard-container">
+      <!-- Steps Indicator -->
+      <div class="wizard-progress-bar">
+        <div class="progress-step active" data-step="1">
+          <span class="step-circle">1</span>
+          <span class="step-title">Objetivo</span>
+        </div>
+        <div class="step-line" id="step-line-1"></div>
+        <div class="progress-step" data-step="2">
+          <span class="step-circle">2</span>
+          <span class="step-title">Etapa</span>
+        </div>
+        <div class="step-line" id="step-line-2"></div>
+        <div class="progress-step" data-step="3">
+          <span class="step-circle">3</span>
+          <span class="step-title">Prioridad</span>
+        </div>
+      </div>
+
+      <!-- Step 1: Goal -->
+      <div class="wizard-step-pane active" id="pane-step-1">
+        <h3 class="pane-question">¿Qué necesitas construir para tu negocio?</h3>
+        <div class="options-grid">
+          <button type="button" class="wizard-option-card" data-key="web" data-label="Página Web / Landing Page">
+            <span class="opt-icon">🚀</span>
+            <div class="opt-text">
+              <strong>Página Web / Landing Page</strong>
+              <small>Presencia profesional y captación de clientes a WhatsApp</small>
+            </div>
+          </button>
+          <button type="button" class="wizard-option-card" data-key="ecommerce" data-label="Tienda Online / E-Commerce">
+            <span class="opt-icon">🛒</span>
+            <div class="opt-text">
+              <strong>Tienda Online / E-Commerce</strong>
+              <small>Catálogo de productos con pasarela de pagos (Wompi, Stripe)</small>
+            </div>
+          </button>
+          <button type="button" class="wizard-option-card" data-key="software" data-label="Software a la Medida / CRM">
+            <span class="opt-icon">💻</span>
+            <div class="opt-text">
+              <strong>Software a la Medida / CRM</strong>
+              <small>Sistemas internos, gestión de pedidos y control de clientes</small>
+            </div>
+          </button>
+          <button type="button" class="wizard-option-card" data-key="automation" data-label="Automatización & Chatbots">
+            <span class="opt-icon">⚡</span>
+            <div class="opt-text">
+              <strong>Automatización & Chatbots</strong>
+              <small>Respuestas automáticas 24/7 y flujos que ahorran horas</small>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Stage -->
+      <div class="wizard-step-pane" id="pane-step-2">
+        <h3 class="pane-question">¿En qué fase se encuentra tu proyecto?</h3>
+        <div class="options-grid">
+          <button type="button" class="wizard-option-card" data-key="idea" data-label="Emprendimiento Nuevo">
+            <span class="opt-icon">💡</span>
+            <div class="opt-text">
+              <strong>Emprendimiento Nuevo</strong>
+              <small>Arrancando desde cero, necesito validar mi oferta y tener presencia seria</small>
+            </div>
+          </button>
+          <button type="button" class="wizard-option-card" data-key="growing" data-label="Negocio en Crecimiento">
+            <span class="opt-icon">📈</span>
+            <div class="opt-text">
+              <strong>Negocio en Crecimiento</strong>
+              <small>Ya vendo pero mi web actual no convierte o quiero un sistema profesional</small>
+            </div>
+          </button>
+          <button type="button" class="wizard-option-card" data-key="established" data-label="Empresa Consolidada">
+            <span class="opt-icon">🏢</span>
+            <div class="opt-text">
+              <strong>Empresa Consolidada</strong>
+              <small>Requiero arquitectura robusta, alta velocidad, escalabilidad y soporte continuo</small>
+            </div>
+          </button>
+        </div>
+        <div class="pane-nav-back">
+          <button type="button" class="back-btn" data-to="1">← Volver al paso anterior</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Priority -->
+      <div class="wizard-step-pane" id="pane-step-3">
+        <h3 class="pane-question">¿Cuál es tu prioridad principal?</h3>
+        <div class="options-grid">
+          <button type="button" class="wizard-option-card" data-key="speed" data-label="Velocidad de Salida">
+            <span class="opt-icon">⏱️</span>
+            <div class="opt-text">
+              <strong>Velocidad de Entrega</strong>
+              <small>Necesito salir al aire en pocos días sin sacrificar calidad</small>
+            </div>
+          </button>
+          <button type="button" class="wizard-option-card" data-key="conversion" data-label="Ventas & Conversión">
+            <span class="opt-icon">🎯</span>
+            <div class="opt-text">
+              <strong>Ventas & Conversión</strong>
+              <small>Optimización total para captar clientes directos y cerrar ventas</small>
+            </div>
+          </button>
+          <button type="button" class="wizard-option-card" data-key="scalability" data-label="Personalización Avanzada">
+            <span class="opt-icon">💎</span>
+            <div class="opt-text">
+              <strong>Personalización Avanzada</strong>
+              <small>Diseño a medida único, animaciones y funciones exclusivas</small>
+            </div>
+          </button>
+        </div>
+        <div class="pane-nav-back">
+          <button type="button" class="back-btn" data-to="2">← Volver al paso anterior</button>
+        </div>
+      </div>
+
+      <!-- Step 4: Instant Result Recommendation Card -->
+      <div class="wizard-step-pane" id="pane-step-result">
+        <div class="result-recommendation-card">
+          <div class="result-badge-top">
+            <span>✨ PLAN RECOMENDADO PARA TI</span>
+          </div>
+          <h3 id="res-plan-title" class="res-title">Desarrollo Web de Alto Rendimiento</h3>
+          <p id="res-plan-desc" class="res-desc">
+            La solución óptima para captar prospectos calificados, con carga en menos de 1 segundo y embudo directo a tu WhatsApp.
+          </p>
+
+          <div class="res-specs-grid">
+            <div class="spec-card">
+              <span class="spec-label">Tiempo Estimado:</span>
+              <span id="res-time" class="spec-val">5 a 9 días hábiles</span>
+            </div>
+            <div class="spec-card">
+              <span class="spec-label">Garantía:</span>
+              <span class="spec-val">30 días de soporte post-lanzamiento</span>
+            </div>
+            <div class="spec-card">
+              <span class="spec-label">Incluye:</span>
+              <span id="res-includes" class="spec-val">Diseño responsive, SEO Google y botón WhatsApp</span>
+            </div>
+            <div class="spec-card">
+              <span class="spec-label">Sesión Estratégica:</span>
+              <span class="spec-val">Asesoría 1-a-1 de 20 min incluida</span>
+            </div>
+          </div>
+
+          <div class="result-cta-box">
+            <a
+              id="advisor-whatsapp-btn"
+              href="https://wa.me/573005059987"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="advisor-order-btn"
+            >
+              <Icon icon="paper-plane-tilt" size="1.3em" />
+              <span>Solicitar Propuesta & Asesoría Gratis</span>
+            </a>
+            <button type="button" id="restart-advisor-btn" class="restart-btn">
+              🔄 Repetir Asesor
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+(function() {
+  function initAdvisor() {
+    var container = document.getElementById('solution-advisor');
+    if (!container) return;
+
+    var stepPanes = {
+      1: document.getElementById('pane-step-1'),
+      2: document.getElementById('pane-step-2'),
+      3: document.getElementById('pane-step-3'),
+      4: document.getElementById('pane-step-result')
+    };
+
+    var progressSteps = container.querySelectorAll('.progress-step');
+    var stepLines = {
+      1: document.getElementById('step-line-1'),
+      2: document.getElementById('step-line-2')
+    };
+
+    var state = {
+      goalKey: 'web',
+      goalLabel: 'Página Web / Landing Page',
+      stageKey: 'idea',
+      stageLabel: 'Emprendimiento Nuevo',
+      priorityKey: 'conversion',
+      priorityLabel: 'Ventas & Conversión'
+    };
+
+    function goToStep(stepNum) {
+      Object.keys(stepPanes).forEach(function(s) {
+        if (stepPanes[s]) stepPanes[s].classList.remove('active');
+      });
+      if (stepPanes[stepNum]) stepPanes[stepNum].classList.add('active');
+
+      // Update progress bar
+      progressSteps.forEach(function(ps) {
+        var s = Number(ps.dataset.step);
+        if (s <= stepNum) {
+          ps.classList.add('active');
+        } else {
+          ps.classList.remove('active');
+        }
+      });
+
+      if (stepLines[1]) {
+        stepLines[1].style.background = stepNum >= 2 ? 'linear-gradient(90deg, #7c3aed, #10b981)' : 'rgba(255,255,255,0.15)';
+      }
+      if (stepLines[2]) {
+        stepLines[2].style.background = stepNum >= 3 ? 'linear-gradient(90deg, #10b981, #3b82f6)' : 'rgba(255,255,255,0.15)';
+      }
+
+      if (stepNum === 4) {
+        renderResult();
+      }
+    }
+
+    function renderResult() {
+      var planTitleEl = document.getElementById('res-plan-title');
+      var planDescEl = document.getElementById('res-plan-desc');
+      var timeEl = document.getElementById('res-time');
+      var includesEl = document.getElementById('res-includes');
+      var waBtn = document.getElementById('advisor-whatsapp-btn');
+
+      var title = "Página Web de Alto Rendimiento";
+      var desc = "Sitio ultrarrápido diseñado para convertir tráfico en clientes reales a tu WhatsApp.";
+      var time = "5 a 8 días hábiles";
+      var inc = "Diseño responsive, SEO Google, botón WhatsApp y analítica.";
+
+      if (state.goalKey === 'ecommerce') {
+        title = "Tienda Online & E-Commerce Pro";
+        desc = "Plataforma completa para vender productos con pasarela de pagos (Wompi, Stripe), inventario y catálogo dinámico.";
+        time = "10 a 16 días hábiles";
+        inc = "Pasarela de pagos, carrito de compras, catálogo autogestionable y certificado SSL.";
+      } else if (state.goalKey === 'software') {
+        title = "Software a la Medida & Sistema Web";
+        desc = "Sistema web personalizado con base de datos, panel de administración y control de operaciones de negocio.";
+        time = "15 a 25 días hábiles";
+        inc = "Autenticación segura, base de datos PostgreSQL, panel de gestión y APIs.";
+      } else if (state.goalKey === 'automation') {
+        title = "Automatización de Negocio & Flujos Digitales";
+        desc = "Sistemas automatizados de captación y respuestas inteligentes para ahorrar hasta 20 horas de trabajo manual cada semana.";
+        time = "4 a 7 días hábiles";
+        inc = "Integración WhatsApp Business, sincronización de leads y flujos automáticos.";
+      }
+
+      if (state.stageKey === 'established') {
+        time = "Prioridad Enterprise (Con soporte continuo)";
+      }
+
+      if (planTitleEl) planTitleEl.textContent = title;
+      if (planDescEl) planDescEl.textContent = desc;
+      if (timeEl) timeEl.textContent = time;
+      if (includesEl) includesEl.textContent = inc;
+
+      if (waBtn) {
+        var msg = "¡Hola Mateo! Hice el test en el Asesor de tu web y busco:\n\n" +
+          "• Proyecto: " + state.goalLabel + "\n" +
+          "• Etapa: " + state.stageLabel + "\n" +
+          "• Prioridad: " + state.priorityLabel + "\n\n" +
+          "El sistema me recomendó el plan: *" + title + "*.\n" +
+          "¿Podemos agendar una asesoría de 20 minutos para revisar mi proyecto?";
+        waBtn.href = "https://wa.me/573005059987?text=" + encodeURIComponent(msg);
+      }
+    }
+
+    // Step 1 clicks
+    var step1Btns = stepPanes[1].querySelectorAll('.wizard-option-card');
+    step1Btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        state.goalKey = btn.dataset.key;
+        state.goalLabel = btn.dataset.label;
+        goToStep(2);
+      });
+    });
+
+    // Step 2 clicks
+    var step2Btns = stepPanes[2].querySelectorAll('.wizard-option-card');
+    step2Btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        state.stageKey = btn.dataset.key;
+        state.stageLabel = btn.dataset.label;
+        goToStep(3);
+      });
+    });
+
+    // Step 3 clicks
+    var step3Btns = stepPanes[3].querySelectorAll('.wizard-option-card');
+    step3Btns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        state.priorityKey = btn.dataset.key;
+        state.priorityLabel = btn.dataset.label;
+        goToStep(4);
+      });
+    });
+
+    // Back buttons
+    container.querySelectorAll('.back-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var to = Number(btn.dataset.to || 1);
+        goToStep(to);
+      });
+    });
+
+    // Restart button
+    var restartBtn = document.getElementById('restart-advisor-btn');
+    if (restartBtn) {
+      restartBtn.addEventListener('click', function() {
+        goToStep(1);
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAdvisor);
+  } else {
+    initAdvisor();
+  }
+  document.addEventListener('astro:page-load', initAdvisor);
+})();
+</script>
+
+<style>
+  .advisor-section {
+    margin-top: 3.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .advisor-card {
+    background: radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.12) 0%, rgba(15, 23, 42, 0.85) 90%);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 30px rgba(16, 185, 129, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .advisor-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #10b981, #06b6d4, #7c3aed);
+  }
+
+  .advisor-header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 2.5rem;
+  }
+
+  .advisor-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #6ee7b7;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .advisor-header h2 {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: var(--gray-0, #fff);
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .advisor-tagline {
+    color: var(--gray-300, #cbd5e1);
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  /* Wizard Progress Bar */
+  .wizard-progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    margin: 0 auto 2.5rem;
+    gap: 0.75rem;
+  }
+
+  .progress-step {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.4;
+    transition: all 0.3s ease;
+  }
+
+  .progress-step.active {
+    opacity: 1;
+  }
+
+  .step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 800;
+  }
+
+  .progress-step.active .step-circle {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #10b981;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+  }
+
+  .step-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gray-200, #e2e8f0);
+  }
+
+  .step-line {
+    flex-grow: 1;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 9999px;
+    transition: background 0.3s ease;
+  }
+
+  /* Panes */
+  .wizard-step-pane {
+    display: none;
+    animation: fadeInPane 0.3s ease forwards;
+  }
+
+  .wizard-step-pane.active {
+    display: block;
+  }
+
+  @keyframes fadeInPane {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .pane-question {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 1.75rem;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.25rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .wizard-option-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    width: 100%;
+  }
+
+  .wizard-option-card:hover {
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.5);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+  }
+
+  .opt-icon {
+    font-size: 2rem;
+  }
+
+  .opt-text strong {
+    display: block;
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0.25rem;
+  }
+
+  .opt-text small {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--gray-400, #94a3b8);
+    line-height: 1.4;
+  }
+
+  .pane-nav-back {
+    text-align: center;
+    margin-top: 1.75rem;
+  }
+
+  .back-btn {
+    background: none;
+    border: none;
+    color: var(--gray-400, #94a3b8);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .back-btn:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+
+  /* Recommendation Card */
+  .result-recommendation-card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: rgba(10, 15, 30, 0.8);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .result-badge-top {
+    display: inline-block;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    margin-bottom: 1rem;
+  }
+
+  .res-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 0.75rem;
+  }
+
+  .res-desc {
+    color: var(--gray-300, #cbd5e1);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .res-specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    text-align: left;
+    margin-bottom: 2.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .res-specs-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .spec-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 1rem 1.25rem;
+  }
+
+  .spec-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--gray-400, #94a3b8);
+    text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .spec-val {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #4ade80;
+  }
+
+  .result-cta-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .advisor-order-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1.1rem 2.25rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    font-size: 1.05rem;
+    font-weight: 800;
+    border-radius: 0.85rem;
+    text-decoration: none;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+    transition: all 0.25s ease;
+  }
+
+  .advisor-order-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(16, 185, 129, 0.6);
+    background: linear-gradient(135deg, #34d399, #10b981);
+  }
+
+  .restart-btn {
+    background: none;
+    border: none;
+    color: var(--gray-400, #94a3b8);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .restart-btn:hover {
+    color: #fff;
+  }
+
+  @media (max-width: 600px) {
+    .advisor-card {
+      padding: 1.5rem 1rem;
+    }
+    .result-recommendation-card {
+      padding: 1.5rem 1rem;
+    }
+    .advisor-order-btn {
+      width: 100%;
+    }
+  }
+</style>
