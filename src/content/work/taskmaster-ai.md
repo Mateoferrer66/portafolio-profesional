@@ -2,11 +2,11 @@
 title: TaskMaster
 publishDate: 2024-11-15 00:00:00
 img: https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop&q=80
-img_alt: Interface of TaskMaster AI dashboard
+img_alt: Interface of TaskMaster productivity dashboard
 description: |
-  An intelligent productivity platform that uses AI to organize tasks, predict deadlines, and optimize workflow efficiency.
+  An intelligent productivity platform that uses smart automation to organize tasks, predict deadlines, and optimize workflow efficiency.
 tags:
-  - AI
+  - Automation
   - Productivity
   - SaaS
   - React
@@ -14,11 +14,11 @@ tags:
 
 ## Overview
 
-TaskMaster AI redefines project management by integrating machine learning to analyze work patterns and suggest optimal schedules.
+TaskMaster redefines project management by integrating advanced automation to analyze work patterns and suggest optimal schedules.
 
 ## Key Features
 
-- **Smart Scheduling**: AI automatically blocks time for tasks based on priority and estimated effort.
+- **Smart Scheduling**: Automatically blocks time for tasks based on priority and estimated effort.
 - **Predictive Analytics**: Estimates project completion dates with 95% accuracy.
 - **Natural Language Input**: Create tasks and projects simply by typing or speaking natural sentences.
 - **Team Insights**: Visualizes team velocity and potential burnout risks.
@@ -27,6 +27,5 @@ TaskMaster AI redefines project management by integrating machine learning to an
 
 - **Frontend**: React, TailwindCSS, Framer Motion
 - **Backend**: Python, FastAPI
-- **AI Engine**: TensorFlow, OpenAI API
+- **Automation Engine**: TensorFlow, Custom Algorithms
 - **Database**: PostgreSQL
-

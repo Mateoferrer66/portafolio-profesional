@@ -1,0 +1,562 @@
+---
+// FreeAuditLeadMagnet.astro
+// Herramienta automatizada de captación: Diagnóstico web gratuito en 60 segundos
+// que califica el negocio del prospecto y lo conecta directamente a WhatsApp con Mateo.
+---
+
+<section class="audit-lead-section reveal" id="diagnostico-gratis">
+  <div class="audit-container">
+    <div class="audit-card">
+      <div class="card-glow"></div>
+      
+      <div class="audit-header">
+        <div class="audit-pill">
+          <span>⚡ HERRAMIENTA GRATUITA DE DIAGNÓSTICO</span>
+        </div>
+        <h2 class="audit-title">¿Tu Página Web Está Perdiendo Clientes?</h2>
+        <p class="audit-desc">
+          El 88% de los visitantes abandonan un sitio web lento o confuso sin comprar. Completa este diagnóstico en 60 segundos y recibe una evaluación técnica personalizada con las 3 mejoras urgentes para duplicar tus ventas.
+        </p>
+      </div>
+
+      <!-- Interactive Diagnostic Form -->
+      <div class="diagnostic-flow" id="diagnostic-flow">
+        <!-- Step 1: Business info -->
+        <div class="flow-step" id="step-1">
+          <div class="step-indicator">Paso 1 de 2: Tu Negocio</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="lead-business-name">Nombre de tu Negocio o Marca</label>
+              <input type="text" id="lead-business-name" placeholder="Ej: Café La Montaña / Tienda Radical" required />
+            </div>
+            <div class="form-group">
+              <label for="lead-current-url">Tu Web Actual o Perfil de Instagram</label>
+              <input type="text" id="lead-current-url" placeholder="Ej: www.minegocio.com o @minegocio (opcional)" />
+            </div>
+            <div class="form-group full-width">
+              <label for="lead-main-goal">¿Cuál es tu principal objetivo en este momento?</label>
+              <select id="lead-main-goal">
+                <option value="vender_mas">Aumentar ventas y recibir pedidos automáticos</option>
+                <option value="modernizar">Modernizar una página web antigua o lenta</option>
+                <option value="posicionar_google">Aparecer en las primeras posiciones de Google (SEO)</option>
+                <option value="crear_desde_cero">Crear una presencia web profesional desde cero</option>
+                <option value="automatizar">Ahorrar tiempo automatizando cotizaciones y atención</option>
+              </select>
+            </div>
+          </div>
+          <button type="button" class="btn-step-next" id="btn-to-step-2">
+            <span>Siguiente: Tus Datos de Contacto ➔</span>
+          </button>
+        </div>
+
+        <!-- Step 2: Contact info -->
+        <div class="flow-step hidden" id="step-2">
+          <div class="step-indicator">Paso 2 de 2: ¿Dónde te enviamos el reporte?</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="lead-person-name">Tu Nombre</label>
+              <input type="text" id="lead-person-name" placeholder="Ej: Andrés Gómez" required />
+            </div>
+            <div class="form-group">
+              <label for="lead-phone">Tu Número de WhatsApp</label>
+              <input type="tel" id="lead-phone" placeholder="Ej: 300 123 4567" required />
+            </div>
+          </div>
+          <div class="step-actions">
+            <button type="button" class="btn-step-back" id="btn-back-to-1">
+              <span>← Volver</span>
+            </button>
+            <button type="button" class="btn-submit-audit" id="btn-run-audit">
+              <span>Analizar Mi Negocio & Enviar a WhatsApp 🚀</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Instant Results + Auto WhatsApp Trigger -->
+        <div class="flow-step hidden" id="step-result">
+          <div class="result-box">
+            <div class="result-badge">✓ DIAGNÓSTICO PRELIMINAR GENERADO</div>
+            <h3 id="result-business-title" class="result-title">Resultados para tu Negocio</h3>
+            
+            <div class="score-cards">
+              <div class="score-card warning">
+                <span class="score-val">⚠️ 3.8s</span>
+                <span class="score-lbl">Tiempo de carga promedio del sector</span>
+              </div>
+              <div class="score-card success">
+                <span class="score-val">⚡ &lt; 0.8s</span>
+                <span class="score-lbl">Objetivo con arquitectura moderna</span>
+              </div>
+              <div class="score-card highlight">
+                <span class="score-val">+120%</span>
+                <span class="score-lbl">Potencial de incremento de contactos</span>
+              </div>
+            </div>
+
+            <div class="recommendations-box">
+              <h4>📋 3 Oportunidades detectadas para tu negocio:</h4>
+              <ul class="rec-list">
+                <li><strong>Catálogo Interactivo con Checkout WhatsApp:</strong> Reduce la fricción y permite a tus clientes ordenar en 2 clicks.</li>
+                <li><strong>Optimización SEO Local:</strong> Estructura técnica para aparecer cuando clientes busquen tu servicio en Google.</li>
+                <li><strong>Velocidad Móvil Extrema:</strong> Cero pérdidas de clientes por sitios lentos en redes móviles 4G/5G.</li>
+              </ul>
+            </div>
+
+            <div class="result-cta-box">
+              <p class="cta-note">Tu reporte ha sido preparado. Haz clic abajo para abrir tu conversación directa con Mateo Ferrer y coordinar tu sesión de asesoría técnica gratuita de 20 minutos:</p>
+              <a id="btn-whatsapp-auto-lead" href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp-lead">
+                <span>Continuar a WhatsApp con Mateo (+57 300 505 9987) 💬</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .audit-lead-section {
+    padding: 5rem 1.5rem;
+    position: relative;
+  }
+
+  .audit-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .audit-card {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(30, 27, 75, 0.8) 100%);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 2rem;
+    padding: 3.5rem 3rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 50px rgba(124, 58, 237, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-glow {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .audit-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .audit-pill {
+    display: inline-flex;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    background: rgba(6, 182, 212, 0.15);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    color: #22d3ee;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.25rem;
+  }
+
+  .audit-title {
+    font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .audit-desc {
+    font-size: 1.05rem;
+    color: var(--gray-300);
+    line-height: 1.6;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .flow-step {
+    animation: fadeIn 0.35s ease;
+  }
+
+  .flow-step.hidden {
+    display: none;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .step-indicator {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #a78bfa;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
+  }
+
+  .form-group.full-width {
+    grid-column: span 2;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--gray-200);
+  }
+
+  .form-group input,
+  .form-group select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .form-group select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a78bfa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1.2em;
+    padding-right: 2.5rem;
+  }
+
+  .form-group select option {
+    background: #0f172a;
+    color: #fff;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: #a78bfa;
+    box-shadow: 0 0 15px rgba(167, 139, 250, 0.25);
+  }
+
+  .btn-step-next,
+  .btn-submit-audit {
+    width: 100%;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.05rem;
+    border-radius: 0.85rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+  }
+
+  .btn-step-next:hover,
+  .btn-submit-audit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(124, 58, 237, 0.6);
+  }
+
+  .step-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .btn-step-back {
+    padding: 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--gray-300);
+    font-weight: 600;
+    border-radius: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .btn-step-back:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+
+  /* Result step */
+  .result-box {
+    text-align: center;
+  }
+
+  .result-badge {
+    display: inline-flex;
+    padding: 0.35rem 0.85rem;
+    background: rgba(16, 185, 129, 0.2);
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    color: #34d399;
+    font-size: 0.8rem;
+    font-weight: 800;
+    border-radius: 9999px;
+    margin-bottom: 1rem;
+  }
+
+  .result-title {
+    font-size: 1.75rem;
+    color: #fff;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+  }
+
+  .score-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .score-card {
+    padding: 1.25rem 1rem;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .score-card.warning {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .score-card.success {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .score-card.highlight {
+    background: rgba(124, 58, 237, 0.12);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+  }
+
+  .score-val {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .score-lbl {
+    font-size: 0.78rem;
+    color: var(--gray-400);
+    line-height: 1.3;
+  }
+
+  .recommendations-box {
+    background: rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 1.5rem 2rem;
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .recommendations-box h4 {
+    font-size: 1.05rem;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+
+  .rec-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .rec-list li {
+    font-size: 0.9rem;
+    color: var(--gray-300);
+    line-height: 1.5;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+
+  .rec-list li::before {
+    content: '➔';
+    position: absolute;
+    left: 0;
+    color: #a78bfa;
+    font-size: 0.85rem;
+  }
+
+  .rec-list strong {
+    color: #fff;
+  }
+
+  .result-cta-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .cta-note {
+    font-size: 0.95rem;
+    color: var(--gray-300);
+    max-width: 600px;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .btn-whatsapp-lead {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    padding: 1.1rem 2.2rem;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: #fff;
+    font-weight: 800;
+    font-size: 1.1rem;
+    border-radius: 0.85rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 25px rgba(37, 211, 102, 0.4);
+    width: 100%;
+    max-width: 550px;
+  }
+
+  .btn-whatsapp-lead:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 35px rgba(37, 211, 102, 0.6);
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    .audit-card {
+      padding: 2.25rem 1.25rem;
+    }
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+    .form-group.full-width {
+      grid-column: span 1;
+    }
+    .score-cards {
+      grid-template-columns: 1fr;
+    }
+    .recommendations-box {
+      padding: 1.25rem;
+    }
+    .step-actions {
+      flex-direction: column-reverse;
+    }
+    .btn-step-back,
+    .btn-submit-audit {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  function setupDiagnosticFlow() {
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const stepResult = document.getElementById('step-result');
+
+    const btnToStep2 = document.getElementById('btn-to-step-2');
+    const btnBackTo1 = document.getElementById('btn-back-to-1');
+    const btnRunAudit = document.getElementById('btn-run-audit');
+
+    const inputBizName = document.getElementById('lead-business-name') as HTMLInputElement;
+    const inputUrl = document.getElementById('lead-current-url') as HTMLInputElement;
+    const selectGoal = document.getElementById('lead-main-goal') as HTMLSelectElement;
+    const inputPersonName = document.getElementById('lead-person-name') as HTMLInputElement;
+    const inputPhone = document.getElementById('lead-phone') as HTMLInputElement;
+
+    const resultBizTitle = document.getElementById('result-business-title');
+    const btnWaAuto = document.getElementById('btn-whatsapp-auto-lead') as HTMLAnchorElement;
+
+    if (!btnToStep2 || !step1 || !step2 || !btnBackTo1 || !btnRunAudit || !stepResult || !inputBizName || !selectGoal) return;
+
+    btnToStep2.addEventListener('click', () => {
+      const biz = inputBizName.value.trim();
+      if (!biz) {
+        inputBizName.focus();
+        inputBizName.style.borderColor = '#ef4444';
+        setTimeout(() => inputBizName.style.borderColor = '', 2000);
+        return;
+      }
+      step1.classList.add('hidden');
+      step2.classList.remove('hidden');
+    });
+
+    btnBackTo1.addEventListener('click', () => {
+      step2.classList.add('hidden');
+      step1.classList.remove('hidden');
+    });
+
+    btnRunAudit.addEventListener('click', () => {
+      const name = inputPersonName.value.trim() || 'Emprendedor';
+      const phone = inputPhone.value.trim();
+      const biz = inputBizName.value.trim() || 'Mi Negocio';
+      const url = inputUrl.value.trim() || 'Sin web actual';
+      const goalText = selectGoal.options[selectGoal.selectedIndex].text;
+
+      step2.classList.add('hidden');
+      stepResult.classList.remove('hidden');
+
+      if (resultBizTitle) {
+        resultBizTitle.textContent = `Resultados para ${biz}`;
+      }
+
+      // Format WhatsApp message to Mateo
+      const waText = encodeURIComponent(
+        `¡Hola Mateo! Acabo de hacer el diagnóstico gratuito en tu página web.\n\n` +
+        `👤 *Nombre:* ${name}\n` +
+        `🏢 *Negocio:* ${biz}\n` +
+        `🌐 *Web/Instagram:* ${url}\n` +
+        `🎯 *Objetivo:* ${goalText}\n` +
+        `📱 *WhatsApp:* ${phone}\n\n` +
+        `Quiero solicitar mi auditoría técnica gratuita de 20 minutos para que revisemos mi proyecto.`
+      );
+
+      const targetWaUrl = `https://wa.me/573005059987?text=${waText}`;
+      if (btnWaAuto) {
+        btnWaAuto.href = targetWaUrl;
+      }
+
+      // Automatically open WhatsApp in a new tab after 1.5 seconds if on desktop, or immediately ready on click
+      setTimeout(() => {
+        window.open(targetWaUrl, '_blank');
+      }, 1200);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupDiagnosticFlow);
+  } else {
+    setupDiagnosticFlow();
+  }
+</script>

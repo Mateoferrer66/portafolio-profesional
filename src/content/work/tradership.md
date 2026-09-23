@@ -79,7 +79,7 @@ Desarrollar una plataforma integral que proporcione:
 - PostgreSQL + TimescaleDB para series temporales
 - Redis para caché y pub/sub
 - Celery para tareas asíncronas
-- Machine Learning con scikit-learn
+- Modelos cuantitativos con scikit-learn
 
 **APIs y Data Sources**
 - Alpha Vantage para stock data
@@ -103,10 +103,10 @@ Desarrollar una plataforma integral que proporcione:
 - Procesamiento de millones de ticks por segundo
 - Latencia ultra-baja (<50ms)
 
-**Machine Learning Features**
-- Predicción de precios con LSTM
-- Análisis de sentimiento de noticias
-- Detección de anomalías en patrones
+**Análisis Cuantitativo & Predictivo**
+- Proyección de tendencias con series temporales LSTM
+- Análisis de sentimiento de noticias del mercado
+- Detección de anomalías en patrones de volumen
 - Optimización de portafolio con algoritmos genéticos
 
 **Performance Optimization**
@@ -153,7 +153,7 @@ Desarrollar una plataforma integral que proporcione:
 - [ ] Premium tiers con features avanzadas
 
 **Q3 2025**
-- [ ] AI-powered trading signals
+- [ ] Automated trading signals & alerts
 - [ ] Integración con más exchanges
 - [ ] Options y futures trading
 - [ ] Marketplace de estrategias
@@ -163,7 +163,7 @@ Desarrollar una plataforma integral que proporcione:
 Este proyecto me enseñó:
 - ✅ Arquitectura de sistemas de alto rendimiento
 - ✅ Procesamiento de datos en tiempo real
-- ✅ Machine Learning aplicado a finanzas
+- ✅ Algoritmos avanzados aplicados a finanzas
 - ✅ UX design para aplicaciones complejas
 - ✅ Regulaciones y compliance en fintech
 

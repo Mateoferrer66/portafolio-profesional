@@ -17,6 +17,7 @@ import ScrollToTop from "../components/ScrollToTop.astro";
 import ChatWidget from "../components/ChatWidget";
 import MagicCursor from "../components/MagicCursor";
 import FAQSchema from "../components/FAQSchema.astro";
+import Schema from "../components/Schema.astro";
 import GlobalControls from "../components/GlobalControls.astro";
 import Preloader from "../components/Preloader.astro";
 import CommandPalette from "../components/CommandPalette.astro";
@@ -64,41 +65,7 @@ const chatWidgetClass = shouldStack
 			keywords={keywords}
 			image={image}
 		/>
-		<script type="application/ld+json">
-			{
-				"@context": "https://schema.org",
-				"@graph": [
-					{
-						"@type": "Person",
-						"name": "Mateo Ferrer",
-						"url": "https://mateoferrer.com",
-						"image": "https://mateoferrer.com/assets/portrait.jpg",
-						"sameAs": [
-							"https://twitter.com/mateoferrer66",
-							"https://github.com/Mateoferrer66",
-							"https://www.linkedin.com/in/mateo-ferrer-a679a713a/"
-						],
-						"jobTitle": "Desarrollador Web & Emprendedor",
-						"worksFor": {
-							"@type": "Organization",
-							"name": "Freelance"
-						}
-					},
-					{
-						"@type": "ProfessionalService",
-						"name": "Mateo Ferrer - Servicios Digitales",
-						"url": "https://mateo-ferrer.pages.dev/",
-						"image": "https://mateo-ferrer.pages.dev/assets/og-image.jpg",
-						"description": "Desarrollo de sitios web, aplicaciones y venta de recursos digitales.",
-						"address": {
-							"@type": "PostalAddress",
-							"addressCountry": "CO"
-						},
-						"priceRange": "$$"
-					}
-				]
-			}
-		</script>
+		<Schema />
 		<FAQSchema />
 		<slot name="head" />
 	</head>
@@ -124,7 +91,7 @@ const chatWidgetClass = shouldStack
 
 		<ScrollReveal />
 		<MagicCursor client:only="react" />
-		<!-- Global AI Controls (Voz y Gestos) -->
+		<!-- Global Smart Controls (Voz y Gestos) -->
 		{!hideGlobalAI && <GlobalControls />}
 		<!-- Command Palette (Ctrl+K) -->
 		<CommandPalette />

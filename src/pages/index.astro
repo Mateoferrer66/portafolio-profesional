@@ -35,6 +35,11 @@ import PricingTable from "../components/PricingTable.astro";
 import BookingCTA from "../components/BookingCTA.astro";
 import ProductSavingsCalculator from "../components/ProductSavingsCalculator.astro";
 import QuickLeadAdvisor from "../components/QuickLeadAdvisor.astro";
+import TrustIndicators from "../components/TrustIndicators.astro";
+import BeforeAfterSlider from "../components/BeforeAfterSlider.astro";
+import CompetitorComparison from "../components/CompetitorComparison.astro";
+import FreeAuditLeadMagnet from "../components/FreeAuditLeadMagnet.astro";
+import ReferralProgram from "../components/ReferralProgram.astro";
 
 // Content Fetching: List four most recent work projects
 const projects = (await getCollection("work"))
@@ -65,7 +70,11 @@ const liveWebsites = [
 // https://docs.astro.build/core-concepts/astro-components/
 ---
 
-<BaseLayout>
+<BaseLayout
+	title="Mateo Ferrer | Desarrollo Web de Alto Rendimiento, E-Commerce & Software"
+	description="Desarrollo páginas web ultra-rápidas, tiendas online y software a la medida diseñados para atraer clientes reales y multiplicar tus ventas. Entrega en 2 a 4 semanas con garantía de satisfacción."
+	keywords="crear pagina web colombia, desarrollo web medellin, diseño de tiendas online colombia, programador web freelance, software a la medida medellin, paginas web para negocios, optimizacion web y seo, mateo ferrer"
+>
 	<!-- Urgency & Scarcity Banner -->
 	<UrgencyBanner />
 	<script type="application/ld+json" slot="head">
@@ -139,6 +148,9 @@ const liveWebsites = [
 
 			<Skills />
 		</div>
+
+		<!-- Trust Indicators Band -->
+		<TrustIndicators />
 
 		<TechMarquee />
 
@@ -254,6 +266,9 @@ const liveWebsites = [
 			</div>
 		</section>
 
+		<!-- Free 60-Second Lead Magnet & Web Diagnostic -->
+		<FreeAuditLeadMagnet />
+
 		<!-- Interactive Project & Solution Advisor -->
 		<QuickLeadAdvisor />
 
@@ -266,8 +281,17 @@ const liveWebsites = [
 		<!-- Client Success Stories -->
 		<CaseStudies />
 
+		<!-- Interactive Before vs After Comparison Slider -->
+		<BeforeAfterSlider />
+
+		<!-- Competitor Comparison Table -->
+		<CompetitorComparison />
+
 		<!-- Pricing Table with Plans -->
 		<PricingTable />
+
+		<!-- Referral & Affiliate Rewards Program -->
+		<ReferralProgram />
 
 		<!-- Courses & Mentorships Section -->
 		<CoursesShowcase />
@@ -416,31 +440,48 @@ const liveWebsites = [
 			<!-- Testimonials Section -->
 			<section class="testimonials-section reveal">
 				<header class="section-header stack gap-2 lg:gap-4">
-					<h2>What Clients Say</h2>
+					<h2>Lo Que Dicen Nuestros Clientes</h2>
 					<p>
-						Don't just take my word for it. Here's what my clients
-						have to say about working with me.
+						Resultados reales de negocios que confiaron en nuestro trabajo.
 					</p>
 				</header>
 
 				<div class="testimonials-grid">
 					<TestimonialCard
-						name="Sarah Johnson"
-						role="CEO"
-						company="TechStart Inc"
-						comment="Mateo delivered an exceptional e-commerce platform that increased our sales by 150%. His professionalism and attention to detail is unmatched."
+						name="Alejandro Muñoz"
+						role="Fundador"
+						company="Coffee Lemon"
+						comment="Mateo transformó nuestra presencia digital por completo. Pasamos de un sitio lento y anticuado a un e-commerce que carga en menos de 1 segundo. Las ventas online subieron un 150% en los primeros 3 meses."
 					/>
 					<TestimonialCard
-						name="Carlos Rodriguez"
-						role="Project Manager"
-						company="Digital Solutions"
-						comment="Working with Mateo was a game-changer. He transformed our outdated website into a modern, responsive platform that our customers love."
+						name="Daniel Restrepo"
+						role="Director Comercial"
+						company="Radical Customs"
+						comment="Necesitábamos una web profesional que reflejara la calidad de nuestros productos y Mateo lo logró perfectamente. El catálogo online nos genera pedidos diarios por WhatsApp sin necesidad de publicidad."
 					/>
 					<TestimonialCard
-						name="Maria García"
-						role="Marketing Director"
-						company="Creative Agency"
-						comment="Mateo's understanding of both design and development made collaboration seamless. He consistently exceeded expectations on every project."
+						name="Camilo Vargas"
+						role="Gerente General"
+						company="PC Master"
+						comment="Contraté a Mateo para nuestra tienda de tecnología y fue la mejor inversión del año. El sitio web se posicionó en Google en menos de 2 meses y triplicamos el tráfico orgánico. 100% recomendado."
+					/>
+					<TestimonialCard
+						name="Valentina Ospina"
+						role="Propietaria"
+						company="Esmeralds"
+						comment="Desde que lanzamos la nueva web diseñada por Mateo, los clientes nos contactan diario. La interfaz es elegante, rápida y profesional. Superó todas mis expectativas y el soporte post-lanzamiento fue excelente."
+					/>
+					<TestimonialCard
+						name="Andrés Herrera"
+						role="Co-Fundador"
+						company="MG Sports"
+						comment="Mateo entendió nuestra visión desde el primer día. Diseñó una plataforma deportiva que se ve premium y convierte visitantes en compradores. El tiempo de entrega fue incluso menor al estimado."
+					/>
+					<TestimonialCard
+						name="Laura Martínez"
+						role="Administradora"
+						company="Impcel"
+						comment="Trabajar con Mateo fue una experiencia increíble. Nos entregó un sistema web completo con catálogo, formularios y optimización SEO. Ahora aparecemos en las primeras posiciones de Google en nuestra ciudad."
 					/>
 				</div>
 			</section>

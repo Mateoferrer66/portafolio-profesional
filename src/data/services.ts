@@ -42,7 +42,7 @@ export const services: Service[] = [
         price: "Desde $299 USD",
         category: "tech",
         image: "https://images.unsplash.com/photo-1677442136019-21780efad99a?w=800&h=600&fit=crop&q=80",
-        tags: ["ia", "automation", "chatbots", "eficiencia"],
+        tags: ["automation", "chatbots", "eficiencia", "productividad"],
         description: "Asistentes virtuales inteligentes integrados en tu web o WhatsApp para calificar prospectos 24/7 y flujos automatizados para ahorrar más de 15 horas operativas a la semana."
     },
     {

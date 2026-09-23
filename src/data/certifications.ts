@@ -45,13 +45,13 @@ export const certifications: Certification[] = [
 
   // Udemy
   { name: 'Complete Web Developer', platform: 'udemy', platformName: 'Udemy', icon: '🌐', url: 'https://www.udemy.com/user/mateoferrer/' },
-  { name: 'Machine Learning A-Z', platform: 'udemy', platformName: 'Udemy', icon: '🧠', url: 'https://www.udemy.com/user/mateoferrer/' },
+  { name: 'Data Science & Algorithms A-Z', platform: 'udemy', platformName: 'Udemy', icon: '📊', url: 'https://www.udemy.com/user/mateoferrer/' },
   { name: 'Advanced CSS and Sass', platform: 'udemy', platformName: 'Udemy', icon: '🎨', url: 'https://www.udemy.com/user/mateoferrer/' },
   { name: 'Three.js 3D Web Development', platform: 'udemy', platformName: 'Udemy', icon: '🎮', url: 'https://www.udemy.com/user/mateoferrer/' },
   { name: 'REST APIs with Node.js', platform: 'udemy', platformName: 'Udemy', icon: '🔌', url: 'https://www.udemy.com/user/mateoferrer/' },
 
   // Coursera
-  { name: 'Deep Learning Specialization', platform: 'coursera', platformName: 'Coursera', icon: '🧬', url: 'https://www.coursera.org/' },
+  { name: 'Cloud Architecture Specialization', platform: 'coursera', platformName: 'Coursera', icon: '☁️', url: 'https://www.coursera.org/' },
   { name: 'IBM Data Science Professional', platform: 'coursera', platformName: 'Coursera', icon: '📊', url: 'https://www.coursera.org/' },
   { name: 'Front-End Web Development', platform: 'coursera', platformName: 'Coursera', icon: '🖥️', url: 'https://www.coursera.org/' },
 

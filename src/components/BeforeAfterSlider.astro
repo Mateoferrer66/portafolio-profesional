@@ -1,0 +1,845 @@
+---
+// BeforeAfterSlider.astro
+// Componente interactivo Antes vs Después para mostrar transformaciones reales de clientes
+---
+
+<section class="before-after-section reveal" id="transformaciones">
+  <div class="section-container">
+    <div class="header-container stack gap-2">
+      <div class="section-badge">
+        <span>⚡ TRANSFORMACIONES REALES</span>
+      </div>
+      <h2 class="section-title">De Sitios Lentos a Máquinas de Ventas</h2>
+      <p class="section-subtitle">
+        Desliza el cursor para ver el impacto visual y de rendimiento que logramos para negocios reales.
+      </p>
+    </div>
+
+    <!-- Case Selector Tabs -->
+    <div class="cases-tabs">
+      <button class="case-tab active" data-case="coffee">
+        <span class="tab-icon">☕</span>
+        <span class="tab-title">Coffee Lemon</span>
+        <span class="tab-stat">+150% Ventas</span>
+      </button>
+      <button class="case-tab" data-case="radical">
+        <span class="tab-icon">🚗</span>
+        <span class="tab-title">Radical Customs</span>
+        <span class="tab-stat">Pedidos Diarios</span>
+      </button>
+      <button class="case-tab" data-case="pcmaster">
+        <span class="tab-icon">💻</span>
+        <span class="tab-title">PC Master</span>
+        <span class="tab-stat">Top 3 Google</span>
+      </button>
+    </div>
+
+    <!-- Interactive Comparison Viewer -->
+    <div class="comparison-showcase">
+      <!-- Item: Coffee Lemon -->
+      <div class="case-content active" id="case-coffee">
+        <div class="ba-slider-box" data-slider-box>
+          <div class="ba-image-wrapper ba-before">
+            <div class="fake-browser browser-before">
+              <div class="browser-bar">
+                <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <div class="url-bar">coffee-lemon-antiguo.com (4.8s carga)</div>
+              </div>
+              <div class="browser-screen screen-before-coffee">
+                <div class="before-mockup-content">
+                  <div class="before-alert">⚠️ Web antigua lenta y sin tienda online</div>
+                  <div class="mockup-header-bad"></div>
+                  <div class="mockup-grid-bad">
+                    <div class="box-bad"></div>
+                    <div class="box-bad"></div>
+                  </div>
+                  <div class="bad-stat-badge">Rebote 72% • 0 Ventas Directas</div>
+                </div>
+              </div>
+            </div>
+            <span class="slider-badge badge-before">ANTES</span>
+          </div>
+
+          <div class="ba-image-wrapper ba-after">
+            <div class="fake-browser browser-after">
+              <div class="browser-bar">
+                <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <div class="url-bar secure">🔒 coffee-lemon-seven.vercel.app (0.7s carga)</div>
+              </div>
+              <div class="browser-screen screen-after-coffee">
+                <div class="after-mockup-content">
+                  <div class="after-hero">
+                    <div class="after-glow"></div>
+                    <h3>Experiencia Gastronómica & Tienda Online</h3>
+                    <p class="after-desc">Diseño inmersivo, catálogo dinámico y checkout directo</p>
+                    <div class="after-btn">Comprar en Línea ☕</div>
+                  </div>
+                  <div class="good-stat-badge">⚡ 99/100 Google Speed • +150% Ventas</div>
+                </div>
+              </div>
+            </div>
+            <span class="slider-badge badge-after">DESPUÉS (POR MATEO FERRER)</span>
+          </div>
+
+          <input type="range" min="0" max="100" value="50" class="ba-range" aria-label="Deslizar para comparar antes y después" />
+          <div class="ba-handle">
+            <div class="handle-line"></div>
+            <div class="handle-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg>
+            </div>
+            <div class="handle-line"></div>
+          </div>
+        </div>
+
+        <!-- Metrics comparison grid -->
+        <div class="metrics-strip">
+          <div class="metric-col">
+            <span class="metric-label">Tiempo de Carga</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">4.8s</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">0.7s (-85%)</span>
+            </div>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Ventas Online</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">Casi nulas</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">+150% en 90 días</span>
+            </div>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Puntaje Google Mobile</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">34/100</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">99/100</span>
+            </div>
+          </div>
+          <div class="metric-cta">
+            <a href="https://wa.me/573005059987?text=Hola%20Mateo,%20vi%20la%20transformación%20de%20Coffee%20Lemon%20y%20quiero%20renovar%20mi%20página%20web" target="_blank" rel="noopener noreferrer" class="btn-transform-cta">
+              Quiero un resultado así 🚀
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item: Radical Customs -->
+      <div class="case-content" id="case-radical">
+        <div class="ba-slider-box" data-slider-box>
+          <div class="ba-image-wrapper ba-before">
+            <div class="fake-browser browser-before">
+              <div class="browser-bar">
+                <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <div class="url-bar">Solo Instagram y Catálogo PDF por chat</div>
+              </div>
+              <div class="browser-screen screen-before-radical">
+                <div class="before-mockup-content">
+                  <div class="before-alert">⚠️ Clientes perdidos esperando cotizaciones manuales</div>
+                  <div class="mockup-header-bad"></div>
+                  <div class="mockup-grid-bad">
+                    <div class="box-bad"></div>
+                  </div>
+                  <div class="bad-stat-badge">Respuestas demoradas • Fuga de clientes</div>
+                </div>
+              </div>
+            </div>
+            <span class="slider-badge badge-before">ANTES</span>
+          </div>
+
+          <div class="ba-image-wrapper ba-after">
+            <div class="fake-browser browser-after">
+              <div class="browser-bar">
+                <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <div class="url-bar secure">🔒 radical-customs.vercel.app (Catálogo Directo)</div>
+              </div>
+              <div class="browser-screen screen-after-radical">
+                <div class="after-mockup-content">
+                  <div class="after-hero">
+                    <div class="after-glow"></div>
+                    <h3>Catálogo Interactivo de Personalización</h3>
+                    <p class="after-desc">Galería de trabajos, filtros por marca y contacto instantáneo</p>
+                    <div class="after-btn">Ver Catálogo Automotriz 🚗</div>
+                  </div>
+                  <div class="good-stat-badge">🔥 Pedidos Diarios Automatizados a WhatsApp</div>
+                </div>
+              </div>
+            </div>
+            <span class="slider-badge badge-after">DESPUÉS (POR MATEO FERRER)</span>
+          </div>
+
+          <input type="range" min="0" max="100" value="50" class="ba-range" aria-label="Deslizar para comparar antes y después" />
+          <div class="ba-handle">
+            <div class="handle-line"></div>
+            <div class="handle-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg>
+            </div>
+            <div class="handle-line"></div>
+          </div>
+        </div>
+
+        <div class="metrics-strip">
+          <div class="metric-col">
+            <span class="metric-label">Tiempo de Respuesta</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">Horas / Días</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">Instantáneo (&lt;1 min)</span>
+            </div>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Generación de Leads</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">Esporádica</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">Pedidos Diarios Frecuentes</span>
+            </div>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Percepción de Marca</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">Taller local</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">Taller Premium de Élite</span>
+            </div>
+          </div>
+          <div class="metric-cta">
+            <a href="https://wa.me/573005059987?text=Hola%20Mateo,%20vi%20el%20caso%20de%20Radical%20Customs%20y%20quiero%20un%20catálogo%20interactivo%20para%20mi%20negocio" target="_blank" rel="noopener noreferrer" class="btn-transform-cta">
+              Quiero un resultado así 🚀
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Item: PC Master -->
+      <div class="case-content" id="case-pcmaster">
+        <div class="ba-slider-box" data-slider-box>
+          <div class="ba-image-wrapper ba-before">
+            <div class="fake-browser browser-before">
+              <div class="browser-bar">
+                <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <div class="url-bar">Plantilla genérica de WordPress caída frecuentemente</div>
+              </div>
+              <div class="browser-screen screen-before-pcmaster">
+                <div class="before-mockup-content">
+                  <div class="before-alert">⚠️ Error de servidor 500 y plugins rotos</div>
+                  <div class="mockup-header-bad"></div>
+                  <div class="bad-stat-badge">Invisible en Google • Caídas continuas</div>
+                </div>
+              </div>
+            </div>
+            <span class="slider-badge badge-before">ANTES</span>
+          </div>
+
+          <div class="ba-image-wrapper ba-after">
+            <div class="fake-browser browser-after">
+              <div class="browser-bar">
+                <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                <div class="url-bar secure">🔒 pc-master.com (Arquitectura Rápida & Segura)</div>
+              </div>
+              <div class="browser-screen screen-after-pcmaster">
+                <div class="after-mockup-content">
+                  <div class="after-hero">
+                    <div class="after-glow"></div>
+                    <h3>Hardware Gamer & Estaciones de Trabajo</h3>
+                    <p class="after-desc">Armador de PCs en vivo, stock sincronizado y SEO local</p>
+                    <div class="after-btn">Configurar Mi PC Gamer 💻</div>
+                  </div>
+                  <div class="good-stat-badge">📈 Top 3 Posiciones en Google • Tráfico 3x</div>
+                </div>
+              </div>
+            </div>
+            <span class="slider-badge badge-after">DESPUÉS (POR MATEO FERRER)</span>
+          </div>
+
+          <input type="range" min="0" max="100" value="50" class="ba-range" aria-label="Deslizar para comparar antes y después" />
+          <div class="ba-handle">
+            <div class="handle-line"></div>
+            <div class="handle-circle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg>
+            </div>
+            <div class="handle-line"></div>
+          </div>
+        </div>
+
+        <div class="metrics-strip">
+          <div class="metric-col">
+            <span class="metric-label">Tráfico Orgánico Google</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">50 visitas/mes</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">+1.200 visitas/mes (3x)</span>
+            </div>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Disponibilidad (Uptime)</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">91% (se caía)</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">99.99% Siempre activo</span>
+            </div>
+          </div>
+          <div class="metric-col">
+            <span class="metric-label">Conversión a Chat</span>
+            <div class="metric-val-wrap">
+              <span class="val-before">0.8%</span>
+              <span class="arrow">➔</span>
+              <span class="val-after">4.6% (+475%)</span>
+            </div>
+          </div>
+          <div class="metric-cta">
+            <a href="https://wa.me/573005059987?text=Hola%20Mateo,%20vi%20el%20caso%20de%20PC%20Master%20y%20quiero%20posicionar%20mi%20empresa%20en%20Google" target="_blank" rel="noopener noreferrer" class="btn-transform-cta">
+              Quiero un resultado así 🚀
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .before-after-section {
+    padding: 5rem 1.5rem;
+    position: relative;
+    background: radial-gradient(circle at 50% 10%, rgba(124, 58, 237, 0.07) 0%, transparent 60%);
+  }
+
+  .section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .header-container {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    background: rgba(124, 58, 237, 0.12);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    color: #a78bfa;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 800;
+    color: var(--gray-0);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .section-subtitle {
+    font-size: 1.1rem;
+    color: var(--gray-300);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Case tabs */
+  .cases-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .case-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--gray-300);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+  }
+
+  .case-tab:hover {
+    background: rgba(124, 58, 237, 0.15);
+    border-color: rgba(124, 58, 237, 0.4);
+    color: var(--gray-0);
+  }
+
+  .case-tab.active {
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.3), rgba(6, 182, 212, 0.2));
+    border-color: #a78bfa;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.25);
+  }
+
+  .tab-stat {
+    font-size: 0.75rem;
+    padding: 0.15rem 0.5rem;
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+
+  /* Slider container */
+  .case-content {
+    display: none;
+    animation: fadeIn 0.4s ease forwards;
+  }
+
+  .case-content.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .ba-slider-box {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+    background: #0b0f19;
+    user-select: none;
+  }
+
+  .ba-image-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .ba-before {
+    z-index: 1;
+  }
+
+  .ba-after {
+    z-index: 2;
+    clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+    transition: clip-path 0.05s ease-out;
+  }
+
+  .slider-badge {
+    position: absolute;
+    bottom: 1.25rem;
+    padding: 0.4rem 0.85rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    z-index: 5;
+    pointer-events: none;
+  }
+
+  .badge-before {
+    left: 1.25rem;
+    background: rgba(239, 68, 68, 0.85);
+    color: #fff;
+    backdrop-filter: blur(8px);
+  }
+
+  .badge-after {
+    right: 1.25rem;
+    background: linear-gradient(135deg, #10b981, #06b6d4);
+    color: #fff;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  }
+
+  /* Fake Browser Mockups */
+  .fake-browser {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .browser-bar {
+    height: 40px;
+    background: #141926;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .dot.red { background: #ef4444; }
+  .dot.yellow { background: #f59e0b; }
+  .dot.green { background: #10b981; }
+
+  .url-bar {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 0.2rem 0.75rem;
+    font-size: 0.78rem;
+    color: var(--gray-400);
+    font-family: monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .url-bar.secure {
+    color: #34d399;
+  }
+
+  .browser-screen {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    position: relative;
+  }
+
+  /* Before styling (ugly / slow) */
+  .screen-before-coffee,
+  .screen-before-radical,
+  .screen-before-pcmaster {
+    background: #18191c;
+    color: #888;
+  }
+
+  .before-mockup-content {
+    text-align: center;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .before-alert {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .mockup-header-bad {
+    width: 200px;
+    height: 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+  }
+
+  .mockup-grid-bad {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .box-bad {
+    width: 100px;
+    height: 100px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+  }
+
+  .bad-stat-badge {
+    color: #f87171;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  /* After styling (vibrant, modern, fast) */
+  .screen-after-coffee {
+    background: radial-gradient(circle at 60% 30%, #1e1338 0%, #0d111e 80%);
+  }
+
+  .screen-after-radical {
+    background: radial-gradient(circle at 60% 30%, #1e162a 0%, #0d111e 80%);
+  }
+
+  .screen-after-pcmaster {
+    background: radial-gradient(circle at 60% 30%, #0c2033 0%, #0d111e 80%);
+  }
+
+  .after-mockup-content {
+    text-align: center;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 2;
+  }
+
+  .after-glow {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .after-hero h3 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .after-desc {
+    font-size: 0.95rem;
+    color: var(--gray-300);
+    margin-bottom: 1.25rem;
+  }
+
+  .after-btn {
+    display: inline-block;
+    padding: 0.65rem 1.5rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, 0.4);
+  }
+
+  .good-stat-badge {
+    color: #34d399;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: rgba(16, 185, 129, 0.15);
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
+
+  /* Range input and handle */
+  .ba-range {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 10;
+    cursor: ew-resize;
+  }
+
+  .ba-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 44px;
+    z-index: 8;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: left 0.05s ease-out;
+  }
+
+  .handle-line {
+    flex: 1;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .handle-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #fff;
+    color: #0b0f19;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.6), 0 0 12px rgba(124, 58, 237, 0.6);
+  }
+
+  /* Metrics Strip */
+  .metrics-strip {
+    margin-top: 1.5rem;
+    padding: 1.5rem 2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) auto;
+    gap: 1.5rem;
+    align-items: center;
+  }
+
+  .metric-col {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .metric-label {
+    font-size: 0.8rem;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  .metric-val-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+  }
+
+  .val-before {
+    color: #f87171;
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+
+  .arrow {
+    color: var(--gray-400);
+    font-size: 0.85rem;
+  }
+
+  .val-after {
+    color: #34d399;
+    font-weight: 800;
+  }
+
+  .btn-transform-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.6rem;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    white-space: nowrap;
+  }
+
+  .btn-transform-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5);
+    color: #fff;
+  }
+
+  @media (max-width: 992px) {
+    .metrics-strip {
+      grid-template-columns: 1fr 1fr;
+    }
+    .metric-cta {
+      grid-column: span 2;
+      text-align: center;
+    }
+    .btn-transform-cta {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .ba-slider-box {
+      height: 380px;
+    }
+    .metrics-strip {
+      grid-template-columns: 1fr;
+      padding: 1.25rem;
+    }
+    .metric-cta {
+      grid-column: span 1;
+    }
+    .after-hero h3 {
+      font-size: 1.25rem;
+    }
+  }
+</style>
+
+<script>
+  function setupBeforeAfterSliders() {
+    // Slider functionality
+    const boxes = document.querySelectorAll('[data-slider-box]');
+    boxes.forEach(box => {
+      const range = box.querySelector('.ba-range') as HTMLInputElement;
+      const afterLayer = box.querySelector('.ba-after') as HTMLElement;
+      const handle = box.querySelector('.ba-handle') as HTMLElement;
+
+      if (!range || !afterLayer || !handle) return;
+
+      const updateSlider = (val: string) => {
+        afterLayer.style.clipPath = `polygon(${val}% 0, 100% 0, 100% 100%, ${val}% 100%)`;
+        handle.style.left = `${val}%`;
+      };
+
+      range.addEventListener('input', (e) => {
+        updateSlider((e.target as HTMLInputElement).value);
+      });
+    });
+
+    // Tab switching functionality
+    const tabs = document.querySelectorAll('.case-tab');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const caseId = tab.getAttribute('data-case');
+        document.querySelectorAll('.case-content').forEach(content => {
+          content.classList.remove('active');
+        });
+
+        const activeContent = document.getElementById(`case-${caseId}`);
+        if (activeContent) {
+          activeContent.classList.add('active');
+        }
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupBeforeAfterSliders);
+  } else {
+    setupBeforeAfterSliders();
+  }
+</script>

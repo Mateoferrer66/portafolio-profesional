@@ -1,0 +1,461 @@
+---
+// ReferralProgram.astro
+// Sistema automatizado de referidos: Convierte a visitantes y clientes en embajadores
+// que comparten la página para ganar comisiones o recompensas por clientes que contraten.
+---
+
+<section class="referral-section reveal" id="referidos">
+  <div class="referral-container">
+    <div class="referral-glass-card">
+      <div class="referral-badge">
+        <span>🎁 PROGRAMA DE ALIADOS & REFERIDOS</span>
+      </div>
+
+      <div class="referral-header">
+        <h2 class="referral-title">Recomienda un Cliente y Gana Hasta $200.000 COP</h2>
+        <p class="referral-subtitle">
+          ¿Conoces a alguien que necesite una página web, tienda online o software a la medida?
+          Recomiéndale mis servicios. Si contrata su proyecto, te transfiero el 10% de comisión o hasta $200.000 COP directamente a tu cuenta bancaria o Nequi.
+        </p>
+      </div>
+
+      <!-- How it works steps -->
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">1</div>
+          <div class="step-icon">🔗</div>
+          <h4>Comparte tu Enlace</h4>
+          <p>Copia tu enlace personalizado o compártelo directo a WhatsApp de tu contacto o grupo empresarial.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">2</div>
+          <div class="step-icon">🤝</div>
+          <h4>Nosotros Cerramos el Trato</h4>
+          <p>Le realizo una consultoría gratuita y le presento una propuesta de alto valor a la medida de su negocio.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">3</div>
+          <div class="step-icon">💰</div>
+          <h4>Recibe tu Pago</h4>
+          <p>Apenas el cliente inicie el proyecto, recibes tu comisión de inmediato por transferencia o Nequi.</p>
+        </div>
+      </div>
+
+      <!-- Interactive Generator Box -->
+      <div class="generator-box">
+        <h3 class="gen-title">Genera tu Enlace de Recomendación en 5 Segundos</h3>
+        <div class="gen-form">
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input 
+              type="text" 
+              id="ref-user-name" 
+              placeholder="Ingresa tu nombre o empresa (ej: Carlos)" 
+              class="ref-input"
+            />
+          </div>
+          <button id="btn-generate-ref" class="btn-gen">
+            <span>Crear Mi Link ⚡</span>
+          </button>
+        </div>
+
+        <!-- Generated Link Output -->
+        <div id="ref-output" class="ref-output hidden">
+          <p class="output-label">Tu enlace de recomendación único:</p>
+          <div class="link-display-row">
+            <input type="text" id="ref-link-field" readonly class="link-input" />
+            <button id="btn-copy-ref" class="btn-copy" title="Copiar enlace">
+              <span id="copy-text">Copiar</span>
+            </button>
+          </div>
+
+          <!-- Quick Share Buttons -->
+          <div class="share-buttons-row">
+            <a id="btn-share-wa" href="#" target="_blank" rel="noopener noreferrer" class="share-btn wa-share">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.086s1.011.477 1.184.564.289.13.332.202c.045.072.045.419-.1.824zm-3.423-14.416c-6.627 0-12 5.373-12 12 0 2.159.57 4.186 1.564 5.938l-1.664 6.082 6.221-1.632c1.705.93 3.652 1.458 5.726 1.458 6.627 0 12-5.373 12-12s-5.373-12-12-12z"/></svg>
+              <span>Enviar por WhatsApp</span>
+            </a>
+            <a id="btn-share-li" href="#" target="_blank" rel="noopener noreferrer" class="share-btn li-share">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+              <span>LinkedIn</span>
+            </a>
+            <a id="btn-share-x" href="#" target="_blank" rel="noopener noreferrer" class="share-btn x-share">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+              <span>Compartir en X</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .referral-section {
+    padding: 5rem 1.5rem;
+    position: relative;
+  }
+
+  .referral-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .referral-glass-card {
+    background: linear-gradient(135deg, rgba(30, 27, 75, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    border-radius: 2rem;
+    padding: 3.5rem 3rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 40px rgba(124, 58, 237, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .referral-glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20%;
+    right: 20%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+  }
+
+  .referral-badge {
+    display: inline-flex;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    background: rgba(124, 58, 237, 0.2);
+    border: 1px solid rgba(167, 139, 250, 0.4);
+    color: #c4b5fd;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin-bottom: 1.5rem;
+  }
+
+  .referral-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 3rem;
+  }
+
+  .referral-title {
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .referral-subtitle {
+    font-size: 1.15rem;
+    color: var(--gray-300);
+    line-height: 1.6;
+  }
+
+  /* Steps grid */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .step-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 2rem 1.5rem;
+    position: relative;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .step-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(167, 139, 250, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .step-num {
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.1);
+  }
+
+  .step-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .step-card h4 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .step-card p {
+    font-size: 0.9rem;
+    color: var(--gray-400);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Generator Box */
+  .generator-box {
+    background: rgba(15, 23, 42, 0.8);
+    border: 1px solid rgba(124, 58, 237, 0.3);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    text-align: center;
+    box-shadow: inset 0 0 20px rgba(124, 58, 237, 0.05);
+  }
+
+  .gen-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.5rem;
+  }
+
+  .gen-form {
+    display: flex;
+    gap: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 0.75rem;
+    padding: 0 1rem;
+    transition: border-color 0.25s ease;
+  }
+
+  .input-wrapper:focus-within {
+    border-color: #a78bfa;
+    box-shadow: 0 0 15px rgba(167, 139, 250, 0.2);
+  }
+
+  .input-icon {
+    font-size: 1.1rem;
+    margin-right: 0.5rem;
+  }
+
+  .ref-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 0.95rem;
+    padding: 0.85rem 0;
+    outline: none;
+  }
+
+  .ref-input::placeholder {
+    color: var(--gray-500);
+  }
+
+  .btn-gen {
+    padding: 0.85rem 1.8rem;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    border: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+  }
+
+  .btn-gen:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.6);
+  }
+
+  /* Output */
+  .ref-output {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .ref-output.hidden {
+    display: none;
+  }
+
+  .output-label {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    margin-bottom: 0.75rem;
+  }
+
+  .link-display-row {
+    display: flex;
+    gap: 0.75rem;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .link-input {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: #38bdf8;
+    font-family: monospace;
+    font-size: 0.9rem;
+    outline: none;
+  }
+
+  .btn-copy {
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-weight: 600;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-copy:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .share-buttons-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 0.75rem;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  .wa-share {
+    background: #25d366;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+  }
+
+  .wa-share:hover {
+    background: #20bd5a;
+    transform: translateY(-2px);
+  }
+
+  .li-share {
+    background: #0a66c2;
+    box-shadow: 0 4px 15px rgba(10, 102, 194, 0.3);
+  }
+
+  .li-share:hover {
+    background: #095196;
+    transform: translateY(-2px);
+  }
+
+  .x-share {
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .x-share:hover {
+    background: #111;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 900px) {
+    .referral-glass-card {
+      padding: 2.5rem 1.5rem;
+    }
+    .steps-grid {
+      grid-template-columns: 1fr;
+    }
+    .gen-form {
+      flex-direction: column;
+    }
+    .btn-gen {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  function setupReferralProgram() {
+    const input = document.getElementById('ref-user-name') as HTMLInputElement;
+    const btnGen = document.getElementById('btn-generate-ref');
+    const outputBox = document.getElementById('ref-output');
+    const linkField = document.getElementById('ref-link-field') as HTMLInputElement;
+    const btnCopy = document.getElementById('btn-copy-ref');
+    const copyText = document.getElementById('copy-text');
+    const btnWa = document.getElementById('btn-share-wa') as HTMLAnchorElement;
+    const btnLi = document.getElementById('btn-share-li') as HTMLAnchorElement;
+    const btnX = document.getElementById('btn-share-x') as HTMLAnchorElement;
+
+    if (!btnGen || !input || !outputBox || !linkField) return;
+
+    btnGen.addEventListener('click', () => {
+      const name = (input.value.trim() || 'aliado').replace(/[^a-zA-Z0-9_-]/g, '-').toLowerCase();
+      const origin = window.location.origin;
+      const refUrl = `${origin}/?ref=${name}`;
+      linkField.value = refUrl;
+      outputBox.classList.remove('hidden');
+
+      // WhatsApp message
+      const waMsg = encodeURIComponent(
+        `¡Hola! Te recomiendo a Mateo Ferrer, es un Ingeniero de Software que crea páginas web ultra-rápidas y tiendas online que realmente traen clientes (como Coffee Lemon y Radical Customs). Si necesitas una web para tu negocio, te dejo su portafolio con descuento: ${refUrl}`
+      );
+      if (btnWa) btnWa.href = `https://api.whatsapp.com/send?text=${waMsg}`;
+
+      // LinkedIn share
+      if (btnLi) btnLi.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(refUrl)}`;
+
+      // X share
+      const xMsg = encodeURIComponent(
+        `Si tu negocio necesita una página web moderna que cargue en 1 segundo y genere clientes reales, te recomiendo el portafolio de @mateoferrer: ${refUrl}`
+      );
+      if (btnX) btnX.href = `https://twitter.com/intent/tweet?text=${xMsg}`;
+    });
+
+    if (btnCopy && copyText) {
+      btnCopy.addEventListener('click', () => {
+        linkField.select();
+        navigator.clipboard.writeText(linkField.value).then(() => {
+          copyText.textContent = '¡Copiado! ✓';
+          setTimeout(() => {
+            copyText.textContent = 'Copiar';
+          }, 2500);
+        });
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupReferralProgram);
+  } else {
+    setupReferralProgram();
+  }
+</script>
