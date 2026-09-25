@@ -87,8 +87,9 @@
       localStorage.setItem('mf-newsletter', JSON.stringify(subscribers));
 
       // Track event
-      if (typeof gtag === 'function') {
-        gtag('event', 'newsletter_signup', {
+      const win = window as any;
+      if (typeof win.gtag === 'function') {
+        win.gtag('event', 'newsletter_signup', {
           event_category: 'conversion',
           event_label: 'Newsletter Subscription',
         });

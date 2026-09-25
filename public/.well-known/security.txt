@@ -1,0 +1,12 @@
+# ==============================================================================
+# Security Policy & Vulnerability Disclosure (RFC 9116)
+# Mateo Ferrer - Software Engineer & Cybersecurity Advocate
+# ==============================================================================
+
+Contact: mailto:mateo.ferrer.dev@gmail.com
+Contact: https://wa.me/573005059987
+Expires: 2027-12-31T23:59:59.000Z
+Preferred-Languages: es, en
+Canonical: https://mateo-ferrer.pages.dev/.well-known/security.txt
+Policy: https://mateo-ferrer.pages.dev/legal
+Acknowledgments: https://mateo-ferrer.pages.dev/mentions

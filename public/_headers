@@ -1,14 +1,34 @@
-# Cache headers for Cloudflare Pages / Netlify
-# Static assets - cache for 1 year
+# ==============================================================================
+# Enterprise Security & High-Performance Headers (Cloudflare Pages / Netlify)
+# Portfolio: Mateo Ferrer - Software Engineer (Copyright © 2026)
+# ==============================================================================
+
+# Global Security Headers for all routes
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(self), microphone=(self), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Cross-Origin-Resource-Policy: same-origin
+  X-Permitted-Cross-Domain-Policies: none
+  X-XSS-Protection: 1; mode=block
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://www.googletagmanager.com https://www.google-analytics.com https://cdnjs.cloudflare.com https://unpkg.com blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; media-src 'self' data: blob:; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://cdn.jsdelivr.net https://*.pages.dev; worker-src 'self' blob:; frame-src 'self' https://www.google.com; object-src 'none'; base-uri 'self'; form-action 'self' https://wa.me; frame-ancestors 'none'; upgrade-insecure-requests;
+
+# Static assets - cache for 1 year with immutable flag for fluid loading
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
 
 # Fonts - cache for 1 year
 /*.woff2
   Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
 
 /*.woff
   Cache-Control: public, max-age=31536000, immutable
+  Access-Control-Allow-Origin: *
 
 # Images - cache for 1 year
 /*.jpg
@@ -26,17 +46,19 @@
 /*.svg
   Cache-Control: public, max-age=31536000, immutable
 
-# JavaScript and CSS - cache for 1 year
+# Bundled JavaScript and CSS - cache for 1 year
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
 /*.js
   Cache-Control: public, max-age=31536000, immutable
 
 /*.css
   Cache-Control: public, max-age=31536000, immutable
 
-# HTML pages - cache for 1 hour, revalidate
+# HTML pages - revalidate for fresh content
 /*.html
   Cache-Control: public, max-age=3600, must-revalidate
 
-# Root HTML
 /
   Cache-Control: public, max-age=3600, must-revalidate

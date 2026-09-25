@@ -1,0 +1,524 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+
+const lastUpdated = "25 de Septiembre de 2026";
+---
+
+<BaseLayout
+  title="Política de Privacidad y Tratamiento de Datos | Mateo Ferrer"
+  description="Política de Privacidad y Protección de Datos Personales de Mateo Ferrer, en estricto cumplimiento de la Ley 1581 de 2012 (Habeas Data) y RGPD/GDPR."
+>
+  <div class="legal-page-container">
+    <header class="legal-header">
+      <div class="legal-badge">
+        <Icon icon="trophy" size="1.2em" />
+        <span>PROTECCIÓN DE DATOS & HABEAS DATA</span>
+      </div>
+      <h1 class="legal-title">Política de Privacidad y Tratamiento de Datos Personales</h1>
+      <p class="legal-subtitle">
+        Tu privacidad y la seguridad de tu información son pilares fundamentales. Conoce cómo recopilo, protejo y utilizo tus datos conforme a la legislación vigente.
+      </p>
+      <div class="legal-meta">
+        <span class="meta-item">📅 Última actualización: <strong>{lastUpdated}</strong></span>
+        <span class="meta-item">🔒 Normativa: <strong>Ley 1581 de 2012 (Colombia) & RGPD/GDPR</strong></span>
+        <span class="meta-item">🛡️ Cifrado: <strong>TLS 1.3 / SSL 256-bit Activo</strong></span>
+      </div>
+    </header>
+
+    <div class="legal-content-grid">
+      <aside class="legal-toc">
+        <div class="toc-sticky">
+          <h3 class="toc-title">Secciones de Privacidad</h3>
+          <nav>
+            <ul class="toc-list">
+              <li><a href="#responsable">1. Responsable del Tratamiento</a></li>
+              <li><a href="#datos-recogidos">2. Datos que se Recopilan</a></li>
+              <li><a href="#finalidad">3. Finalidad del Tratamiento</a></li>
+              <li><a href="#legitimacion">4. Base Legal y Consentimiento</a></li>
+              <li><a href="#no-venta">5. Política de No Venta a Terceros</a></li>
+              <li><a href="#seguridad">6. Medidas de Seguridad y Cifrado</a></li>
+              <li><a href="#derechos-arco">7. Tus Derechos (Habeas Data / ARCO)</a></li>
+              <li><a href="#conservacion">8. Plazos de Conservación</a></li>
+              <li><a href="#transferencias">9. Transferencias Internacionales</a></li>
+              <li><a href="#contacto-dpo">10. Ejercicio de Derechos y Contacto</a></li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="legal-body">
+        <section id="responsable" class="legal-section">
+          <h2>1. Responsable del Tratamiento de Datos</h2>
+          <p>
+            En cumplimiento de la <strong>Ley Estatutaria 1581 de 2012</strong> de la República de Colombia, su Decreto Reglamentario 1377 de 2013, y las normas internacionales aplicables en materia de protección de datos (incluyendo el RGPD europeo), el responsable de la recopilación y tratamiento de tus datos personales es:
+          </p>
+          <div class="info-card">
+            <ul>
+              <li><strong>Responsable:</strong> Mateo Ferrer</li>
+              <li><strong>Actividad Profesional:</strong> Ingeniería de Software, Consultoría Web y Soluciones Tecnológicas</li>
+              <li><strong>Domicilio Profesional:</strong> Colombia</li>
+              <li><strong>Correo Electrónico de Privacidad:</strong> <a href="mailto:mateo.ferrer@example.com" class="link-glow">mateo.ferrer.dev@gmail.com</a></li>
+              <li><strong>Canal Inmediato de Verificación:</strong> <a href="https://wa.me/573005059987" target="_blank" rel="noopener noreferrer" class="link-glow">+57 300 505 9987</a></li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="datos-recogidos" class="legal-section">
+          <h2>2. Datos Personales que se Recopilan</h2>
+          <p>
+            Bajo el principio de <strong>minimización de datos</strong>, únicamente solicito y proceso la información estrictamente necesaria para atender tus solicitudes comerciales y técnicas:
+          </p>
+          <div class="cards-grid">
+            <div class="data-box">
+              <h4>📋 Datos de Identificación y Contacto</h4>
+              <p>Nombre, dirección de correo electrónico, número de teléfono/WhatsApp de contacto e información sobre tu empresa o marca.</p>
+            </div>
+            <div class="data-box">
+              <h4>💼 Información del Proyecto</h4>
+              <p>Tipo de software o web requerida, requerimientos funcionales, presupuesto aproximado, plazos previstos e información proporcionada en el Cotizador Inteligente.</p>
+            </div>
+            <div class="data-box">
+              <h4>🌐 Datos Técnicos Anonimizados</h4>
+              <p>Dirección IP anonimizada, tipo de navegador, sistema operativo y eventos de interacción en el sitio web (a través de analítica estadística sin identificación personal).</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="finalidad" class="legal-section">
+          <h2>3. Finalidad del Tratamiento de la Información</h2>
+          <p>Tus datos son tratados exclusivamente para los siguientes fines legítimos:</p>
+          <ol class="styled-list">
+            <li><strong>Atención de Consultas y Cotizaciones:</strong> Dar respuesta personalizada a tus solicitudes enviadas por formularios, correo electrónico o WhatsApp.</li>
+            <li><strong>Gestión y Ejecución Contractual:</strong> Elaborar propuestas técnicas, contratos de desarrollo, informes de avance, entregas de código y facturación de servicios.</li>
+            <li><strong>Soporte Técnico y Garantía:</strong> Brindar asistencia técnica, monitoreo y mantenimiento convenido contractualmente.</li>
+            <li><strong>Comunicaciones Informativas y Newsletter (Opcional):</strong> Remitir únicamente previa autorización explícita artículos técnicos, novedades del sector o lanzamientos de herramientas. Puedes darte de baja en cualquier momento con un solo clic.</li>
+            <li><strong>Seguridad del Sitio Web:</strong> Prevenir ataques informáticos, intentos de hacking, fraudes cibernéticos o abusos en los servidores.</li>
+          </ol>
+        </section>
+
+        <section id="legitimacion" class="legal-section">
+          <h2>4. Base Legal y Consentimiento</h2>
+          <p>
+            La base legal para el tratamiento de tus datos es:
+          </p>
+          <ul class="styled-list">
+            <li><strong>El Consentimiento Libre, Previo, Expreso e Informado:</strong> Otorgado voluntariamente al enviar cualquier formulario de contacto, cotizador o suscripción a la newsletter.</li>
+            <li><strong>La Ejecución de Medidas Precontractuales o Contractuales:</strong> Necesarias para cotizar o desarrollar los proyectos encomendados.</li>
+            <li><strong>El Interés Legítimo en Materia de Ciberseguridad:</strong> Proteger la integridad del servidor, prevenir ataques DDoS y garantizar la operatividad de la infraestructura.</li>
+          </ul>
+        </section>
+
+        <section id="no-venta" class="legal-section">
+          <h2>5. Compromiso de Confidencialidad y No Venta a Terceros</h2>
+          <div class="alert-box success">
+            <strong>🛡️ Compromiso Cero Spam y No Venta:</strong>
+            Mateo Ferrer <strong>NUNCA vende, alquila, comercializa ni cede</strong> tus datos personales o de contacto a empresas de publicidad, brokers de datos ni a terceros con fines lucrativos o promocionales ajenos. Tu información es estrictamente confidencial.
+          </div>
+        </section>
+
+        <section id="seguridad" class="legal-section">
+          <h2>6. Medidas de Seguridad Técnicas y Cifrado</h2>
+          <p>
+            Para garantizar que tus datos no sean interceptados, manipulados o vulnerados, implemento rigurosos estándares de ciberseguridad:
+          </p>
+          <ul class="styled-list">
+            <li><strong>Cifrado TLS 1.3 / SSL de 256 bits:</strong> Todas las comunicaciones entre tu navegador y este sitio viajan totalmente encriptadas.</li>
+            <li><strong>Cabeceras HTTP de Alta Seguridad (CSP, HSTS, X-Frame-Options):</strong> Bloqueo nativo contra ataques de cross-site scripting (XSS), inyección de código y clickjacking.</li>
+            <li><strong>Protección Anti-Spam y Honeypot:</strong> Formularios equipados con trampas invisibles para neutralizar bots automatizados sin molestar al usuario.</li>
+            <li><strong>Almacenamiento Local Aislado:</strong> Las preferencias locales (tema visual, consentimiento de cookies) se almacenan en tu propio navegador de forma aislada y no invasiva.</li>
+          </ul>
+        </section>
+
+        <section id="derechos-arco" class="legal-section">
+          <h2>7. Tus Derechos como Titular (Habeas Data y ARCO)</h2>
+          <p>
+            De conformidad con la Ley 1581 de 2012 y el RGPD, en cualquier momento tienes derecho a:
+          </p>
+          <div class="arco-grid">
+            <div class="arco-card">
+              <span class="arco-icon">👁️</span>
+              <h4>Acceso</h4>
+              <p>Conocer qué datos tuyos poseo y cómo son tratados.</p>
+            </div>
+            <div class="arco-card">
+              <span class="arco-icon">✏️</span>
+              <h4>Rectificación</h4>
+              <p>Actualizar o corregir datos inexactos, incompletos o erróneos.</p>
+            </div>
+            <div class="arco-card">
+              <span class="arco-icon">🗑️</span>
+              <h4>Supresión (Olvido)</h4>
+              <p>Solicitar la eliminación total de tus datos de mis registros.</p>
+            </div>
+            <div class="arco-card">
+              <span class="arco-icon">🚫</span>
+              <h4>Oposición / Revocatoria</h4>
+              <p>Revocar en cualquier momento la autorización otorgada para su uso.</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="conservacion" class="legal-section">
+          <h2>8. Plazos de Conservación de la Información</h2>
+          <p>
+            Los datos personales proporcionados para cotizaciones y consultas se conservarán durante el tiempo indispensable para responder a tu requerimiento comercial y efectuar el debido seguimiento (máximo 12 meses si no se formaliza contratación).
+          </p>
+          <p>
+            En caso de concretar un contrato de desarrollo, los datos se mantendrán durante el plazo de vigencia del contrato, el periodo de garantía técnica y el tiempo exigido por la legislación tributaria y mercantil aplicable, tras lo cual se procederá a su borrado seguro.
+          </p>
+        </section>
+
+        <section id="transferencias" class="legal-section">
+          <h2>9. Proveedores de Infraestructura y Transferencias Internacionales</h2>
+          <p>
+            Para garantizar la más alta velocidad, disponibilidad del 99.99% y máxima protección perimetral, este sitio utiliza servicios de infraestructura tecnológica de primer nivel global:
+          </p>
+          <ul class="styled-list">
+            <li><strong>Cloudflare / Vercel:</strong> Proveedores de red CDN global, hosting estático perimetral y mitigación de ataques DDoS con certificación SOC 2 y cumplimiento de estándares GDPR.</li>
+            <li><strong>Google Analytics (con anonimización de IP):</strong> Análisis de métricas web agregadas y no identificables de forma individual.</li>
+          </ul>
+        </section>
+
+        <section id="contacto-dpo" class="legal-section">
+          <h2>10. Procedimiento para el Ejercicio de tus Derechos</h2>
+          <p>
+            Para ejercer cualquiera de tus derechos de Habeas Data (conocer, actualizar, rectificar o suprimir tus datos), solo debes enviar una solicitud escrita indicando tu nombre y petición específica al siguiente correo oficial:
+          </p>
+          <div class="cta-legal-box">
+            <h3>Canal Exclusivo de Privacidad y Habeas Data</h3>
+            <p>Escribe con el asunto <strong>"Ejercicio de Derechos Habeas Data - Privacidad"</strong> y recibirás respuesta en un plazo máximo de cinco (5) días hábiles.</p>
+            <a href="mailto:mateo.ferrer.dev@gmail.com?subject=Ejercicio%20de%20Derechos%20Habeas%20Data" class="btn-legal-contact">
+              Enviar Solicitud a: mateo.ferrer.dev@gmail.com ✉️
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .legal-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  .legal-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #34d399;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-title {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    color: var(--gray-0);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-subtitle {
+    font-size: 1.15rem;
+    color: var(--gray-300);
+    max-width: 780px;
+    margin: 0 auto 1.75rem;
+    line-height: 1.6;
+  }
+
+  .legal-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--gray-400);
+  }
+
+  .meta-item strong {
+    color: #38bdf8;
+  }
+
+  .legal-content-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  .legal-toc {
+    display: block;
+  }
+
+  .toc-sticky {
+    position: sticky;
+    top: 6rem;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .toc-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-200);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .toc-list a {
+    color: var(--gray-400);
+    text-decoration: none;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    transition: all 0.2s ease;
+    display: block;
+    padding: 0.25rem 0.4rem;
+    border-radius: 0.35rem;
+  }
+
+  .toc-list a:hover {
+    color: #34d399;
+    background: rgba(16, 185, 129, 0.1);
+    transform: translateX(3px);
+  }
+
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .legal-section {
+    scroll-margin-top: 6rem;
+  }
+
+  .legal-section h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(16, 185, 129, 0.3);
+  }
+
+  .legal-section p {
+    color: var(--gray-300);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .info-card {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1.25rem 0;
+  }
+
+  .info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    color: var(--gray-300);
+  }
+
+  .info-card li strong {
+    color: var(--gray-100);
+    margin-right: 0.4rem;
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+  }
+
+  .data-box {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    border-radius: 1rem;
+    padding: 1.25rem;
+  }
+
+  .data-box h4 {
+    font-size: 0.95rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .data-box p {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .styled-list {
+    margin: 1rem 0 1.5rem 1.5rem;
+    color: var(--gray-300);
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .styled-list li strong {
+    color: #fff;
+  }
+
+  .alert-box {
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.85rem;
+    margin: 1.25rem 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .alert-box.success {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: #d1fae5;
+  }
+
+  .alert-box strong {
+    display: block;
+    color: #34d399;
+    margin-bottom: 0.35rem;
+  }
+
+  .arco-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .arco-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  .arco-icon {
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .arco-card h4 {
+    font-size: 1rem;
+    color: #fff;
+    margin-bottom: 0.35rem;
+  }
+
+  .arco-card p {
+    font-size: 0.8rem;
+    color: var(--gray-400);
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .link-glow {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cta-legal-box {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15));
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    border-radius: 1.25rem;
+    text-align: center;
+  }
+
+  .cta-legal-box h3 {
+    font-size: 1.35rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-legal-box p {
+    font-size: 0.95rem;
+    color: var(--gray-300);
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .btn-legal-contact {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.75rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  }
+
+  .btn-legal-contact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+    color: #fff;
+  }
+
+  @media (max-width: 900px) {
+    .legal-content-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .legal-toc {
+      display: none;
+    }
+    .cards-grid,
+    .arco-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

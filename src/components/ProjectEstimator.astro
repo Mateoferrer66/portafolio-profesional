@@ -211,7 +211,6 @@ import Icon from "./Icon.astro";
     var section = document.getElementById('project-estimator');
     if (!section) return;
 
-    var currentType = 'landing';
     var baseUsd = 350;
     var baseCop = 1400000;
     var baseDays = 7;
@@ -288,7 +287,6 @@ import Icon from "./Icon.astro";
       btn.addEventListener('click', function() {
         typeBtns.forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
-        currentType = btn.dataset.type;
         baseUsd = Number(btn.dataset.baseUsd);
         baseCop = Number(btn.dataset.baseCop);
         baseDays = Number(btn.dataset.days);

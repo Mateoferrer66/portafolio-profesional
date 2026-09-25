@@ -1,0 +1,496 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+
+const lastUpdated = "25 de Septiembre de 2026";
+---
+
+<BaseLayout
+  title="Política de Cookies | Mateo Ferrer"
+  description="Política de Cookies y tecnologías de almacenamiento local del sitio web de Mateo Ferrer. Transparencia total y control de privacidad."
+>
+  <div class="legal-page-container">
+    <header class="legal-header">
+      <div class="legal-badge">
+        <Icon icon="strategy" size="1.2em" />
+        <span>TRANSPARENCIA & CONTROL DEL USUARIO</span>
+      </div>
+      <h1 class="legal-title">Política de Cookies y Almacenamiento Local</h1>
+      <p class="legal-subtitle">
+        Conoce qué tecnologías de almacenamiento utilizo, para qué sirven y cómo tienes el control total para configurarlas o revocarlas en cualquier instante.
+      </p>
+      <div class="legal-meta">
+        <span class="meta-item">📅 Última actualización: <strong>{lastUpdated}</strong></span>
+        <span class="meta-item">🍪 Control: <strong>Consentimiento Granular Activo</strong></span>
+      </div>
+    </header>
+
+    <div class="legal-content-grid">
+      <aside class="legal-toc">
+        <div class="toc-sticky">
+          <h3 class="toc-title">Contenido</h3>
+          <nav>
+            <ul class="toc-list">
+              <li><a href="#que-son">1. ¿Qué son las Cookies?</a></li>
+              <li><a href="#tipos">2. Tipos de Cookies que Utilizo</a></li>
+              <li><a href="#tabla">3. Tabla Detallada de Almacenamiento</a></li>
+              <li><a href="#terceros">4. Cookies de Terceros</a></li>
+              <li><a href="#como-gestionar">5. Cómo Administrar o Desactivar</a></li>
+              <li><a href="#modificar-consentimiento">6. Cambiar Preferencias en Este Sitio</a></li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+      <main class="legal-body">
+        <section id="que-son" class="legal-section">
+          <h2>1. ¿Qué son las Cookies y Tecnologías Similares?</h2>
+          <p>
+            Una <em>cookie</em> es un pequeño archivo de texto que un sitio web descarga en tu ordenador, teléfono móvil o dispositivo al acceder al mismo. Permite al sitio recordar tus acciones y preferencias (como inicio de sesión, idioma, tamaño de letra, tema oscuro o preferencias de sonido) para que no tengas que volver a configurarlos cada vez que regresas.
+          </p>
+          <p>
+            Además de las cookies convencionales, este sitio web utiliza almacenamiento web local moderno (<strong>Local Storage</strong> y <strong>Session Storage</strong>), el cual funciona de manera similar pero de forma más segura y rápida, almacenando datos exclusivamente en tu dispositivo sin transmitirlos innecesariamente por la red.
+          </p>
+        </section>
+
+        <section id="tipos" class="legal-section">
+          <h2>2. Tipos de Cookies Utilizadas</h2>
+          <div class="types-grid">
+            <div class="type-box">
+              <span class="type-tag essential">OBLIGATORIAS</span>
+              <h4>1. Cookies Técnicas y Necesarias</h4>
+              <p>Son esenciales para que la web funcione de manera fluida, segura y correcta. Permiten la navegación entre páginas sin recarga pesada (Astro View Transitions), la persistencia del tema oscuro y la seguridad contra ataques automatizados.</p>
+            </div>
+            <div class="type-box">
+              <span class="type-tag pref">PREFERENCIAS</span>
+              <h4>2. Cookies de Personalización</h4>
+              <p>Guardan tus preferencias interactivas seleccionadas voluntariamente, como el estado de los controles por voz o gestos, el volumen de los efectos sonoros o el idioma elegido.</p>
+            </div>
+            <div class="type-box">
+              <span class="type-tag analytics">ANALÍTICAS</span>
+              <h4>3. Cookies de Medición y Analítica</h4>
+              <p>Nos ayudan a entender de forma completamente agregada y anonimizada cómo navegan los visitantes, qué proyectos resultan más interesantes y cómo optimizar la velocidad del sitio (Google Analytics 4 con anonimización de IP obligatoria).</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="tabla" class="legal-section">
+          <h2>3. Tabla Detallada de Cookies y Almacenamiento Local</h2>
+          <p>A continuación se detallan los elementos almacenados en tu navegador al interactuar con este portafolio:</p>
+          <div class="table-responsive">
+            <table class="cookies-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Tipo / Origen</th>
+                  <th>Finalidad</th>
+                  <th>Duración</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>theme</code></td>
+                  <td>Técnica (Local Storage)</td>
+                  <td>Guarda tu preferencia de modo oscuro / claro para evitar destellos al cambiar de página.</td>
+                  <td>Persistente</td>
+                </tr>
+                <tr>
+                  <td><code>mf_cookie_consent</code></td>
+                  <td>Técnica (Local Storage)</td>
+                  <td>Registra si has aceptado o configurado la política de cookies para no mostrar el banner reiteradamente.</td>
+                  <td>1 año</td>
+                </tr>
+                <tr>
+                  <td><code>mf-newsletter</code></td>
+                  <td>Funcional (Local Storage)</td>
+                  <td>Evita mostrarte el formulario de suscripción si ya te has registrado previamente.</td>
+                  <td>Persistente</td>
+                </tr>
+                <tr>
+                  <td><code>_ga</code> / <code>_ga_*</code></td>
+                  <td>Analítica (Terceros - Google)</td>
+                  <td>Recopila estadísticas anónimas de visitas, fuentes de tráfico y páginas más vistas sin almacenar datos identificables.</td>
+                  <td>2 años (o revocable)</td>
+                </tr>
+                <tr>
+                  <td><code>sound-muted</code></td>
+                  <td>Preferencia (Local Storage)</td>
+                  <td>Recuerda si decidiste silenciar los efectos sonoros de interacción.</td>
+                  <td>Persistente</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="terceros" class="legal-section">
+          <h2>4. Servicios y Cookies de Terceros</h2>
+          <p>
+            Este sitio web no alberga redes publicitarias invasivas, banners de afiliados ni rastreadores de retargeting de terceros. Los únicos servicios externos integrados con fines técnicos y estadísticos son:
+          </p>
+          <ul class="styled-list">
+            <li><strong>Google Analytics / Google Tag Manager:</strong> Servicio de analítica web provisto por Google LLC con IP anonimizada.</li>
+            <li><strong>CDN de Cloudflare / Google Fonts:</strong> Proveen entrega ultrarrápida de tipografías y recursos estáticos con cifrado perimetral.</li>
+          </ul>
+        </section>
+
+        <section id="como-gestionar" class="legal-section">
+          <h2>5. Cómo Administrar o Desactivar Cookies en tu Navegador</h2>
+          <p>
+            Puedes permitir, bloquear o eliminar las cookies instaladas en tu equipo mediante la configuración de las opciones del navegador que utilices:
+          </p>
+          <ul class="styled-list">
+            <li><strong>Google Chrome:</strong> Configuración &gt; Privacidad y seguridad &gt; Cookies y otros datos de sitios.</li>
+            <li><strong>Mozilla Firefox:</strong> Opciones &gt; Privacidad y Seguridad &gt; Cookies y datos del sitio.</li>
+            <li><strong>Apple Safari:</strong> Preferencias &gt; Privacidad &gt; Bloquear todas las cookies.</li>
+            <li><strong>Microsoft Edge:</strong> Configuración &gt; Cookies y permisos del sitio &gt; Administrar y eliminar cookies.</li>
+          </ul>
+          <p class="footnote">
+            * Nota técnica: Si bloqueas las cookies técnicas indispensables, es posible que ciertas características fluidas de navegación o el tema visual no se recuerden correctamente.
+          </p>
+        </section>
+
+        <section id="modificar-consentimiento" class="legal-section">
+          <h2>6. Cambiar tus Preferencias en Este Sitio Web</h2>
+          <p>
+            En cualquier momento puedes reabrir el panel de configuración de cookies para modificar tus elecciones previas:
+          </p>
+          <div class="cta-cookie-box">
+            <h3>Panel de Configuración de Consentimiento</h3>
+            <p>Haz clic en el siguiente botón para abrir inmediatamente el gestor de preferencias de cookies:</p>
+            <button id="btn-reopen-cookies" class="btn-cookie-action">
+              ⚙️ Abrir Gestor de Cookies del Sitio
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</BaseLayout>
+
+<script>
+  function setupCookieReopen() {
+    const btn = document.getElementById('btn-reopen-cookies');
+    if (btn) {
+      btn.addEventListener('click', () => {
+        window.dispatchEvent(new CustomEvent('mf-open-cookie-banner'));
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', setupCookieReopen);
+  document.addEventListener('astro:page-load', setupCookieReopen);
+</script>
+
+<style>
+  .legal-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  .legal-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #fbbf24;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-title {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    color: var(--gray-0);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-subtitle {
+    font-size: 1.15rem;
+    color: var(--gray-300);
+    max-width: 780px;
+    margin: 0 auto 1.75rem;
+    line-height: 1.6;
+  }
+
+  .legal-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--gray-400);
+  }
+
+  .meta-item strong {
+    color: #38bdf8;
+  }
+
+  .legal-content-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  .legal-toc {
+    display: block;
+  }
+
+  .toc-sticky {
+    position: sticky;
+    top: 6rem;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .toc-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-200);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .toc-list a {
+    color: var(--gray-400);
+    text-decoration: none;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    transition: all 0.2s ease;
+    display: block;
+    padding: 0.25rem 0.4rem;
+    border-radius: 0.35rem;
+  }
+
+  .toc-list a:hover {
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.1);
+    transform: translateX(3px);
+  }
+
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .legal-section {
+    scroll-margin-top: 6rem;
+  }
+
+  .legal-section h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .legal-section p {
+    color: var(--gray-300);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .types-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+  }
+
+  .type-box {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .type-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    align-self: flex-start;
+  }
+
+  .type-tag.essential {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+  }
+
+  .type-tag.pref {
+    background: rgba(124, 58, 237, 0.15);
+    color: #c4b5fd;
+  }
+
+  .type-tag.analytics {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+  }
+
+  .type-box h4 {
+    font-size: 0.95rem;
+    color: #fff;
+    margin: 0;
+  }
+
+  .type-box p {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* Cookies Table */
+  .table-responsive {
+    overflow-x: auto;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    margin: 1.5rem 0;
+    background: rgba(15, 23, 42, 0.6);
+  }
+
+  .cookies-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    min-width: 650px;
+  }
+
+  .cookies-table th,
+  .cookies-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.9rem;
+  }
+
+  .cookies-table th {
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--gray-200);
+    font-weight: 700;
+  }
+
+  .cookies-table td {
+    color: var(--gray-300);
+  }
+
+  .cookies-table code {
+    background: rgba(124, 58, 237, 0.2);
+    color: #c4b5fd;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.85rem;
+  }
+
+  .styled-list {
+    margin: 1rem 0 1.5rem 1.5rem;
+    color: var(--gray-300);
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .styled-list li strong {
+    color: #fff;
+  }
+
+  .footnote {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    font-style: italic;
+  }
+
+  .cta-cookie-box {
+    margin-top: 1.5rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(124, 58, 237, 0.15));
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 1.25rem;
+    text-align: center;
+  }
+
+  .cta-cookie-box h3 {
+    font-size: 1.35rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-cookie-box p {
+    font-size: 0.95rem;
+    color: var(--gray-300);
+    margin: 0 auto 1.5rem;
+  }
+
+  .btn-cookie-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.75rem;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+  }
+
+  .btn-cookie-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+  }
+
+  @media (max-width: 900px) {
+    .legal-content-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .legal-toc {
+      display: none;
+    }
+    .types-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

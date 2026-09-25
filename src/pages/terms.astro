@@ -1,0 +1,520 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+
+const lastUpdated = "25 de Septiembre de 2026";
+---
+
+<BaseLayout
+  title="Términos y Condiciones | Mateo Ferrer"
+  description="Términos y condiciones de uso del sitio web y contratación de servicios de ingeniería de software y desarrollo web con Mateo Ferrer."
+>
+  <div class="legal-page-container">
+    <!-- Header Banner -->
+    <header class="legal-header">
+      <div class="legal-badge">
+        <Icon icon="terminal-window" size="1.2em" />
+        <span>MARCO LEGAL Y CONTRACTUAL</span>
+      </div>
+      <h1 class="legal-title">Términos y Condiciones de Uso y Contratación</h1>
+      <p class="legal-subtitle">
+        Por favor lee cuidadosamente estos términos antes de utilizar este sitio web o contratar cualquiera de mis servicios de ingeniería de software y desarrollo digital.
+      </p>
+      <div class="legal-meta">
+        <span class="meta-item">📅 Última actualización: <strong>{lastUpdated}</strong></span>
+        <span class="meta-item">⚖️ Jurisdicción: <strong>Colombia & Internacional</strong></span>
+        <span class="meta-item">🛡️ Estado: <strong>Vigente y Vinculante</strong></span>
+      </div>
+    </header>
+
+    <!-- Content Layout -->
+    <div class="legal-content-grid">
+      <!-- Quick Navigation -->
+      <aside class="legal-toc">
+        <div class="toc-sticky">
+          <h3 class="toc-title">Índice del Documento</h3>
+          <nav>
+            <ul class="toc-list">
+              <li><a href="#identificacion">1. Identificación del Titular</a></li>
+              <li><a href="#aceptacion">2. Aceptación y Objeto</a></li>
+              <li><a href="#propiedad">3. Propiedad Intelectual del Sitio</a></li>
+              <li><a href="#servicios">4. Contratación de Servicios</a></li>
+              <li><a href="#pagos">5. Hitos y Condiciones de Pago</a></li>
+              <li><a href="#derechos-cliente">6. Propiedad del Software Entregado</a></li>
+              <li><a href="#garantia">7. Garantía y Nivel de Servicio (SLA)</a></li>
+              <li><a href="#responsabilidad">8. Limitación de Responsabilidad</a></li>
+              <li><a href="#uso-aceptable">9. Política de Uso Aceptable y Anti-Abuso</a></li>
+              <li><a href="#jurisdiccion">10. Legislación y Contacto Legal</a></li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Main Body -->
+      <main class="legal-body">
+        <section id="identificacion" class="legal-section">
+          <h2>1. Identificación del Titular</h2>
+          <p>
+            En cumplimiento del deber de información y transparencia mercantil, se informa que el presente sitio web 
+            <strong>mateo-ferrer.pages.dev</strong> (y dominios asociados oficiales) es de titularidad y gestión exclusiva de:
+          </p>
+          <div class="info-card">
+            <ul>
+              <li><strong>Titular:</strong> Mateo Ferrer</li>
+              <li><strong>Profesión:</strong> Ingeniero de Software, Consultor Digital y Full-Stack Specialist</li>
+              <li><strong>Actividad:</strong> Desarrollo de software a la medida, aplicaciones web de alto rendimiento, e-commerce, consultoría cloud y automatización</li>
+              <li><strong>Canal Oficial de Contacto:</strong> <a href="mailto:mateo.ferrer@example.com" class="link-glow">mateo.ferrer.dev@gmail.com</a></li>
+              <li><strong>WhatsApp de Verificación:</strong> <a href="https://wa.me/573005059987" target="_blank" rel="noopener noreferrer" class="link-glow">+57 300 505 9987</a></li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="aceptacion" class="legal-section">
+          <h2>2. Aceptación y Objeto</h2>
+          <p>
+            El acceso, navegación y utilización de este sitio web atribuye la condición de <strong>Usuario</strong>, lo cual implica la adhesión plena, expresa y sin reservas a todas las cláusulas contenidas en este documento desde el momento exacto en que se ingresa a la plataforma.
+          </p>
+          <p>
+            Si el Usuario no estuviera de acuerdo con alguna de las estipulaciones aquí descritas, deberá abstenerse inmediatamente de navegar por este sitio o de utilizar los formularios de cotización, simuladores y canales de contratación.
+          </p>
+        </section>
+
+        <section id="propiedad" class="legal-section">
+          <h2>3. Propiedad Intelectual del Portafolio y del Código Fuente</h2>
+          <p>
+            Todos los elementos constitutivos de este sitio web, incluyendo sin limitación su código fuente (Astro, TypeScript, React, Three.js, CSS), arquitectura de componentes, algoritmos de estimación, diseños UI/UX, animaciones tridimensionales, logotipos, textos, material audiovisual, demostraciones y selección de materiales, son de la <strong>exclusiva propiedad de Mateo Ferrer</strong> o cuentan con la correspondiente licencia o autorización de terceros para su integración.
+          </p>
+          <div class="alert-box warning">
+            <strong>⚠️ Prohibición Expresa de Clonación y Scraping:</strong>
+            Queda estrictamente prohibida la copia, clonación de repositorios, descompilación, ingeniería inversa, scraping masivo automatizado, republicación con fines comerciales o suplantación de identidad de cualquier recurso o componente exhibido en este portal sin consentimiento formal por escrito.
+          </div>
+        </section>
+
+        <section id="servicios" class="legal-section">
+          <h2>4. Contratación de Servicios de Ingeniería de Software</h2>
+          <p>
+            Las descripciones de servicios, planes, estimadores de presupuesto y tiempos publicados en este portal tienen un carácter informativo y de orientación comercial preliminar. Toda contratación formal se rige bajo los siguientes principios:
+          </p>
+          <ol class="styled-list">
+            <li><strong>Propuesta Técnico-Comercial:</strong> Tras el análisis inicial de requerimientos (briefing), se emitirá una propuesta formal con alcance definido, cronograma de entregables y costo total.</li>
+            <li><strong>Validez de Cotizaciones:</strong> Las cotizaciones individuales generadas vía cotizador inteligente o reunión tienen una vigencia de quince (15) días calendario a partir de su emisión.</li>
+            <li><strong>Contrato Formal de Prestación de Servicios:</strong> Para proyectos a la medida se suscribirá un contrato privado de desarrollo que definirá con exactitud los hitos, plazos, SLA y especificaciones técnicas.</li>
+          </ol>
+        </section>
+
+        <section id="pagos" class="legal-section">
+          <h2>5. Hitos y Condiciones de Pago</h2>
+          <p>
+            Salvo estipulación expresa en contrario dentro del contrato particular, la metodología estándar de pagos es:
+          </p>
+          <div class="payment-grid">
+            <div class="payment-card">
+              <span class="payment-step">Paso 1</span>
+              <h4>Anticipo Inicial (50%)</h4>
+              <p>Requisito indispensable para bloquear fecha en el cronograma, levantar arquitectura e iniciar la fase de diseño y desarrollo activo.</p>
+            </div>
+            <div class="payment-card">
+              <span class="payment-step">Paso 2</span>
+              <h4>Hitos Intermedios (Si aplica)</h4>
+              <p>Para proyectos de gran envergadura (SaaS, plataformas complejas), se podrán establecer hitos intermedios verificables en staging.</p>
+            </div>
+            <div class="payment-card">
+              <span class="payment-step">Paso 3</span>
+              <h4>Liquidación Final (50%)</h4>
+              <p>Contra entrega del producto final probado, aprobación del cliente en ambiente de pruebas y previo al despliegue o entrega de credenciales en producción.</p>
+            </div>
+          </div>
+          <p class="footnote">
+            * Se aceptan transferencias bancarias directas, pasarelas seguras (Stripe, PSE, Wompi) o transferencias internacionales vía Wise / Swift. Todos los gastos bancarios o de conversión de divisas internacionales corren por cuenta del ordenante.
+          </p>
+        </section>
+
+        <section id="derechos-cliente" class="legal-section">
+          <h2>6. Propiedad Intelectual del Software Entregado al Cliente</h2>
+          <p>
+            La transferencia de derechos sobre el software desarrollado se rige con la máxima claridad y seguridad jurídica para ambas partes:
+          </p>
+          <ul class="styled-list">
+            <li><strong>Transferencia al 100% de Pago:</strong> Una vez cancelada la totalidad de los honorarios pactados en el contrato, el cliente adquiere la titularidad plena y el derecho de explotación comercial del software desarrollado exclusivamente a su medida (código fuente personalizado, diseño de interfaces y bases de datos).</li>
+            <li><strong>Librerías Abiertas y Frameworks:</strong> Las herramientas de código abierto empleadas (React, Astro, Three.js, Node.js, etc.) mantienen sus respectivas licencias públicas (MIT, Apache 2.0, BSD).</li>
+            <li><strong>Derecho de Exhibición en Portafolio:</strong> Mateo Ferrer conserva el derecho moral y la facultad de exhibir capturas, enlaces y métricas públicas de éxito del proyecto en su portafolio profesional y redes, salvaguardando en todo momento información confidencial o secretos industriales del cliente.</li>
+          </ul>
+        </section>
+
+        <section id="garantia" class="legal-section">
+          <h2>7. Garantía de Calidad y Nivel de Servicio (SLA)</h2>
+          <p>
+            Cada solución entregada por Mateo Ferrer está respaldada por una estricta garantía de estabilidad:
+          </p>
+          <div class="info-card">
+            <h4>Garantía de 30 a 60 Días Post-Lanzamiento</h4>
+            <p>
+              Incluye la corrección gratuita e inmediata de cualquier error de programación, inconsistencia en el diseño o fallo técnico atribuible al desarrollo original, según el alcance pactado en el contrato.
+            </p>
+            <p>
+              <strong>Exclusiones de la Garantía:</strong> Fallas derivadas de manipulaciones de terceros no autorizados en el código, alteraciones en servidores no gestionados, cambios unilaterales en APIs de terceros (ej. cambios no retrocompatibles de Facebook Graph API, WhatsApp Cloud API o Google Maps) o ataques deliberados contra credenciales compartidas por el cliente.
+            </p>
+          </div>
+        </section>
+
+        <section id="responsabilidad" class="legal-section">
+          <h2>8. Limitación de Responsabilidad</h2>
+          <p>
+            Mateo Ferrer implementa las mejores prácticas de la industria en seguridad, arquitectura y rendimiento. Sin embargo, en ningún caso será responsable por:
+          </p>
+          <ul class="styled-list">
+            <li>Interrupciones de servicio o caídas causadas por proveedores globales de nube (Cloudflare, Vercel, AWS, Google Cloud).</li>
+            <li>Pérdidas de beneficios, lucro cesante o pérdidas indirectas que resulten del uso incorrecto o indisponibilidad temporal del sitio.</li>
+            <li>Contenidos, textos o imágenes suministrados por el cliente que infrinjan derechos de autor de terceros; la responsabilidad civil y penal de dichos contenidos recae enteramente en el cliente emisor.</li>
+          </ul>
+        </section>
+
+        <section id="uso-aceptable" class="legal-section">
+          <h2>9. Política de Uso Aceptable y Anti-Abuso</h2>
+          <p>
+            El usuario se compromete a hacer un uso lícito, diligente y de buena fe de este sitio web. Queda terminantemente prohibido:
+          </p>
+          <ul class="styled-list">
+            <li>Introducir intencionalmente virus, troyanos, gusanos, bombas lógicas o cualquier programa o material tecnológicamente perjudicial.</li>
+            <li>Intentar accesos no autorizados al servidor, bases de datos o código backend del sitio web.</li>
+            <li>Llevar a cabo ataques de denegación de servicio (DoS o DDoS).</li>
+            <li>Utilizar bots, scripts de recolección de correos o enviar spam a través de los formularios de contacto.</li>
+          </ul>
+          <p>
+            Cualquier infracción será debidamente reportada ante las autoridades judiciales y de delitos cibernéticos correspondientes, activando los protocolos de rastreo de dirección IP y registros de servidor.
+          </p>
+        </section>
+
+        <section id="jurisdiccion" class="legal-section">
+          <h2>10. Legislación Aplicable y Resolución de Conflictos</h2>
+          <p>
+            Estos términos se rigen e interpretan de conformidad con las leyes de la <strong>República de Colombia</strong> y los tratados internacionales de comercio electrónico y propiedad intelectual aplicables.
+          </p>
+          <p>
+            Para cualquier discrepancia o controversia que pudiera surgir en relación con el acceso o uso de este sitio web o la interpretación de estos términos, las partes intentarán resolverla primeramente de mutuo acuerdo y buena fe. En caso de no alcanzarse acuerdo, se someterá a los juzgados y tribunales competentes de Colombia.
+          </p>
+          <div class="cta-legal-box">
+            <h3>¿Tienes dudas sobre los términos o deseas una propuesta formal?</h3>
+            <p>Escríbeme directamente para revisar tu requerimiento con total transparencia y respaldo contractual.</p>
+            <a href="https://wa.me/573005059987?text=Hola%20Mateo,%20leí%20los%20Términos%20y%20Condiciones%20en%20tu%20web%20y%20deseo%20hacerte%20una%20consulta" target="_blank" rel="noopener noreferrer" class="btn-legal-contact">
+              Contactar por WhatsApp Oficial 💬
+            </a>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .legal-page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+  }
+
+  .legal-header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .legal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(124, 58, 237, 0.15);
+    border: 1px solid rgba(124, 58, 237, 0.35);
+    color: #a78bfa;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-title {
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    color: var(--gray-0);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .legal-subtitle {
+    font-size: 1.15rem;
+    color: var(--gray-300);
+    max-width: 780px;
+    margin: 0 auto 1.75rem;
+    line-height: 1.6;
+  }
+
+  .legal-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    color: var(--gray-400);
+  }
+
+  .meta-item strong {
+    color: #38bdf8;
+  }
+
+  /* Grid Layout */
+  .legal-content-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+
+  /* Table of Contents */
+  .legal-toc {
+    display: block;
+  }
+
+  .toc-sticky {
+    position: sticky;
+    top: 6rem;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .toc-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--gray-200);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .toc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .toc-list a {
+    color: var(--gray-400);
+    text-decoration: none;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    transition: all 0.2s ease;
+    display: block;
+    padding: 0.25rem 0.4rem;
+    border-radius: 0.35rem;
+  }
+
+  .toc-list a:hover {
+    color: #a78bfa;
+    background: rgba(124, 58, 237, 0.1);
+    transform: translateX(3px);
+  }
+
+  /* Main Body */
+  .legal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .legal-section {
+    scroll-margin-top: 6rem;
+  }
+
+  .legal-section h2 {
+    font-size: 1.65rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(124, 58, 237, 0.3);
+  }
+
+  .legal-section p {
+    color: var(--gray-300);
+    font-size: 1rem;
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+
+  .info-card {
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin: 1.25rem 0;
+  }
+
+  .info-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+    color: var(--gray-300);
+  }
+
+  .info-card li strong {
+    color: var(--gray-100);
+    margin-right: 0.4rem;
+  }
+
+  .styled-list {
+    margin: 1rem 0 1.5rem 1.5rem;
+    color: var(--gray-300);
+    line-height: 1.7;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .styled-list li strong {
+    color: #fff;
+  }
+
+  .alert-box {
+    padding: 1.25rem 1.5rem;
+    border-radius: 0.85rem;
+    margin: 1.25rem 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .alert-box.warning {
+    background: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: #fde68a;
+  }
+
+  .alert-box strong {
+    display: block;
+    color: #fbbf24;
+    margin-bottom: 0.35rem;
+  }
+
+  .payment-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+  }
+
+  .payment-card {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(124, 58, 237, 0.25);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .payment-step {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.1);
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    align-self: flex-start;
+  }
+
+  .payment-card h4 {
+    font-size: 1rem;
+    color: #fff;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  .payment-card p {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  .footnote {
+    font-size: 0.85rem;
+    color: var(--gray-400);
+    font-style: italic;
+  }
+
+  .link-glow {
+    color: #38bdf8;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .cta-legal-box {
+    margin-top: 2.5rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.15));
+    border: 1px solid rgba(124, 58, 237, 0.4);
+    border-radius: 1.25rem;
+    text-align: center;
+  }
+
+  .cta-legal-box h3 {
+    font-size: 1.35rem;
+    color: #fff;
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-legal-box p {
+    font-size: 0.95rem;
+    color: var(--gray-300);
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .btn-legal-contact {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.75rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+    font-weight: 700;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  }
+
+  .btn-legal-contact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+    color: #fff;
+  }
+
+  @media (max-width: 900px) {
+    .legal-content-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .legal-toc {
+      display: none;
+    }
+    .payment-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

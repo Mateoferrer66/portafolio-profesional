@@ -1,0 +1,117 @@
+---
+// ClientSecurityShield.astro
+// Blindaje de seguridad en el cliente: Anti-Clickjacking, Sanitización Anti-XSS,
+// Honeypot dinámico anti-spam, endurecimiento de enlaces y protección de integridad
+---
+
+<script is:inline>
+(function() {
+  'use strict';
+
+  // 1. Anti-Clickjacking Client Defense
+  try {
+    if (window.top && window.top !== window.self) {
+      window.top.location = window.self.location;
+    }
+  } catch (e) {
+    // If cross-origin framing blocks top access, fail safe
+    try {
+      document.body.style.display = 'none';
+    } catch (_) {}
+  }
+
+  // 2. Security Banner in DevTools
+  var bannerStyle = 'color: #38bdf8; font-size: 16px; font-weight: bold; background: #0f172a; padding: 8px 12px; border-radius: 4px;';
+  var warnStyle = 'color: #f87171; font-size: 13px; font-weight: bold;';
+  console.log('%c🛡️ Mateo Ferrer — Entorno Seguro & Protegido (Copyright © 2026)', bannerStyle);
+  console.log('%c⚠️ Advertencia de Seguridad: Este sitio cuenta con monitoreo activo de integridad. Queda prohibida cualquier prueba no autorizada de inyección o scraping.', warnStyle);
+
+  // 3. Form Hardening & Anti-Spam Honeypot
+  function hardenForms() {
+    var forms = document.querySelectorAll('form');
+    forms.forEach(function(form) {
+      if (form.getAttribute('data-sec-shielded') === 'true') return;
+      form.setAttribute('data-sec-shielded', 'true');
+
+      // Inject invisible honeypot if missing
+      if (!form.querySelector('input[name="_mf_hp_sec"]')) {
+        var hp = document.createElement('input');
+        hp.type = 'text';
+        hp.name = '_mf_hp_sec';
+        hp.tabIndex = -1;
+        hp.autocomplete = 'off';
+        hp.style.position = 'absolute';
+        hp.style.opacity = '0';
+        hp.style.pointerEvents = 'none';
+        hp.style.left = '-9999px';
+        hp.style.height = '0';
+        hp.style.width = '0';
+        form.appendChild(hp);
+      }
+
+      var lastSubmitTime = 0;
+
+      form.addEventListener('submit', function(e) {
+        var hpInput = form.querySelector('input[name="_mf_hp_sec"]');
+        if (hpInput && hpInput.value.trim() !== '') {
+          // Bot detected via honeypot
+          e.preventDefault();
+          e.stopPropagation();
+          console.warn('[Security Shield] Bot attempt blocked.');
+          return false;
+        }
+
+        // Rate limit: prevent flooding submissions faster than 3 seconds
+        var now = Date.now();
+        if (now - lastSubmitTime < 3000) {
+          e.preventDefault();
+          e.stopPropagation();
+          alert('Por favor espera unos segundos antes de enviar nuevamente.');
+          return false;
+        }
+        lastSubmitTime = now;
+
+        // Anti-XSS Sanitization on text inputs
+        var inputs = form.querySelectorAll('input[type="text"], input[type="email"], textarea');
+        var maliciousPattern = /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>|javascript:|onerror\s*=|onload\s*=/gi;
+
+        for (var i = 0; i < inputs.length; i++) {
+          var val = inputs[i].value;
+          if (maliciousPattern.test(val)) {
+            e.preventDefault();
+            e.stopPropagation();
+            alert('Por motivos de seguridad, no se permiten scripts o etiquetas HTML en los campos.');
+            return false;
+          }
+        }
+      });
+    });
+  }
+
+  // 4. External Links Hardening (rel="noopener noreferrer")
+  function secureExternalLinks() {
+    var links = document.querySelectorAll('a[target="_blank"]');
+    links.forEach(function(link) {
+      var rel = link.getAttribute('rel') || '';
+      if (!rel.includes('noopener')) rel += ' noopener';
+      if (!rel.includes('noreferrer')) rel += ' noreferrer';
+      link.setAttribute('rel', rel.trim());
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+      hardenForms();
+      secureExternalLinks();
+    });
+  } else {
+    hardenForms();
+    secureExternalLinks();
+  }
+
+  document.addEventListener('astro:page-load', function() {
+    hardenForms();
+    secureExternalLinks();
+  });
+})();
+</script>

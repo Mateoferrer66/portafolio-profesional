@@ -27,6 +27,8 @@ import AnalyticsTracker from "../components/AnalyticsTracker.astro";
 import SocialProofBanner from "../components/SocialProofBanner.astro";
 import SoundEffects from "../components/SoundEffects.astro";
 import ExitIntentPopup from "../components/ExitIntentPopup.astro";
+import CookieConsent from "../components/CookieConsent.astro";
+import ClientSecurityShield from "../components/ClientSecurityShield.astro";
 
 interface Props {
 	title?: string | undefined;
@@ -107,6 +109,10 @@ const chatWidgetClass = shouldStack
 		<AnalyticsTracker />
 		<!-- Exit-Intent Lead Capture Popup -->
 		<ExitIntentPopup />
+		<!-- Cookie Consent & Preferences Management -->
+		<CookieConsent />
+		<!-- Client-Side Security & Integrity Shield -->
+		<ClientSecurityShield />
 		
 		<!-- Gesture Control Bridge: listens for postMessage commands from the gesture controller -->
 		<Fragment set:html={`<script src="/gesture-bridge.js"></script>`} />

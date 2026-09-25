@@ -737,7 +737,7 @@
     S.isListening = false;
   }
 
-  function processVoiceCommand(text, isFinal) {
+  function processVoiceCommand(text, _isFinal) {
     var now = Date.now();
     if (now - S.lastVoiceActionTime < 1300) return;
 
@@ -1142,7 +1142,7 @@
 
   function detectRawGesture(lm) {
     var wrist = lm[0];
-    var thumbTip = lm[4], thumbIp = lm[3], thumbMcp = lm[2];
+    var thumbTip = lm[4], thumbIp = lm[3];
     var indexTip = lm[8], indexPip = lm[6], indexMcp = lm[5];
     var middleTip = lm[12], middlePip = lm[10], middleMcp = lm[9];
     var ringTip = lm[16], ringPip = lm[14], ringMcp = lm[13];

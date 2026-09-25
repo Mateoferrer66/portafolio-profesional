@@ -1,4 +1,44 @@
+# ==============================================================================
+# Robots.txt - Mateo Ferrer (Copyright © 2026)
+# ==============================================================================
+
 User-agent: *
 Allow: /
+Disallow: /dist/
+Disallow: /api/
+Disallow: /.well-known/
 
-Sitemap: https://portafolio-profesional.pages.dev/sitemap-index.xml
+# Block Aggressive Scrapers & Malicious Bots
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: PetalBot
+Disallow: /
+
+User-agent: BLEXBot
+Disallow: /
+
+User-agent: DataForSeoBot
+Disallow: /
+
+# Prevent Unauthorized AI Mass Content Scraping of Code & Intellectual Property
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Diffbot
+Disallow: /
+
+# Sitemaps
+Sitemap: https://mateo-ferrer.pages.dev/sitemap-index.xml

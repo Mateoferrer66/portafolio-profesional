@@ -136,8 +136,55 @@ const currentYear = new Date().getFullYear();
 				</a>
 			</div>
 		</div>
+
+		<!-- Legal Navigation & Trust Security Bar -->
+		<div class="footer-legal-container">
+			<div class="legal-links-wrap">
+				<a href="/terms" class="legal-nav-link">Términos y Condiciones</a>
+				<span class="legal-sep">•</span>
+				<a href="/privacy" class="legal-nav-link">Política de Privacidad</a>
+				<span class="legal-sep">•</span>
+				<a href="/cookies" class="legal-nav-link">Política de Cookies</a>
+				<span class="legal-sep">•</span>
+				<a href="/legal" class="legal-nav-link">Aviso Legal & Copyright</a>
+				<span class="legal-sep">•</span>
+				<a href="/mentions" class="legal-nav-link">Credenciales & Certificaciones</a>
+				<span class="legal-sep">•</span>
+				<button type="button" id="footer-cookie-pref-btn" class="legal-nav-btn">
+					Preferencias de Cookies 🍪
+				</button>
+			</div>
+
+			<div class="footer-security-trust">
+				<div class="security-pill">
+					<span class="sec-icon">🔒</span>
+					<span>Cifrado SSL 256-bit Activo</span>
+				</div>
+				<div class="security-pill">
+					<span class="sec-icon">🛡️</span>
+					<span>Canal Oficial & Auténtico Verificado</span>
+				</div>
+				<div class="security-pill">
+					<span class="sec-icon">⚖️</span>
+					<span>Copyright © {currentYear} Mateo Ferrer. Todos los derechos reservados.</span>
+				</div>
+			</div>
+		</div>
 	</div>
 </footer>
+
+<script>
+	function setupFooterCookieTrigger() {
+		const btn = document.getElementById('footer-cookie-pref-btn');
+		if (btn) {
+			btn.addEventListener('click', () => {
+				window.dispatchEvent(new CustomEvent('mf-open-cookie-banner'));
+			});
+		}
+	}
+	document.addEventListener('DOMContentLoaded', setupFooterCookieTrigger);
+	document.addEventListener('astro:page-load', setupFooterCookieTrigger);
+</script>
 
 <style>
 	footer {
@@ -327,6 +374,90 @@ const currentYear = new Date().getFullYear();
 		color: white;
 		transform: translateY(-3px);
 		box-shadow: 0 8px 20px rgba(118, 17, 166, 0.4);
+	}
+
+	/* Footer Legal & Security Bar */
+	.footer-legal-container {
+		margin-top: 2.5rem;
+		padding-top: 2rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		align-items: center;
+		text-align: center;
+	}
+
+	.legal-links-wrap {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.75rem;
+		flex-wrap: wrap;
+		font-size: 0.85rem;
+	}
+
+	.legal-nav-link {
+		color: var(--gray-400);
+		text-decoration: none;
+		transition: all 0.2s ease;
+	}
+
+	.legal-nav-link:hover {
+		color: #38bdf8;
+		text-decoration: underline;
+		text-underline-offset: 2px;
+	}
+
+	.legal-sep {
+		color: var(--gray-600);
+		font-size: 0.75rem;
+	}
+
+	.legal-nav-btn {
+		background: none;
+		border: 1px solid rgba(245, 158, 11, 0.3);
+		color: #fbbf24;
+		font-size: 0.8rem;
+		padding: 0.2rem 0.6rem;
+		border-radius: 999px;
+		cursor: pointer;
+		transition: all 0.2s ease;
+	}
+
+	.legal-nav-btn:hover {
+		background: rgba(245, 158, 11, 0.15);
+		color: #fde68a;
+		transform: translateY(-1px);
+	}
+
+	.footer-security-trust {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.security-pill {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.3rem 0.75rem;
+		background: rgba(255, 255, 255, 0.03);
+		border: 1px solid rgba(255, 255, 255, 0.08);
+		border-radius: 999px;
+		font-size: 0.75rem;
+		color: var(--gray-400);
+	}
+
+	.security-pill:hover {
+		border-color: rgba(56, 189, 248, 0.3);
+		color: var(--gray-300);
+	}
+
+	.sec-icon {
+		font-size: 0.85rem;
 	}
 
 	/* Responsive */

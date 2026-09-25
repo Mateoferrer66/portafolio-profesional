@@ -1,6 +1,5 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { Image } from "astro:assets";
 
 // Combined product data for easier filtering
 import { products } from "../data/products";
@@ -39,6 +38,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
     <!-- SEO Schema: Store -->
     <script
+        is:inline
         type="application/ld+json"
         set:html={JSON.stringify({
             "@context": "https://schema.org",
@@ -54,6 +54,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
     <!-- SEO Schema: BreadcrumbList -->
     <script
+        is:inline
         type="application/ld+json"
         set:html={JSON.stringify({
             "@context": "https://schema.org",
@@ -77,6 +78,7 @@ const star = `M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9
 
     <!-- SEO Schema: Product List -->
     <script
+        is:inline
         type="application/ld+json"
         set:html={JSON.stringify({
             "@context": "https://schema.org",

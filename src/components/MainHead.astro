@@ -27,6 +27,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <meta name="description" content={description} />
 <meta name="keywords" content={keywords} />
 <meta name="author" content="Mateo Ferrer" />
+<meta name="copyright" content="Mateo Ferrer" />
+<meta name="rights" content="Todos los derechos reservados © 2026 Mateo Ferrer" />
+<link rel="license" href="/legal" />
 <meta name="robots" content={robots} />
 <meta name="language" content="Spanish" />
 <meta name="revisit-after" content="7 days" />
@@ -115,8 +118,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 <link
 	href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,700;1,400&family=Rubik:wght@500;600&display=swap"
 	rel="stylesheet"
-	media="print"
-	onload="this.media='all'"
 />
 <script is:inline>
 	// This code is inlined in the head to make dark mode instant & blocking.

@@ -1,11 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
-import Icon from "../components/Icon.astro";
 import { getCollection } from "astro:content";
 
 const projects = await getCollection("work");
-const allTechs = [...new Set(projects.flatMap(p => p.data.tags || []))].sort();
 
 const liveWebsites = [
   { name: "Coffee Lemon", url: "https://coffee-lemon-seven.vercel.app/", image: "/assets/live/coffee-lemon.jpg", tech: "React" },
