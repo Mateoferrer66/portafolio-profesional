@@ -94,6 +94,8 @@ const ChatWidget = ({ className }: ChatWidgetProps) => {
                 "E-commerce 🏦",
                 "Otro"
             ]);
+        } else if (lowerText.includes("contactar soporte")) {
+            window.open('https://wa.me/573005059987?text=' + encodeURIComponent('Hola Mateo, necesito soporte sobre un servicio o compra en tu plataforma.'), '_blank');
         } else if (lowerText.includes("tienda") || lowerText.includes("soporte")) {
             addBotMessage("Para temas de la tienda, revisa la sección 'Shop' o escríbeme directamente si tuviste un problema con una compra.", ["Ir a la Tienda", "Contactar Soporte"]);
         } else if (lowerText.includes("hablemos") || lowerText.includes("contactar")) {
@@ -105,7 +107,7 @@ const ChatWidget = ({ className }: ChatWidgetProps) => {
         } else if (lowerText.includes("ir a la tienda")) {
             window.location.href = '/shop/';
         } else if (lowerText.includes("abrir whatsapp")) {
-            window.open('https://wa.me/573005059987', '_blank');
+            window.open('https://wa.me/573005059987?text=' + encodeURIComponent('Hola Mateo, vi tu portafolio y me gustaría consultar sobre un proyecto o servicio.'), '_blank');
         } else {
             // Fallback
             addBotMessage("Entendido. ¿Deseas saber algo más?", [

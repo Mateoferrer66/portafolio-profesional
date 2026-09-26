@@ -45,7 +45,10 @@
       <div class="newsletter-success" id="newsletter-success" style="display: none;">
         <div class="success-icon">🎉</div>
         <h3>¡Gracias por suscribirte!</h3>
-        <p>Revisa tu email para recibir tu guía gratuita.</p>
+        <p>Tu correo ha sido registrado. Para recibir tu guía y recursos gratuitos de inmediato por WhatsApp con Mateo Ferrer, haz clic abajo:</p>
+        <a id="newsletter-wa-btn" href="https://wa.me/573005059987" target="_blank" rel="noopener noreferrer" class="newsletter-wa-btn">
+          💬 Recibir Guía por WhatsApp (+57 300 505 9987)
+        </a>
       </div>
 
       <div class="newsletter-stats">
@@ -85,6 +88,14 @@
       const subscribers = JSON.parse(localStorage.getItem('mf-newsletter') || '[]');
       subscribers.push({ email, date: new Date().toISOString() });
       localStorage.setItem('mf-newsletter', JSON.stringify(subscribers));
+
+      const waMsg = `¡Hola Mateo! Acabo de suscribirme a tus recursos desde tu web con el correo: ${email}.\n\nMe gustaría recibir la guía gratuita y recursos de desarrollo web.`;
+      const waUrl = `https://wa.me/573005059987?text=${encodeURIComponent(waMsg)}`;
+      const waBtn = document.getElementById('newsletter-wa-btn') as HTMLAnchorElement;
+      if (waBtn) waBtn.href = waUrl;
+
+      // Open WhatsApp automatically
+      window.open(waUrl, '_blank');
 
       // Track event
       const win = window as any;
@@ -264,6 +275,28 @@
   .newsletter-success p {
     color: #94a3b8;
     font-size: 0.9rem;
+  }
+
+  .newsletter-wa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #25d366;
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.35);
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 10px;
+  }
+
+  .newsletter-wa-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 22px rgba(37, 211, 102, 0.5);
+    color: white;
   }
 
   /* Stats */

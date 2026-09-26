@@ -1,46 +1,89 @@
 ---
 // SocialProofBanner.astro
-// Animated notification popup showing recent "purchases/contacts" 
-// Creates urgency and trust through social proof technique
+// Notificaciones verificadas de casos de éxito reales, garantías y atención directa por WhatsApp (+57 300 505 9987)
 ---
 
-<div id="social-proof-popup" class="social-proof-popup" role="alert" aria-live="polite">
-  <div class="sp-avatar" id="sp-avatar">🔥</div>
-  <div class="sp-content">
-    <p class="sp-text" id="sp-text"></p>
-    <p class="sp-time" id="sp-time"></p>
-  </div>
-  <button class="sp-close" id="sp-close" aria-label="Cerrar notificación">×</button>
+<div id="social-proof-popup" class="social-proof-popup" role="status" aria-live="polite">
+  <a id="sp-link" href="https://wa.me/573005059987" target="_blank" rel="noopener noreferrer" class="sp-clickable" title="Consultar por WhatsApp">
+    <div class="sp-avatar" id="sp-avatar">⭐</div>
+    <div class="sp-content">
+      <div class="sp-header-row">
+        <span class="sp-badge" id="sp-badge">Caso Real Verificado</span>
+        <span class="sp-verified-badge" title="Información 100% verídica">✓ Real</span>
+      </div>
+      <p class="sp-text" id="sp-text"></p>
+      <p class="sp-footer" id="sp-footer">
+        <span class="sp-pulse-dot"></span>
+        <span id="sp-footer-text">Consultar por WhatsApp (+57 300 505 9987)</span>
+      </p>
+    </div>
+  </a>
+  <button class="sp-close" id="sp-close" aria-label="Cerrar notificación" type="button">×</button>
 </div>
 
 <script is:inline>
 (function() {
-  const notifications = [
-    { name: "Alejandro", city: "Medellín", action: "renovó el e-commerce de Coffee Lemon (+150% ventas)", icon: "☕" },
-    { name: "Carlos", city: "Bogotá", action: "contrató el desarrollo web con entrega garantizada", icon: "💻" },
-    { name: "Daniel", city: "Medellín", action: "activó el catálogo digital para Radical Customs", icon: "🚗" },
-    { name: "María", city: "Cali", action: "agendó una asesoría técnica gratuita de 20 min", icon: "📅" },
-    { name: "Camilo", city: "Barranquilla", action: "posicionó la web de PC Master en el Top 3 de Google", icon: "📈" },
-    { name: "Santiago", city: "Cartagena", action: "solicitó cotización para software a la medida", icon: "⚡" },
-    { name: "Valentina", city: "Pereira", action: "contrató una tienda online con pasarela de pago", icon: "🛒" },
-    { name: "Andrés", city: "Bucaramanga", action: "ganó $150.000 COP en el programa de referidos", icon: "🎁" },
+  const verifiedHighlights = [
+    {
+      badge: "Caso de Éxito Verificado",
+      text: "Coffee Lemon: E-commerce renovado con arquitectura rápida y +150% en ventas.",
+      icon: "☕",
+      waText: "Hola Mateo, vi el caso de éxito real de Coffee Lemon y me interesa una solución similar para mi negocio."
+    },
+    {
+      badge: "Garantía de Calidad",
+      text: "Entregas con código limpio, arquitectura moderna, certificado SSL y soporte.",
+      icon: "🛡️",
+      waText: "Hola Mateo, me interesa conocer tus garantías de desarrollo y cotizar un proyecto web."
+    },
+    {
+      badge: "Proyecto en Producción",
+      text: "Radical Customs: Catálogo web interactivo y cotizador para vehículos de alto rendimiento.",
+      icon: "🚗",
+      waText: "Hola Mateo, vi el proyecto de Radical Customs en tu portafolio y quiero un catálogo interactivo."
+    },
+    {
+      badge: "Rendimiento & SEO",
+      text: "Plataformas con carga inferior a 1 segundo y optimización para primeros puestos en Google.",
+      icon: "⚡",
+      waText: "Hola Mateo, quiero optimizar la velocidad y el SEO de mi negocio con tu stack de desarrollo."
+    },
+    {
+      badge: "Atención Inmediata",
+      text: "Canal oficial directo con Mateo Ferrer al WhatsApp +57 300 505 9987.",
+      icon: "💬",
+      waText: "Hola Mateo, te escribo directamente desde tu portafolio para una consulta de desarrollo web."
+    },
+    {
+      badge: "Caso de Éxito SEO",
+      text: "PC Master: Plataforma tecnológica posicionada en el Top 3 de búsquedas de Google.",
+      icon: "📈",
+      waText: "Hola Mateo, vi el caso de PC Master y quiero posicionar mi página web en los primeros lugares de Google."
+    },
+    {
+      badge: "Disponibilidad de Cupos",
+      text: "Agenda abierta para nuevos desarrollos web, tiendas online y software a la medida.",
+      icon: "🚀",
+      waText: "Hola Mateo, quiero consultar disponibilidad y tiempos de entrega para iniciar mi proyecto."
+    }
   ];
 
-  const timeAgo = ["Hace 2 minutos", "Hace 5 minutos", "Hace 12 minutos", "Hace 18 minutos", "Hace 25 minutos", "Hace 1 hora", "Hace 2 horas", "Hace 3 horas"];
-
   const popup = document.getElementById('social-proof-popup');
+  const linkEl = document.getElementById('sp-link');
   const avatarEl = document.getElementById('sp-avatar');
+  const badgeEl = document.getElementById('sp-badge');
   const textEl = document.getElementById('sp-text');
-  const timeEl = document.getElementById('sp-time');
   const closeBtn = document.getElementById('sp-close');
 
-  if (!popup || !textEl || !timeEl || !avatarEl || !closeBtn) return;
+  if (!popup || !linkEl || !avatarEl || !badgeEl || !textEl || !closeBtn) return;
 
   let currentIndex = 0;
   let timeoutId = null;
   let dismissed = false;
 
-  closeBtn.addEventListener('click', () => {
+  closeBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     popup.classList.remove('show');
     dismissed = true;
     if (timeoutId) clearTimeout(timeoutId);
@@ -49,51 +92,50 @@
   function showNotification() {
     if (dismissed) return;
     
-    const notif = notifications[currentIndex % notifications.length];
-    const time = timeAgo[Math.floor(Math.random() * timeAgo.length)];
-
-    avatarEl.textContent = notif.icon;
-    textEl.textContent = `${notif.name} de ${notif.city} ${notif.action}`;
-    timeEl.textContent = time;
+    const item = verifiedHighlights[currentIndex % verifiedHighlights.length];
+    
+    avatarEl.textContent = item.icon;
+    badgeEl.textContent = item.badge;
+    textEl.textContent = item.text;
+    linkEl.href = "https://wa.me/573005059987?text=" + encodeURIComponent(item.waText);
 
     popup.classList.add('show');
     currentIndex++;
 
-    // Hide after 5 seconds
+    // Ocultar a los 6 segundos
     timeoutId = setTimeout(() => {
       popup.classList.remove('show');
-      // Show next notification after 15-30 seconds
-      const delay = 15000 + Math.random() * 15000;
+      // Mostrar la siguiente notificación tras 18 a 28 segundos
+      const delay = 18000 + Math.random() * 10000;
       timeoutId = setTimeout(showNotification, delay);
-    }, 5000);
+    }, 6000);
   }
 
-  // First notification after 8 seconds
-  setTimeout(showNotification, 8000);
+  // Primera notificación a los 7 segundos
+  setTimeout(showNotification, 7000);
 })();
 </script>
 
 <style>
   .social-proof-popup {
     position: fixed;
-    bottom: 100px;
+    bottom: 95px;
     left: 20px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 18px;
-    background: rgba(15, 12, 30, 0.92);
-    border: 1px solid rgba(168, 85, 247, 0.2);
+    background: rgba(15, 12, 30, 0.95);
+    border: 1px solid rgba(168, 85, 247, 0.35);
     border-radius: 16px;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(168, 85, 247, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.55), 0 0 25px rgba(168, 85, 247, 0.15);
     z-index: 9998;
-    max-width: 380px;
+    max-width: 390px;
     transform: translateX(-120%);
     opacity: 0;
     transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: none;
+    overflow: hidden;
   }
 
   .social-proof-popup.show {
@@ -102,12 +144,28 @@
     pointer-events: auto;
   }
 
+  .sp-clickable {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
+    min-width: 0;
+    transition: background 0.2s ease;
+  }
+
+  .sp-clickable:hover {
+    background: rgba(168, 85, 247, 0.08);
+  }
+
   .sp-avatar {
     width: 44px;
     height: 44px;
     border-radius: 12px;
-    background: rgba(168, 85, 247, 0.12);
-    border: 1px solid rgba(168, 85, 247, 0.2);
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid rgba(168, 85, 247, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -120,34 +178,83 @@
     min-width: 0;
   }
 
-  .sp-text {
-    margin: 0;
-    font-size: 0.78rem;
-    color: #e2e8f0;
-    font-weight: 500;
-    line-height: 1.4;
+  .sp-header-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
   }
 
-  .sp-time {
-    margin: 3px 0 0;
+  .sp-badge {
     font-size: 0.65rem;
-    color: #64748b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #c084fc;
+    background: rgba(168, 85, 247, 0.16);
+    padding: 2px 7px;
+    border-radius: 999px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+  }
+
+  .sp-verified-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.12);
+    border: 1px solid rgba(74, 222, 128, 0.25);
+    padding: 1px 6px;
+    border-radius: 999px;
+  }
+
+  .sp-text {
+    margin: 0;
+    font-size: 0.76rem;
+    color: #f1f5f9;
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  .sp-footer {
+    margin: 4px 0 0;
+    font-size: 0.65rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .sp-pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #25d366;
+    box-shadow: 0 0 6px #25d366;
+    animation: sp-pulse 2s infinite;
+  }
+
+  @keyframes sp-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
   }
 
   .sp-close {
     background: none;
     border: none;
     color: #64748b;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     cursor: pointer;
-    padding: 4px;
+    padding: 8px 10px;
     line-height: 1;
-    transition: color 0.2s;
+    transition: color 0.2s, background 0.2s;
     flex-shrink: 0;
+    border-radius: 8px;
+    margin-right: 4px;
   }
 
   .sp-close:hover {
-    color: #e2e8f0;
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.1);
   }
 
   @media (max-width: 480px) {

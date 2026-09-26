@@ -128,8 +128,11 @@ import Icon from "../components/Icon.astro";
                 <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
               </svg>
             </div>
-            <h3>¡Mensaje Enviado! 🎉</h3>
-            <p>Te responderé en menos de 24 horas.</p>
+            <h3>¡Mensaje Preparado para WhatsApp! 🎉</h3>
+            <p>Conectando directamente con Mateo Ferrer al <strong>+57 300 505 9987</strong>. Si no abrió automáticamente, haz clic abajo:</p>
+            <a id="form-success-wa-link" href="https://wa.me/573005059987" target="_blank" rel="noopener noreferrer" class="btn-success-wa">
+              <span>💬 Abrir Chat en WhatsApp (+57 300 505 9987)</span>
+            </a>
             <button class="form-reset-btn" id="form-reset-btn">Enviar otro mensaje</button>
           </div>
         </div>
@@ -230,11 +233,24 @@ import Icon from "../components/Icon.astro";
     const submitBtn = document.getElementById('submit-btn');
     const formSuccess = document.getElementById('form-success');
     const resetBtn = document.getElementById('form-reset-btn');
+    const successWaLink = document.getElementById('form-success-wa-link') as HTMLAnchorElement;
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       if (!submitBtn || !formSuccess) return;
+
+      const nameInput = document.getElementById('name') as HTMLInputElement;
+      const emailInput = document.getElementById('email') as HTMLInputElement;
+      const projectTypeInput = document.getElementById('project-type') as HTMLSelectElement;
+      const budgetInput = document.getElementById('budget') as HTMLInputElement;
+      const messageInput = document.getElementById('message') as HTMLTextAreaElement;
+
+      const name = nameInput?.value.trim() || 'Cliente';
+      const email = emailInput?.value.trim() || 'No especificado';
+      const projectType = projectTypeInput?.options[projectTypeInput.selectedIndex]?.text || 'Proyecto General';
+      const budget = budgetInput?.value || '1000';
+      const message = messageInput?.value.trim() || '';
 
       // Show loader
       const submitText = submitBtn.querySelector('.submit-text') as HTMLElement;
@@ -246,10 +262,27 @@ import Icon from "../components/Icon.astro";
       if (submitLoader) submitLoader.style.display = 'flex';
       (submitBtn as HTMLButtonElement).disabled = true;
 
-      // Simulate form submission (replace with actual formspree/emailjs)
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Mensaje estructurado directamente para WhatsApp de Mateo (+57 300 505 9987)
+      const waMsg = `¡Hola Mateo! Acabo de completar el formulario en tu portafolio:\n\n` +
+        `👤 *Nombre:* ${name}\n` +
+        `📧 *Email:* ${email}\n` +
+        `🚀 *Tipo de Proyecto:* ${projectType}\n` +
+        `💰 *Presupuesto Estimado:* $${budget} USD\n` +
+        `💬 *Mensaje:* ${message}\n\n` +
+        `¿Podemos coordinar la cotización o asesoría por este medio?`;
 
-      // Show success
+      const waUrl = `https://wa.me/573005059987?text=${encodeURIComponent(waMsg)}`;
+
+      if (successWaLink) {
+        successWaLink.href = waUrl;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 600));
+
+      // Abrir WhatsApp automáticamente
+      window.open(waUrl, '_blank');
+
+      // Mostrar estado de éxito
       form.style.display = 'none';
       formSuccess.style.display = 'flex';
     });
@@ -552,6 +585,29 @@ import Icon from "../components/Icon.astro";
   .form-success p {
     color: #94a3b8;
     margin: 0;
+  }
+
+  .btn-success-wa {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #25d366;
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    margin: 8px 0;
+  }
+
+  .btn-success-wa:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 22px rgba(37, 211, 102, 0.5);
+    color: white;
   }
 
   .form-reset-btn {

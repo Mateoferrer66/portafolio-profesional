@@ -17,15 +17,23 @@
     <!-- Video and canvas frame -->
     <div style="position:relative;width:100%;height:150px;overflow:hidden;background:#000;">
       <video id="global-webcam-feed" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);"></video>
-      <canvas id="global-webcam-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);"></canvas>
+      <canvas id="global-webcam-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:scaleX(-1);pointer-events:none;"></canvas>
       
       <!-- Gesture detected badge -->
-      <div id="gesture-badge" style="display:none;position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.75);border:1px solid rgba(124,58,237,0.5);color:#c4b5fd;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;backdrop-filter:blur(4px);">
+      <div id="gesture-badge" style="display:none;position:absolute;top:6px;left:6px;background:rgba(0,0,0,0.75);border:1px solid rgba(124,58,237,0.5);color:#c4b5fd;font-size:0.65rem;font-weight:700;padding:2px 8px;border-radius:10px;backdrop-filter:blur(4px);z-index:4;">
         🖐️ Detectando...
       </div>
 
+      <!-- Camera status / fallback overlay -->
+      <div id="cam-status-overlay" style="display:none;position:absolute;inset:0;background:rgba(13,10,26,0.92);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;padding:12px;text-align:center;gap:6px;z-index:5;">
+        <span id="cam-status-icon" style="font-size:1.6rem;">📷</span>
+        <span id="cam-status-title" style="color:#e2e8f0;font-size:0.75rem;font-weight:700;">Iniciando cámara...</span>
+        <p id="cam-status-msg" style="color:#94a3b8;font-size:0.62rem;margin:0;line-height:1.3;max-width:200px;">Permite el acceso a tu cámara para usar los gestos</p>
+        <button id="cam-retry-btn" type="button" style="display:none;margin-top:2px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:#fff;border-radius:8px;padding:4px 12px;font-size:0.65rem;font-weight:700;cursor:pointer;">Activar Cámara</button>
+      </div>
+
       <!-- Loading indicator for model -->
-      <div id="model-loading" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);padding:8px 14px;border-radius:12px;color:#e2e8f0;font-size:0.75rem;text-align:center;white-space:nowrap;">
+      <div id="model-loading" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.85);padding:8px 14px;border-radius:12px;color:#e2e8f0;font-size:0.75rem;text-align:center;white-space:nowrap;z-index:6;">
         <div style="margin-bottom:4px;">⏳</div>
         <span id="model-loading-text">Cargando modelo...</span>
       </div>
@@ -300,6 +308,25 @@
   function showLoading(show) {
     var el = document.getElementById('model-loading');
     if (el) el.style.display = show ? 'block' : 'none';
+  }
+
+  function showCamStatus(icon, title, msg, showRetry) {
+    var overlay = document.getElementById('cam-status-overlay');
+    var iconEl = document.getElementById('cam-status-icon');
+    var titleEl = document.getElementById('cam-status-title');
+    var msgEl = document.getElementById('cam-status-msg');
+    var retryBtn = document.getElementById('cam-retry-btn');
+    if (!overlay) return;
+    if (iconEl) iconEl.textContent = icon || '📷';
+    if (titleEl) titleEl.textContent = title || '';
+    if (msgEl) msgEl.textContent = msg || '';
+    if (retryBtn) retryBtn.style.display = showRetry ? 'inline-block' : 'none';
+    overlay.style.display = 'flex';
+  }
+
+  function hideCamStatus() {
+    var overlay = document.getElementById('cam-status-overlay');
+    if (overlay) overlay.style.display = 'none';
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -1396,6 +1423,38 @@
     setTimeout(function() { r.remove(); }, 600);
   }
 
+  async function getCameraStream() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      throw new Error('Navegador sin soporte de cámara o requiere conexión HTTPS');
+    }
+
+    // 1. Intento con facingMode: 'user'
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: 'user' },
+        audio: false
+      });
+    } catch (e1) {
+      console.warn('[AI] Intento 1 con facingMode falló, probando sin facingMode...', e1);
+    }
+
+    // 2. Intento sin facingMode (esencial en Windows PC / webcams USB)
+    try {
+      return await navigator.mediaDevices.getUserMedia({
+        video: { width: { ideal: 640 }, height: { ideal: 480 } },
+        audio: false
+      });
+    } catch (e2) {
+      console.warn('[AI] Intento 2 falló, probando { video: true } básico...', e2);
+    }
+
+    // 3. Fallback a video básico
+    return await navigator.mediaDevices.getUserMedia({
+      video: true,
+      audio: false
+    });
+  }
+
   // ═══════════════════════════════════════════════════════════════
   //  START AI — Main Entry Point
   // ═══════════════════════════════════════════════════════════════
@@ -1408,44 +1467,83 @@
 
     localStorage.setItem('portfolio_ai_active', '1');
     S.active = true;
+
+    // Actualizar UI primero para que el contenedor esté visible y no en display:none
+    updateUI();
     startVoice();
+
+    var vid = document.getElementById('global-webcam-feed');
+    var cvs = document.getElementById('global-webcam-canvas');
+
+    showCamStatus('⏳', 'Iniciando cámara...', 'Solicitando acceso a tu cámara web...', false);
 
     try {
       var stream = S.stream;
-      if (!stream || !stream.active) {
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { width: { ideal: 320 }, height: { ideal: 240 }, facingMode: 'user' },
-          audio: false
-        });
+      var isLive = stream && stream.active && stream.getVideoTracks().some(function(t) { return t.readyState === 'live'; });
+
+      if (!isLive) {
+        stream = await getCameraStream();
         S.stream = stream;
       }
 
-      S.isStarting = false;
-
-      var vid = document.getElementById('global-webcam-feed');
-      var cvs = document.getElementById('global-webcam-canvas');
       if (vid) {
+        vid.muted = true;
+        vid.defaultMuted = true;
+        vid.playsInline = true;
+        vid.setAttribute('autoplay', '');
+        vid.setAttribute('playsinline', '');
+        vid.setAttribute('muted', '');
         vid.srcObject = stream;
+
         vid.onloadedmetadata = function() {
-          vid.play().catch(function(){});
-          if (cvs) { cvs.width = vid.videoWidth || 320; cvs.height = vid.videoHeight || 240; }
+          if (cvs) {
+            cvs.width = vid.videoWidth || 320;
+            cvs.height = vid.videoHeight || 240;
+          }
+          vid.play().then(function() {
+            hideCamStatus();
+          }).catch(function(){});
         };
-        vid.play().catch(function(){});
+
+        vid.onplaying = function() {
+          console.log('[AI] Webcam activa y transmitiendo fotogramas.');
+          hideCamStatus();
+        };
+
+        // Forzar intento de reproducción
+        vid.play().then(function() {
+          if (vid.videoWidth > 0 && !vid.paused) {
+            hideCamStatus();
+          }
+        }).catch(function(playErr) {
+          console.warn('[AI] Intento inicial de play diferido:', playErr);
+        });
       }
 
-      updateUI();
+      S.isStarting = false;
       showToast('¡Controles Activos! Gestos y Voz listos 🖐️🎙️ Di "ayuda" para ver comandos', '✨', 4000);
       initHands();
 
     } catch(err) {
       console.warn('[AI] Camera initialization warning:', err);
       S.isStarting = false;
-      if (localStorage.getItem('portfolio_ai_active') === '1') {
-        S.active = true;
-        updateUI();
-        if (err.name === 'NotAllowedError') showToast('Permiso de cámara denegado. Voz activa.', '📷', 5000);
-        else if (err.name === 'NotFoundError') showToast('Cámara no detectada. Voz activa 🎙️', '🎙️', 4000);
-        else showToast('Cámara ocupada. Voz activa 🎙️', '🎙️', 4000);
+
+      var isPermissionDenied = err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError';
+      var isNotFound = err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError';
+      var isBusy = err.name === 'NotReadableError' || err.name === 'TrackStartError';
+
+      if (isPermissionDenied) {
+        showCamStatus('🔒', 'Permiso de Cámara Bloqueado', 'Haz clic en el icono del candado 🔒 en la barra de direcciones de tu navegador y activa el permiso de Cámara.', true);
+        showToast('Permiso de cámara bloqueado. Actívalo en el candado 🔒 de tu navegador.', '📷', 5000);
+      } else if (isNotFound) {
+        showCamStatus('🔌', 'Cámara no detectada', 'No se encontró ninguna webcam conectada. La voz sigue activa 🎙️', true);
+        showToast('Cámara no detectada. Voz activa 🎙️', '🎙️', 4000);
+      } else if (isBusy) {
+        showCamStatus('⚠️', 'Cámara en uso', 'Tu cámara está siendo utilizada por Zoom, Teams u otra app.', true);
+        showToast('Cámara ocupada por otra app. Voz activa 🎙️', '🎙️', 4000);
+      } else {
+        showCamStatus('📷', 'Error de cámara', err.message || 'No se pudo conectar a la cámara.', true);
+        showToast('Error al iniciar la cámara. Voz activa 🎙️', '🎙️', 4000);
       }
     }
   }
@@ -1462,6 +1560,7 @@
     if (S.stream) { S.stream.getTracks().forEach(function(track) { track.stop(); }); S.stream = null; }
     var vid = document.getElementById('global-webcam-feed');
     if (vid) vid.srcObject = null;
+    hideCamStatus();
     stopVoice();
     stopReading();
     toggleZoom(false);
@@ -1481,6 +1580,16 @@
       aiBtn.addEventListener('click', function() {
         if (S.active) stopAI();
         else startAI();
+      });
+    }
+
+    var camRetryBtn = document.getElementById('cam-retry-btn');
+    if (camRetryBtn && !camRetryBtn.dataset.bound) {
+      camRetryBtn.dataset.bound = 'true';
+      camRetryBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        S.stream = null;
+        startAI();
       });
     }
 
@@ -1538,15 +1647,21 @@
 
     var shouldBeActive = localStorage.getItem('portfolio_ai_active') === '1';
     if (shouldBeActive) {
-      if (!S.active && !S.isStarting) {
-        console.log('[AI] Resuming active session from localStorage...');
+      var isStreamLive = S.stream && S.stream.active && S.stream.getVideoTracks().some(function(t) { return t.readyState === 'live'; });
+      if (!S.active || !isStreamLive) {
+        console.log('[AI] Resuming active session or requesting live stream...');
         startAI();
       } else if (S.active) {
         var vid = document.getElementById('global-webcam-feed');
         var cvs = document.getElementById('global-webcam-canvas');
         if (vid && S.stream && vid.srcObject !== S.stream) {
+          vid.muted = true;
+          vid.defaultMuted = true;
+          vid.playsInline = true;
           vid.srcObject = S.stream;
-          vid.play().catch(function(){});
+          vid.play().then(function() {
+            hideCamStatus();
+          }).catch(function(){});
           if (cvs) { cvs.width = vid.videoWidth || 320; cvs.height = vid.videoHeight || 240; }
         }
         if (S.handsReady && !S.animFrameId) startFrameLoop();
